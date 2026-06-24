@@ -127,7 +127,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #002: WebRTC Transport & Transfer Protocol Core
 
-- **Status**: 🟡 **Next** — ENGINE (blocking)
+- **Status**: ✅ **Implemented (code)** — branch `002-webrtc-transport-core` (2026-06-24). `dart analyze lib test` 0 issues · `flutter test` 63 passed. Engine + abstract `SignalingChannel`/`PeerConnector`/`DataTransport` + in-process loopback; real `WebRtcPeerConnector` (flutter_webrtc 1.5.2) wired; two-device smoke + iOS pod/Android release config deferred. See [`changelog.md`](changelog.md).
 - **Branch**: `002-webrtc-transport-core`
 - **Depends on**: #001
 - **Blocking**: all transfer features
@@ -143,7 +143,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #003: Signaling Server + 6-Digit Key Pairing
 
-- **Status**: ⬜ Not started — RENDEZVOUS (blocking)
+- **Status**: 🟡 **Next** — RENDEZVOUS (blocking)
 - **Branch**: `003-signaling-6digit`
 - **Depends on**: #002
 - **Design**: Screen 03 **Kết nối (connect)** — the pairing hub. This spec builds the **"Mã 6 số" tab** (radar-ringed phone, 4–6 mono CodeBoxes, expiry countdown) + the **Nhận "Nhập mã"** entry on Screen 04. QR/Gần đây tabs are stubbed for #007/#009. See [`ui-design-context.md`](ui-design-context.md) §Screen 03/04.
