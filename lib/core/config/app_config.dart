@@ -1,5 +1,20 @@
 import 'package:safe_send/core/config/app_flavor.dart';
 
+/// A STUN/TURN server descriptor for WebRTC connectivity. Kept free of any
+/// plugin types so config stays dependency-light (mapped by the connector).
+class RtcIceServer {
+  const RtcIceServer({required this.urls, this.username, this.credential});
+
+  /// One or more ICE server URLs (e.g. `stun:...`, `turn:...`).
+  final List<String> urls;
+
+  /// Optional TURN username.
+  final String? username;
+
+  /// Optional TURN credential.
+  final String? credential;
+}
+
 /// Immutable per-flavor app configuration, provided at startup by the flavor
 /// entry point and registered in the DI container.
 class AppConfig {
@@ -7,6 +22,7 @@ class AppConfig {
     required this.flavor,
     this.appName = 'Safe Send',
     this.deepLinkScheme = 'safesend',
+    this.iceServers = const <RtcIceServer>[],
   });
 
   /// Active build flavor.
@@ -17,4 +33,8 @@ class AppConfig {
 
   /// Reserved deep-link scheme (no handlers wired in #001).
   final String deepLinkScheme;
+
+  /// ICE servers used to establish the peer connection. Empty for #002
+  /// (loopback needs none); real per-flavor STUN/TURN is wired in #003.
+  final List<RtcIceServer> iceServers;
 }
