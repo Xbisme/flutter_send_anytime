@@ -4,12 +4,13 @@ description: "Task list for Project Foundation & Navigation"
 
 # Tasks: Project Foundation & Navigation
 
-> **Status (2026-06-24): IMPLEMENTED — 65/70 tasks done.** Full Dart app builds; `dart analyze lib test` = **0 issues**; `flutter test` = **27 passed**; `dart format` clean; native splash generated. The whole shell (3-tab nav, Home with mock dashboard, Send/Receive nav-less flows, History/Settings placeholders), the fixed light/dark design-token system, the shared widget library, DI, codegen (freezed/injectable), and l10n (VI primary + EN) are all in and tested.
+> **Status (2026-06-24): IMPLEMENTED — 67/70 tasks done.** Full Dart app builds; `dart analyze lib test` = **0 issues**; `flutter test` = **27 passed**; `dart format` clean; native splash generated. The whole shell (3-tab nav, Home with mock dashboard, Send/Receive nav-less flows, History/Settings placeholders), the fixed light/dark design-token system, the shared widget library, DI, codegen (freezed/injectable), and l10n (VI primary + EN) are all in and tested.
 >
-> **5 deferred (native/device-only — not verifiable in this dev env):**
-> - **T005** bloc-lint CLI (`bloc_tools`) not wired — BLoC code follows the 4-state pattern and passes `dart analyze`; add `bloc_tools` when available.
-> - **T006 / T007** iOS `.xcconfig` schemes + Android Gradle `productFlavors` (dev/prod bundle ids `app.safesend` / `app.safesend.dev`). App runs on the single default `flutter create` identity; flavor split needs Xcode/Gradle config + on-device verification.
-> - **T067** build + launch both flavors on iOS/Android (device).
+> **Flavors (T006 + T007): dev/prod fully wired on BOTH platforms.** Android `productFlavors` (`app.safesend.dev` / `app.safesend`, labels, `minSdk 26`). iOS build configs `Debug/Release/Profile-{dev,prod}` + shared schemes `dev`/`prod` (default `Runner` scheme removed) generated via [ios/setup_flavors.rb](../../ios/setup_flavors.rb) and **verified with `xcodebuild -list` + `-showBuildSettings`** (Debug-dev → `app.safesend.dev`, Release-prod → `app.safesend`). Run: `flutter run --flavor dev -t lib/main_dev.dart` / `--flavor prod -t lib/main_prod.dart`.
+>
+> **3 deferred (device/external-only):**
+> - **T005** bloc-lint CLI (`bloc_tools`) not wired — BLoC follows the 4-state pattern and passes `dart analyze`.
+> - **T067** build + launch both flavors on a physical iOS/Android device (signing) — flavor *wiring* verified via xcodebuild; on-device run still pending.
 > - **T068** manual quickstart SC-001…009 smoke (device).
 >
 > **Local-toolchain note**: `flutter analyze` crashes on this detached-HEAD Flutter checkout (AOT analysis-server snapshot); use **`dart analyze`** — same analyzer engine + `analysis_options.yaml`, gate-equivalent.
@@ -38,8 +39,8 @@ description: "Task list for Project Foundation & Navigation"
 - [x] T003 [P] Add all dependencies + dev_dependencies to `pubspec.yaml` with the pinned versions from plan.md and run `flutter pub get`
 - [x] T004 [P] Configure `analysis_options.yaml` with `very_good_analysis` 10.3.0 + `strict-casts`/`strict-raw-types`/`strict-inference`
 - [ ] T005 [P] Configure `bloc_lint` (`bloc.yaml` / analysis include) so `dart run bloc_tools:bloc lint .` runs clean
-- [ ] T006 Configure iOS flavors (dev/prod) — per-flavor `.xcconfig` + schemes, bundle ids `app.safesend` (prod) / `app.safesend.dev` (dev), display names, deployment target iOS 13.0, register `safesend://` URL type
-- [ ] T007 Configure Android flavors (dev/prod) — Gradle `productFlavors`, `applicationId` + suffix, `minSdk 26`, `targetSdk` latest, app labels, `safesend` intent-filter scheme placeholder
+- [x] T006 Configure iOS flavors (dev/prod) — per-flavor `.xcconfig` + schemes, bundle ids `app.safesend` (prod) / `app.safesend.dev` (dev), display names, deployment target iOS 13.0, register `safesend://` URL type
+- [x] T007 Configure Android flavors (dev/prod) — Gradle `productFlavors`, `applicationId` + suffix, `minSdk 26`, `targetSdk` latest, app labels, `safesend` intent-filter scheme placeholder
 - [x] T008 [P] Create `lib/main_dev.dart`, `lib/main_prod.dart` (flavor entry points) and `lib/bootstrap.dart` skeleton (error zone + runApp hook)
 - [x] T009 [P] Add brand SVGs to `assets/brand/` and Sora + JetBrains Mono TTFs to `assets/fonts/`; declare assets + font families in `pubspec.yaml`
 - [x] T010 [P] Configure `flutter_native_splash` (per-flavor: logomark on brand background, light + dark) and generate native splash

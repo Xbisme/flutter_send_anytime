@@ -1,2 +1,5 @@
 #include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
 #include "Generated.xcconfig"
+
+// Default app display name (overridden by Dev/Prod flavor xcconfigs).
+APP_DISPLAY_NAME=Safe Send

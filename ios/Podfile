@@ -8,6 +8,14 @@ project 'Runner', {
   'Debug' => :debug,
   'Profile' => :release,
   'Release' => :release,
+  # Flavor build configurations (see ios/setup_flavors.rb) mapped to a base
+  # CocoaPods config so Pods support files / xcfilelists are generated.
+  'Debug-dev' => :debug,
+  'Profile-dev' => :release,
+  'Release-dev' => :release,
+  'Debug-prod' => :debug,
+  'Profile-prod' => :release,
+  'Release-prod' => :release,
 }
 
 def flutter_root

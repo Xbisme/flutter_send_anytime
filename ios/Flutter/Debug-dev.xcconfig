@@ -1,0 +1,6 @@
+// Safe Send — dev flavor, Debug mode (see ios/setup_flavors.rb).
+#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug-dev.xcconfig"
+#include "Generated.xcconfig"
+
+APP_DISPLAY_NAME=Safe Send Dev
+PRODUCT_BUNDLE_IDENTIFIER=app.safesend.dev

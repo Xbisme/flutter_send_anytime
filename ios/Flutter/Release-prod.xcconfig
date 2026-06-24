@@ -1,0 +1,6 @@
+// Safe Send — prod flavor, Release mode (see ios/setup_flavors.rb).
+#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release-prod.xcconfig"
+#include "Generated.xcconfig"
+
+APP_DISPLAY_NAME=Safe Send
+PRODUCT_BUNDLE_IDENTIFIER=app.safesend
