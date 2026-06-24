@@ -27,16 +27,17 @@ Two devices agree on a **rendezvous identifier** (a 6-digit code, a QR, a link, 
 
 ## Current Focus
 
-- **Current phase**: **Pre-spec / bootstrap.** Repo is a fresh Speckit scaffold (`.specify/` + `.claude/skills/`); `CLAUDE.md` is a stub pointing at the current plan. **Constitution v1.0.0 ratified** ([`.specify/memory/constitution.md`](../../.specify/memory/constitution.md), 15 principles). **No Flutter project generated yet, no specs started.**
-- **Next spec**: **#001 Project Foundation & Navigation** (FOUNDATION, blocking). Generate the Flutter app shell — Clean Architecture, 2 flavors, **3-tab nav (Trang chủ/Lịch sử/Cài đặt)** with Gửi+Nhận as Home actions, fixed light/dark palette + **design-token layer** (Sora/JetBrains Mono, semantic color aliases), **shared widget library** (FileRow/CodeBox/SegmentedTabs/PrimaryButton…), `Result`/`AppFailure`/`AppCubit`, DI, router, l10n. Build spec = [`ui-design-context.md`](ui-design-context.md).
-- **Active blockers**: none. (Decision to confirm at #003 planning: signaling-server language — Dart `shelf` vs Node — and hosting target for dev/prod.)
+- **Latest**: **Spec #001 Project Foundation & Navigation** ✅ **IMPLEMENTED** on branch `001-project-foundation` (2026-06-24). Flutter app shell built: 3-tab nav (Trang chủ/Lịch sử/Cài đặt) via `go_router` StatefulShellRoute; Gửi/Nhận as Home actions → nav-less placeholder flows; fixed light/dark design-token system (Sora + JetBrains Mono bundled, `AppColors` ThemeExtension); shared widget library in `core/presentation/`; `Result`/`AppFailure`/4-state `AppCubit`; DI (get_it+injectable); `HomeCubit` + static mock dashboard (swap seam for #006); l10n VI-primary + EN + VI fallback; branded splash. **`dart analyze lib test` = 0 issues · `flutter test` = 27 passed · `dart format` clean.** dev/prod flavors fully wired on both platforms (Android `productFlavors`; iOS build configs + `dev`/`prod` schemes via `ios/setup_flavors.rb`, verified with `xcodebuild -list`). Deferred (device-only): on-device build (T067), quickstart smoke (T068), bloc_tools CLI (T005). See [changelog.md](changelog.md) + [specs/001-project-foundation/](../../specs/001-project-foundation/).
+- **Next spec**: **#002 WebRTC Transport & Transfer Protocol Core** (ENGINE, blocking) — RTCPeerConnection lifecycle, DataChannel, file chunking/reassembly, transfer state machine, abstract `SignalingChannel` + in-process loopback for tests.
+- **Toolchain note**: `flutter analyze` crashes on this detached-HEAD Flutter checkout (AOT analysis-server snapshot) — use **`dart analyze`** (gate-equivalent, same engine + `analysis_options.yaml`).
+- **Active blockers**: none. (Decisions to confirm at #003 planning: signaling-server language — Dart `shelf` vs Node — and hosting target for dev/prod. Bundle ids `app.safesend` / `app.safesend.dev` proposed, user-confirmable before store setup.)
 
 ## Spec Status
 
 | # | Name | Status | Branch / merge |
 |---|---|---|---|
-| 001 | Project Foundation & Navigation | ⬜ Not started 🟡 Next | `001-project-foundation` |
-| 002 | WebRTC Transport & Transfer Protocol Core | ⬜ Not started | `002-webrtc-transport-core` |
+| 001 | Project Foundation & Navigation | ✅ Implemented (code) · native/device deferred | `001-project-foundation` |
+| 002 | WebRTC Transport & Transfer Protocol Core | ⬜ Not started 🟡 Next | `002-webrtc-transport-core` |
 | 003 | Signaling Server + 6-Digit Key Pairing | ⬜ Not started | `003-signaling-6digit` |
 | 004 | Send Flow (Gửi) | ⬜ Not started | `004-send-flow` |
 | 005 | Receive Flow (Nhận) ⭐ MVP | ⬜ Not started | `005-receive-flow` |
