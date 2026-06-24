@@ -1,0 +1,12 @@
+# Safe Send — Changelog
+
+> Append-only ship history. One entry per spec as it lands. Newest at top.
+> Format: `### YYYY-MM-DD — Spec #NNN <Name> ✅ <verb>` + 1–4 bullets.
+
+### 2026-06-24 — Spec #001 Project Foundation & Navigation ✅ IMPLEMENTED
+
+- **App shell shipped**: Flutter app (org `app.safesend`, project `safe_send`) with Clean Architecture + feature-first layout; 3-tab bottom navigation (Trang chủ / Lịch sử / Cài đặt) via `go_router` `StatefulShellRoute.indexedStack`; **Gửi/Nhận are Home actions** opening full-screen nav-less placeholder flows (Send/Receive). Branded static splash → Home. History + Settings tabs are styled placeholders.
+- **Design system**: fixed light/dark palette as an `AppColors` `ThemeExtension` + token layer (`AppTypography` Sora + JetBrains Mono bundled TTFs, `AppSpacing`/`AppRadii`/`AppShadow`/`AppMotion`); shared widget library in `core/presentation/` (Primary/Secondary/Danger buttons, FileChip/FileRow, CodeBox, SegmentedTabs, ToggleRow, SearchPill, StatTile, QuickActionCard, AppToast, AppEmptyView, FlowAppBar, ComingSoonView). Brand SVGs + fonts pulled from the claude_design project.
+- **Foundation**: `Result<T>` + `AppFailure` (freezed) + generic 4-state `AppCubit<T>`/`AppState<T>`; `AppLogger`; DI via `get_it` + `injectable`; `HomeCubit` loads a static mock `HomeDashboard` (swappable seam for #006). l10n ARB **Vietnamese-primary + English** with VI fallback for unsupported locales.
+- **Quality**: `dart analyze lib test` = 0 issues; `flutter test` = **27 passed** (nav, home, cubit, theme, l10n parity, widgets, a11y); `dart format` clean; native splash generated. **Packages**: flutter_bloc 9.1.1, go_router 17.3.0, get_it 9.2.1, injectable 3.0.0, freezed 3.2.5, lucide_icons_flutter 3.1.14, flutter_svg 2.3.0, toastification 3.2.0, intl 0.20.2 (+ dev: very_good_analysis 10.2.0, build_runner, bloc_test, mocktail, flutter_native_splash). Local Dart 3.11.5 forced minor downgrades (very_good_analysis 10.2.0, injectable_generator 3.0.0, flutter_native_splash 2.4.x) — resolved against the actual SDK per Constitution XV.
+- **Deferred (native/device-only)**: iOS `.xcconfig`/Android `productFlavors` dev/prod split (T006/T007), on-device dual-flavor build (T067), manual quickstart smoke (T068), `bloc_tools` lint CLI (T005). Tracked in [specs/001-project-foundation/tasks.md](../../specs/001-project-foundation/tasks.md) status banner. **Toolchain note**: `flutter analyze` crashes on this detached-HEAD Flutter checkout (AOT analysis-server snapshot) — use `dart analyze` (gate-equivalent).

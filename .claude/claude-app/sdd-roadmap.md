@@ -108,7 +108,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #001: Project Foundation & Navigation
 
-- **Status**: ⬜ Not started — FOUNDATION (blocking)
+- **Status**: ✅ **Implemented (code)** — branch `001-project-foundation` (2026-06-24). `dart analyze lib test` 0 issues · `flutter test` 27 passed. Native flavor split (iOS xcconfig / Android productFlavors) + on-device build deferred. See [`changelog.md`](changelog.md).
 - **Branch**: `001-project-foundation`
 - **Design**: see [`ui-design-context.md`](ui-design-context.md) — Navigation IA + Design Tokens + Shared Components sections are the build spec for this spec.
 - **Scope**:
@@ -127,7 +127,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #002: WebRTC Transport & Transfer Protocol Core
 
-- **Status**: ⬜ Not started — ENGINE (blocking)
+- **Status**: 🟡 **Next** — ENGINE (blocking)
 - **Branch**: `002-webrtc-transport-core`
 - **Depends on**: #001
 - **Blocking**: all transfer features

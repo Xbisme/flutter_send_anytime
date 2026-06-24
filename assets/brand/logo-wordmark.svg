@@ -1,0 +1,11 @@
+<svg width="360" height="96" viewBox="0 0 360 96" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ssgw" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00E676"></stop>
+      <stop offset="1" stop-color="#00C2A8"></stop>
+    </linearGradient>
+  </defs>
+  <path d="M48 12 L82 24 V50 C82 71 67 84 48 90 C29 84 14 71 14 50 V24 Z" fill="url(#ssgw)"></path>
+  <path d="M36 50 L62 36 L53 64 L48 53 Z" fill="#070B09"></path>
+  <text x="100" y="60" font-family="Sora, sans-serif" font-size="38" font-weight="800" letter-spacing="-0.02em" fill="#0E1512">Safe<tspan fill="#00A847">Send</tspan></text>
+</svg>
