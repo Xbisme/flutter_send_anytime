@@ -7,6 +7,10 @@ abstract final class AppRoutes {
   static const send = '/send';
   static const receive = '/receive';
 
+  /// Dev-flavor-only signaling/pairing debug surface (#003, FR-021a). Mounted
+  /// only when `AppConfig.flavor.isDev`; absent from prod builds.
+  static const pairingDebug = '/dev/pairing';
+
   /// Reserved deep-link scheme (no handlers wired in #001).
   static const deepLinkScheme = 'safesend';
 }

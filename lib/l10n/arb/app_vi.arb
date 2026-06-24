@@ -105,5 +105,22 @@
   },
 
   "commonBack": "Quay lại",
-  "@commonBack": { "description": "Back affordance label" }
+  "@commonBack": { "description": "Back affordance label" },
+
+  "pairingErrorInvalidCode": "Mã không đúng",
+  "@pairingErrorInvalidCode": { "description": "Pairing error: invalid/unknown code" },
+  "pairingErrorRoomFull": "Phòng đã đủ hai thiết bị",
+  "@pairingErrorRoomFull": { "description": "Pairing error: room already full" },
+  "pairingErrorRoomExpired": "Mã đã hết hạn",
+  "@pairingErrorRoomExpired": { "description": "Pairing error: code expired" },
+  "pairingErrorRateLimited": "Thử quá nhiều lần, vui lòng đợi",
+  "@pairingErrorRateLimited": { "description": "Pairing error: rate limited" },
+  "pairingErrorUnreachable": "Không kết nối được máy chủ",
+  "@pairingErrorUnreachable": { "description": "Pairing error: signaling unreachable" },
+  "pairingErrorTimeout": "Kết nối quá thời gian",
+  "@pairingErrorTimeout": { "description": "Pairing error: signaling timeout" },
+  "pairingErrorConnectionLost": "Mất kết nối với thiết bị kia",
+  "@pairingErrorConnectionLost": { "description": "Pairing error: peer connection lost" },
+  "pairingErrorGeneric": "Đã xảy ra lỗi, vui lòng thử lại",
+  "@pairingErrorGeneric": { "description": "Pairing error: generic fallback" }
 }

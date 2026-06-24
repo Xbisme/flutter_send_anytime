@@ -1,9 +1,9 @@
 <!-- SPECKIT START -->
 # Safe Send — Agent Context
 
-Active feature: **#002 WebRTC Transport & Transfer Protocol Core** (branch `002-webrtc-transport-core`). #001 ✅ merged.
-Current plan: [specs/002-webrtc-transport-core/plan.md](specs/002-webrtc-transport-core/plan.md)
-Spec: [specs/002-webrtc-transport-core/spec.md](specs/002-webrtc-transport-core/spec.md)
+Active feature: **#003 Signaling Server & 6-Digit Key Pairing** (branch `003-signaling-6digit`). #001 ✅ merged · #002 ✅ merged.
+Current plan: [specs/003-signaling-6digit/plan.md](specs/003-signaling-6digit/plan.md)
+Spec: [specs/003-signaling-6digit/spec.md](specs/003-signaling-6digit/spec.md)
 
 ## Project meta (read these first)
 - Constitution (authoritative, 15 principles): [.specify/memory/constitution.md](.specify/memory/constitution.md)
@@ -20,7 +20,8 @@ Cross-platform (iOS + Android, Flutter) P2P file-sharing app over WebRTC — **n
 - UI: fixed design tokens (Sora + JetBrains Mono bundled fonts), `lucide_icons_flutter` 3.1.14+2, `flutter_svg` 2.3.0, `toastification` 3.2.0, splash via `flutter_native_splash` 2.4.8.
 - Codegen: `freezed` 3.2.5 / `json_serializable` 6.14.0 / `build_runner` 2.15.0. i18n: ARB + `intl` 0.20.2 (VI primary, EN; VI fallback). Lint: `very_good_analysis` 10.3.0 + `bloc_lint`. Test: `flutter_test` + `bloc_test` 10.0.0 + `mocktail` 1.0.5.
 - Target: iOS 13.0+ / Android 8.0 (API 26)+. Flavors: dev (`app.safesend.dev`) / prod (`app.safesend`). No networking/persistence in #001.
-- **#002 engine (in progress)**: `flutter_webrtc` 1.5.2 (RTCPeerConnection + RTCDataChannel, data-channel-only → no camera/mic), `crypto` 3.0.7 (streamed SHA-256), `uuid` 4.5.3. Engine lives in `core/{domain/transfer,services/signaling,services/transport,constants}`; abstract `SignalingChannel` + in-process loopback for tests; versioned opcode-framed protocol (16 KiB chunks, backpressure via `bufferedAmount`); quarantine→atomic-rename, per-file hash gates completion; single transfer state machine `idle→connecting→handshaking→transferring→done|failed|cancelled`. No UI/cubits here. Signaling carries metadata only.
+- **#002 engine (merged)**: `flutter_webrtc` 1.5.2 (RTCPeerConnection + RTCDataChannel, data-channel-only → no camera/mic), `crypto` 3.0.7 (streamed SHA-256), `uuid` 4.5.3. Engine lives in `core/{domain/transfer,services/signaling,services/transport,constants}`; abstract `SignalingChannel` (offer/answer/ice/bye, 1:1 seam) + in-process loopback for tests; versioned opcode-framed protocol (16 KiB chunks, backpressure via `bufferedAmount`); quarantine→atomic-rename, per-file hash gates completion; single transfer state machine `idle→connecting→handshaking→transferring→done|failed|cancelled`. Signaling carries metadata only.
+- **#003 signaling/pairing (planned)**: new `web_socket_channel` 3.0.3 (app); new `server/` relay (Dart `shelf` 1.4.2 + `shelf_web_socket` 3.0.0); new pure-Dart shared protocol pkg `packages/safesend_signaling/` (versioned JSON frames, one source of truth for app+server). App side: `SignalingClient` (owns ws, drives 6-digit pairing, demuxes frames) **produces** `WebSocketSignalingChannel implements SignalingChannel` (#002 seam reused unchanged); `features/pairing/` repo+use-cases+4-state `PairingCubit` + **dev-flavor-only** debug page. Code = full `000000`–`999999`, 5-min TTL, sender-generated, per-connection join rate-limit. STUN = Google public per flavor; TURN = documented empty hook (#011). `AppConfig.signalingEndpoint` per flavor (dev `ws://`, prod `wss://`). Relay in-memory only, no bytes, logs phase/error-type only. Add `AppFailure` variants: signalingUnreachable/signalingTimeout/roomExpired/roomFull/invalidCode/rateLimited. 2-device smoke deferred.
 
 ## Key rules (see constitution for full list)
 - `lib/core/` MUST NOT import `lib/features/`. Shared widget library lives in `core/presentation/`.

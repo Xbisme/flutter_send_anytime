@@ -52,5 +52,14 @@
   "settingsDarkModeSub": "Follow system",
   "settingsVersion": "Safe Send v{version} · WebRTC P2P",
 
-  "commonBack": "Back"
+  "commonBack": "Back",
+
+  "pairingErrorInvalidCode": "Invalid code",
+  "pairingErrorRoomFull": "That room is already full",
+  "pairingErrorRoomExpired": "This code has expired",
+  "pairingErrorRateLimited": "Too many attempts — please wait",
+  "pairingErrorUnreachable": "Can't reach the server",
+  "pairingErrorTimeout": "Connection timed out",
+  "pairingErrorConnectionLost": "Lost connection to the other device",
+  "pairingErrorGeneric": "Something went wrong, please try again"
 }

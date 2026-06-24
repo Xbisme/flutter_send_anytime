@@ -154,4 +154,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commonBack => 'Back';
+
+  @override
+  String get pairingErrorInvalidCode => 'Invalid code';
+
+  @override
+  String get pairingErrorRoomFull => 'That room is already full';
+
+  @override
+  String get pairingErrorRoomExpired => 'This code has expired';
+
+  @override
+  String get pairingErrorRateLimited => 'Too many attempts — please wait';
+
+  @override
+  String get pairingErrorUnreachable => 'Can\'t reach the server';
+
+  @override
+  String get pairingErrorTimeout => 'Connection timed out';
+
+  @override
+  String get pairingErrorConnectionLost =>
+      'Lost connection to the other device';
+
+  @override
+  String get pairingErrorGeneric => 'Something went wrong, please try again';
 }

@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Dev flavor only: allow cleartext `ws://` to a localhost/LAN signaling
+         relay for on-network testing (#003, R-08). Merged ONLY into the dev
+         flavor — the prod flavor stays TLS-only (`wss://`). -->
+    <application android:usesCleartextTraffic="true" />
+</manifest>

@@ -23,6 +23,7 @@ class AppConfig {
     this.appName = 'Safe Send',
     this.deepLinkScheme = 'safesend',
     this.iceServers = const <RtcIceServer>[],
+    this.signalingEndpoint,
   });
 
   /// Active build flavor.
@@ -37,4 +38,9 @@ class AppConfig {
   /// ICE servers used to establish the peer connection. Empty for #002
   /// (loopback needs none); real per-flavor STUN/TURN is wired in #003.
   final List<RtcIceServer> iceServers;
+
+  /// The signaling relay WebSocket endpoint for this flavor (#003). dev uses
+  /// `ws://` (localhost/LAN), prod uses `wss://`. Null until set by the flavor
+  /// entry point; the signaling client treats null as misconfiguration.
+  final Uri? signalingEndpoint;
 }

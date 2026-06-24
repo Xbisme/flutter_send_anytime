@@ -1,9 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:safe_send/app/view/app_shell.dart';
+import 'package:safe_send/core/config/app_config.dart';
 import 'package:safe_send/core/constants/app_routes.dart';
+import 'package:safe_send/core/di/injection.dart';
 import 'package:safe_send/features/history/presentation/history_page.dart';
 import 'package:safe_send/features/home/presentation/home_page.dart';
+import 'package:safe_send/features/pairing/presentation/debug/pairing_debug_page.dart';
 import 'package:safe_send/features/receive/presentation/receive_page.dart';
 import 'package:safe_send/features/send/presentation/send_page.dart';
 import 'package:safe_send/features/settings/presentation/settings_page.dart';
@@ -13,8 +16,10 @@ import 'package:safe_send/features/splash/presentation/splash_page.dart';
 /// Send/Receive are top-level routes outside the shell so the bottom nav is
 /// hidden for them. Scheme `safesend://` is reserved (no handlers in #001).
 ///
-/// A factory (not a singleton) so each widget test gets an isolated instance.
-GoRouter createAppRouter() {
+/// [includeDevRoutes] mounts the dev-flavor-only pairing debug surface (#003,
+/// FR-021a). A factory (not a singleton) so each widget test gets an isolated
+/// instance.
+GoRouter createAppRouter({bool includeDevRoutes = false}) {
   final rootKey = GlobalKey<NavigatorState>();
   final shellKey = GlobalKey<NavigatorState>();
   return GoRouter(
@@ -65,9 +70,22 @@ GoRouter createAppRouter() {
         parentNavigatorKey: rootKey,
         builder: (_, _) => const ReceivePage(),
       ),
+      if (includeDevRoutes)
+        GoRoute(
+          path: AppRoutes.pairingDebug,
+          parentNavigatorKey: rootKey,
+          builder: (_, _) => const PairingDebugPage(),
+        ),
     ],
   );
 }
 
+/// Whether the dev-flavor debug routes should be mounted. False unless the
+/// active flavor is dev (and DI has been configured).
+bool _devRoutesEnabled() =>
+    getIt.isRegistered<AppConfig>() && getIt<AppConfig>().flavor.isDev;
+
 /// The production router instance.
-final GoRouter appRouter = createAppRouter();
+final GoRouter appRouter = createAppRouter(
+  includeDevRoutes: _devRoutesEnabled(),
+);
