@@ -45,6 +45,13 @@ class PairingRepositoryImpl implements PairingRepository {
   }
 
   @override
+  DataTransport? takeTransport() {
+    final transport = _transport;
+    _transport = null; // ownership leaves the repo; dispose won't close it
+    return transport;
+  }
+
+  @override
   Future<void> dispose() async {
     await _clientSub?.cancel();
     await _transport?.close();

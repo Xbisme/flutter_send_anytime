@@ -7,6 +7,7 @@ import 'package:safe_send/core/domain/failures/app_failure.dart';
 import 'package:safe_send/core/domain/pairing/pairing_code.dart';
 import 'package:safe_send/core/domain/pairing/pairing_state.dart';
 import 'package:safe_send/core/domain/result.dart';
+import 'package:safe_send/core/services/transport/data_transport.dart';
 import 'package:safe_send/features/pairing/domain/pairing_repository.dart';
 import 'package:safe_send/features/pairing/domain/usecases/host_session_usecase.dart';
 import 'package:safe_send/features/pairing/domain/usecases/join_session_usecase.dart';
@@ -28,6 +29,9 @@ class FakePairingRepository implements PairingRepository {
 
   @override
   Future<Result<void>> join(String code) async => joinResult;
+
+  @override
+  DataTransport? takeTransport() => null;
 
   @override
   Future<void> dispose() async {

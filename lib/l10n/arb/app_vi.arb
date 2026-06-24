@@ -122,5 +122,101 @@
   "pairingErrorConnectionLost": "Mất kết nối với thiết bị kia",
   "@pairingErrorConnectionLost": { "description": "Pairing error: peer connection lost" },
   "pairingErrorGeneric": "Đã xảy ra lỗi, vui lòng thử lại",
-  "@pairingErrorGeneric": { "description": "Pairing error: generic fallback" }
+  "@pairingErrorGeneric": { "description": "Pairing error: generic fallback" },
+
+  "sendTitle": "Gửi file",
+  "@sendTitle": { "description": "Send file-selection screen title" },
+  "sendSelectedSummary": "{count} mục · {size}",
+  "@sendSelectedSummary": {
+    "description": "Selection header: item count + total size",
+    "placeholders": { "count": { "type": "int" }, "size": { "type": "String" } }
+  },
+  "sendAdd": "Thêm",
+  "@sendAdd": { "description": "Add more files button" },
+  "sendContinue": "Tiếp tục",
+  "@sendContinue": { "description": "Continue to pairing button" },
+  "sendEmptyTitle": "Chưa chọn file nào",
+  "@sendEmptyTitle": { "description": "Empty selection title" },
+  "sendEmptyBody": "Nhấn Thêm để chọn file gửi đi",
+  "@sendEmptyBody": { "description": "Empty selection body" },
+  "sendRemove": "Bỏ chọn",
+  "@sendRemove": { "description": "Remove a file from selection (semantic label)" },
+
+  "connectTitle": "Kết nối thiết bị",
+  "@connectTitle": { "description": "Connect/pairing hub title" },
+  "connectTabCode": "Mã 6 số",
+  "@connectTabCode": { "description": "Connect tab: 6-digit code" },
+  "connectTabQr": "QR",
+  "@connectTabQr": { "description": "Connect tab: QR" },
+  "connectTabNearby": "Gần đây",
+  "@connectTabNearby": { "description": "Connect tab: nearby" },
+  "connectShareInstruction": "Chia sẻ mã này với người nhận",
+  "@connectShareInstruction": { "description": "Instruction above the code" },
+  "connectExpiresIn": "Hết hạn sau {time}",
+  "@connectExpiresIn": {
+    "description": "Code expiry countdown",
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "connectWaiting": "Đang chờ thiết bị kia kết nối…",
+  "@connectWaiting": { "description": "Waiting-for-peer status" },
+  "connectShareLink": "Chia sẻ link mời",
+  "@connectShareLink": { "description": "Share invite link action (stub)" },
+  "connectRefreshCode": "Lấy mã mới",
+  "@connectRefreshCode": { "description": "Get a fresh code action" },
+  "connectComingSoonTab": "Tính năng này sắp ra mắt",
+  "@connectComingSoonTab": { "description": "Disabled tab placeholder" },
+
+  "sendProgressBadge": "ĐANG GỬI",
+  "@sendProgressBadge": { "description": "Sending status badge" },
+  "sendPeerReceiver": "Thiết bị nhận",
+  "@sendPeerReceiver": { "description": "Generic destination-peer label (until #010)" },
+  "sendProgressTo": "tới {peer}",
+  "@sendProgressTo": {
+    "description": "Destination line on progress",
+    "placeholders": { "peer": { "type": "String" } }
+  },
+  "sendProgressFilePosition": "file {index}/{total}",
+  "@sendProgressFilePosition": {
+    "description": "Current file position in the batch",
+    "placeholders": { "index": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "sendProgressRemaining": "còn {time}",
+  "@sendProgressRemaining": {
+    "description": "Time remaining",
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "sendCancel": "Hủy",
+  "@sendCancel": { "description": "Cancel transfer button" },
+  "sendCancelConfirmTitle": "Hủy lượt gửi?",
+  "@sendCancelConfirmTitle": { "description": "Cancel confirmation title" },
+  "sendCancelConfirmBody": "Lượt truyền đang diễn ra sẽ bị dừng.",
+  "@sendCancelConfirmBody": { "description": "Cancel confirmation body" },
+  "sendCancelConfirmKeep": "Tiếp tục gửi",
+  "@sendCancelConfirmKeep": { "description": "Dismiss cancel dialog (keep sending)" },
+
+  "sendCompleteTitle": "Hoàn tất!",
+  "@sendCompleteTitle": { "description": "Completion title" },
+  "sendCompleteDetail": "Đã gửi {count} file · {size} tới {peer} trong {duration}",
+  "@sendCompleteDetail": {
+    "description": "Completion summary line",
+    "placeholders": {
+      "count": { "type": "int" },
+      "size": { "type": "String" },
+      "peer": { "type": "String" },
+      "duration": { "type": "String" }
+    }
+  },
+  "sendDone": "Xong",
+  "@sendDone": { "description": "Finish (return home) button" },
+  "sendAgain": "Gửi tiếp",
+  "@sendAgain": { "description": "Start a new send button" },
+
+  "sendErrorTitle": "Gửi thất bại",
+  "@sendErrorTitle": { "description": "Send failure title" },
+  "sendRetry": "Thử lại",
+  "@sendRetry": { "description": "Retry the send" },
+  "sendErrorRejected": "Người nhận đã từ chối",
+  "@sendErrorRejected": { "description": "Receiver declined the transfer" },
+  "sendErrorFileRead": "Không đọc được file đã chọn",
+  "@sendErrorFileRead": { "description": "A selected file could not be read" }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:injectable/injectable.dart';
 import 'package:safe_send/core/domain/cubit/app_cubit.dart';
 import 'package:safe_send/core/domain/pairing/pairing_state.dart';
+import 'package:safe_send/core/services/transport/data_transport.dart';
 import 'package:safe_send/features/pairing/domain/pairing_repository.dart';
 import 'package:safe_send/features/pairing/domain/usecases/host_session_usecase.dart';
 import 'package:safe_send/features/pairing/domain/usecases/join_session_usecase.dart';
@@ -36,6 +37,10 @@ class PairingCubit extends AppCubit<PairingState> {
     final result = await _join(code);
     result.fold((_) {}, emitError);
   }
+
+  /// Transfer ownership of the connected data channel to the caller (#004).
+  /// Returns null if not yet connected. Single-use.
+  DataTransport? takeTransport() => _repository.takeTransport();
 
   void _listen() {
     _sub ??= _repository.state.listen((state) {

@@ -74,13 +74,38 @@ class TransferEngine {
     required SignalingChannel signaling,
   }) async {
     _role = TransferRole.sender;
-    _items = session.initialItems();
-    _progress = TransferProgress(overallTotalBytes: session.totalBytes);
+    _initSession(session);
     _setPhase(TransferPhase.connecting);
 
     final transport = await _establish(signaling);
     if (transport == null) return _result();
+    return _runSend(transport, session);
+  }
 
+  /// Begin sending [session] over an ALREADY-OPEN [transport] produced by the
+  /// pairing layer (#004). Adopts the transport and runs the send protocol from
+  /// the handshaking phase onward — no second WebRTC handshake. Ownership of the
+  /// transport transfers to this engine (it closes it on terminal/dispose).
+  Future<Result<void>> startSendOnTransport({
+    required DataTransport transport,
+    required TransferSession session,
+  }) async {
+    _role = TransferRole.sender;
+    _initSession(session);
+    _setPhase(TransferPhase.connecting);
+    _adoptTransport(transport);
+    return _runSend(transport, session);
+  }
+
+  void _initSession(TransferSession session) {
+    _items = session.initialItems();
+    _progress = TransferProgress(overallTotalBytes: session.totalBytes);
+  }
+
+  Future<Result<void>> _runSend(
+    DataTransport transport,
+    TransferSession session,
+  ) async {
     final acceptCompleter = Completer<bool>();
     _controlSub = transport.inbound.listen((raw) {
       final frame = _tryDecode(raw);
@@ -391,25 +416,30 @@ class TransferEngine {
     );
     return result.fold(
       (transport) {
-        _transport = transport;
-        unawaited(
-          transport.closed.then((_) {
-            if (!_terminated) {
-              unawaited(
-                _terminate(
-                  TransferPhase.failed,
-                  const AppFailure.connectionLost(),
-                ),
-              );
-            }
-          }),
-        );
+        _adoptTransport(transport);
         return transport;
       },
       (failure) {
         unawaited(_terminate(TransferPhase.failed, failure));
         return null;
       },
+    );
+  }
+
+  /// Take ownership of [transport]: store it and tear down on its close.
+  void _adoptTransport(DataTransport transport) {
+    _transport = transport;
+    unawaited(
+      transport.closed.then((_) {
+        if (!_terminated) {
+          unawaited(
+            _terminate(
+              TransferPhase.failed,
+              const AppFailure.connectionLost(),
+            ),
+          );
+        }
+      }),
     );
   }
 

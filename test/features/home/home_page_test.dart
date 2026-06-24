@@ -8,7 +8,7 @@ import 'package:safe_send/core/di/injection.dart';
 import 'package:safe_send/core/presentation/tiles/quick_action_card.dart';
 import 'package:safe_send/core/router/app_router.dart';
 import 'package:safe_send/features/receive/presentation/receive_page.dart';
-import 'package:safe_send/features/send/presentation/send_page.dart';
+import 'package:safe_send/features/send/presentation/pages/send_selection_page.dart';
 
 // Widget tests render in the test-default locale (English).
 Future<void> _settleToHome(WidgetTester tester) async {
@@ -59,21 +59,21 @@ void main() {
       expect(find.text('Quick actions'), findsOneWidget);
     });
 
-    testWidgets('tapping Send opens a nav-less Coming Soon flow', (
+    testWidgets('tapping Send opens the nav-less send selection flow', (
       tester,
     ) async {
       await _settleToHome(tester);
       await _tapAction(tester, 'Send files');
 
-      expect(find.byType(SendPage), findsOneWidget);
-      expect(find.text('Coming soon'), findsOneWidget);
+      expect(find.byType(SendSelectionPage), findsOneWidget);
+      expect(find.text('No files selected'), findsOneWidget);
       expect(find.byType(NavigationBar), findsNothing);
 
-      // Back returns to Home with the bar restored.
-      await tester.tap(find.byIcon(LucideIcons.arrowLeft));
+      // Close (x) returns to Home with the bar restored.
+      await tester.tap(find.byIcon(LucideIcons.x));
       await tester.pumpAndSettle();
       expect(find.byType(NavigationBar), findsOneWidget);
-      expect(find.byType(SendPage), findsNothing);
+      expect(find.byType(SendSelectionPage), findsNothing);
     });
 
     testWidgets('tapping Receive opens a nav-less Coming Soon flow', (

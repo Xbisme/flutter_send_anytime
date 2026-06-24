@@ -176,4 +176,123 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get pairingErrorGeneric => 'Đã xảy ra lỗi, vui lòng thử lại';
+
+  @override
+  String get sendTitle => 'Gửi file';
+
+  @override
+  String sendSelectedSummary(int count, String size) {
+    return '$count mục · $size';
+  }
+
+  @override
+  String get sendAdd => 'Thêm';
+
+  @override
+  String get sendContinue => 'Tiếp tục';
+
+  @override
+  String get sendEmptyTitle => 'Chưa chọn file nào';
+
+  @override
+  String get sendEmptyBody => 'Nhấn Thêm để chọn file gửi đi';
+
+  @override
+  String get sendRemove => 'Bỏ chọn';
+
+  @override
+  String get connectTitle => 'Kết nối thiết bị';
+
+  @override
+  String get connectTabCode => 'Mã 6 số';
+
+  @override
+  String get connectTabQr => 'QR';
+
+  @override
+  String get connectTabNearby => 'Gần đây';
+
+  @override
+  String get connectShareInstruction => 'Chia sẻ mã này với người nhận';
+
+  @override
+  String connectExpiresIn(String time) {
+    return 'Hết hạn sau $time';
+  }
+
+  @override
+  String get connectWaiting => 'Đang chờ thiết bị kia kết nối…';
+
+  @override
+  String get connectShareLink => 'Chia sẻ link mời';
+
+  @override
+  String get connectRefreshCode => 'Lấy mã mới';
+
+  @override
+  String get connectComingSoonTab => 'Tính năng này sắp ra mắt';
+
+  @override
+  String get sendProgressBadge => 'ĐANG GỬI';
+
+  @override
+  String get sendPeerReceiver => 'Thiết bị nhận';
+
+  @override
+  String sendProgressTo(String peer) {
+    return 'tới $peer';
+  }
+
+  @override
+  String sendProgressFilePosition(int index, int total) {
+    return 'file $index/$total';
+  }
+
+  @override
+  String sendProgressRemaining(String time) {
+    return 'còn $time';
+  }
+
+  @override
+  String get sendCancel => 'Hủy';
+
+  @override
+  String get sendCancelConfirmTitle => 'Hủy lượt gửi?';
+
+  @override
+  String get sendCancelConfirmBody => 'Lượt truyền đang diễn ra sẽ bị dừng.';
+
+  @override
+  String get sendCancelConfirmKeep => 'Tiếp tục gửi';
+
+  @override
+  String get sendCompleteTitle => 'Hoàn tất!';
+
+  @override
+  String sendCompleteDetail(
+    int count,
+    String size,
+    String peer,
+    String duration,
+  ) {
+    return 'Đã gửi $count file · $size tới $peer trong $duration';
+  }
+
+  @override
+  String get sendDone => 'Xong';
+
+  @override
+  String get sendAgain => 'Gửi tiếp';
+
+  @override
+  String get sendErrorTitle => 'Gửi thất bại';
+
+  @override
+  String get sendRetry => 'Thử lại';
+
+  @override
+  String get sendErrorRejected => 'Người nhận đã từ chối';
+
+  @override
+  String get sendErrorFileRead => 'Không đọc được file đã chọn';
 }

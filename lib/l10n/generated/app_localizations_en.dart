@@ -179,4 +179,123 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pairingErrorGeneric => 'Something went wrong, please try again';
+
+  @override
+  String get sendTitle => 'Send files';
+
+  @override
+  String sendSelectedSummary(int count, String size) {
+    return '$count items · $size';
+  }
+
+  @override
+  String get sendAdd => 'Add';
+
+  @override
+  String get sendContinue => 'Continue';
+
+  @override
+  String get sendEmptyTitle => 'No files selected';
+
+  @override
+  String get sendEmptyBody => 'Tap Add to choose files to send';
+
+  @override
+  String get sendRemove => 'Remove';
+
+  @override
+  String get connectTitle => 'Connect devices';
+
+  @override
+  String get connectTabCode => '6-digit';
+
+  @override
+  String get connectTabQr => 'QR';
+
+  @override
+  String get connectTabNearby => 'Nearby';
+
+  @override
+  String get connectShareInstruction => 'Share this code with the receiver';
+
+  @override
+  String connectExpiresIn(String time) {
+    return 'Expires in $time';
+  }
+
+  @override
+  String get connectWaiting => 'Waiting for the other device…';
+
+  @override
+  String get connectShareLink => 'Share invite link';
+
+  @override
+  String get connectRefreshCode => 'Get a new code';
+
+  @override
+  String get connectComingSoonTab => 'This option is coming soon';
+
+  @override
+  String get sendProgressBadge => 'SENDING';
+
+  @override
+  String get sendPeerReceiver => 'the receiver';
+
+  @override
+  String sendProgressTo(String peer) {
+    return 'to $peer';
+  }
+
+  @override
+  String sendProgressFilePosition(int index, int total) {
+    return 'file $index/$total';
+  }
+
+  @override
+  String sendProgressRemaining(String time) {
+    return '$time left';
+  }
+
+  @override
+  String get sendCancel => 'Cancel';
+
+  @override
+  String get sendCancelConfirmTitle => 'Cancel this send?';
+
+  @override
+  String get sendCancelConfirmBody => 'The transfer in progress will stop.';
+
+  @override
+  String get sendCancelConfirmKeep => 'Keep sending';
+
+  @override
+  String get sendCompleteTitle => 'Done!';
+
+  @override
+  String sendCompleteDetail(
+    int count,
+    String size,
+    String peer,
+    String duration,
+  ) {
+    return 'Sent $count files · $size to $peer in $duration';
+  }
+
+  @override
+  String get sendDone => 'Done';
+
+  @override
+  String get sendAgain => 'Send more';
+
+  @override
+  String get sendErrorTitle => 'Send failed';
+
+  @override
+  String get sendRetry => 'Try again';
+
+  @override
+  String get sendErrorRejected => 'The receiver declined';
+
+  @override
+  String get sendErrorFileRead => 'Couldn\'t read the selected file';
 }
