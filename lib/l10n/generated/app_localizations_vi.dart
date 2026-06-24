@@ -152,4 +152,28 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get commonBack => 'Quay lại';
+
+  @override
+  String get pairingErrorInvalidCode => 'Mã không đúng';
+
+  @override
+  String get pairingErrorRoomFull => 'Phòng đã đủ hai thiết bị';
+
+  @override
+  String get pairingErrorRoomExpired => 'Mã đã hết hạn';
+
+  @override
+  String get pairingErrorRateLimited => 'Thử quá nhiều lần, vui lòng đợi';
+
+  @override
+  String get pairingErrorUnreachable => 'Không kết nối được máy chủ';
+
+  @override
+  String get pairingErrorTimeout => 'Kết nối quá thời gian';
+
+  @override
+  String get pairingErrorConnectionLost => 'Mất kết nối với thiết bị kia';
+
+  @override
+  String get pairingErrorGeneric => 'Đã xảy ra lỗi, vui lòng thử lại';
 }

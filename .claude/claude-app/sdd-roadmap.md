@@ -143,7 +143,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #003: Signaling Server + 6-Digit Key Pairing
 
-- **Status**: 🟡 **Next** — RENDEZVOUS (blocking)
+- **Status**: ✅ **Implemented (code)** — branch `003-signaling-6digit` (2026-06-24). `shelf` WebSocket relay in `server/` + pure-Dart shared protocol pkg `packages/safesend_signaling/` + `WebSocketSignalingChannel implements SignalingChannel` (the #002 seam); 6-digit code (full range, 5-min TTL, sender-generated) → room → SDP/ICE relay; per-connection join rate limiting; `features/pairing/` cubit + dev-only debug screen. `dart analyze` 0 across 3 packages · 133 tests pass · two-device smoke deferred. See [`changelog.md`](changelog.md).
 - **Branch**: `003-signaling-6digit`
 - **Depends on**: #002
 - **Design**: Screen 03 **Kết nối (connect)** — the pairing hub. This spec builds the **"Mã 6 số" tab** (radar-ringed phone, 4–6 mono CodeBoxes, expiry countdown) + the **Nhận "Nhập mã"** entry on Screen 04. QR/Gần đây tabs are stubbed for #007/#009. See [`ui-design-context.md`](ui-design-context.md) §Screen 03/04.
@@ -158,7 +158,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #004: Send Flow (Gửi)
 
-- **Status**: ⬜ Not started
+- **Status**: 🟡 **Next**
 - **Branch**: `004-send-flow`
 - **Depends on**: #002, #003
 - **Design**: Screens 02 **Gửi file (send)** → 03 **Kết nối** → 05 **Đang truyền (progress)** → 06 **Hoàn tất (complete)**, launched from the Home "Gửi" action. See [`ui-design-context.md`](ui-design-context.md) §Screen 02/05/06.

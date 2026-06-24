@@ -379,6 +379,54 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Quay lại'**
   String get commonBack;
+
+  /// Pairing error: invalid/unknown code
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã không đúng'**
+  String get pairingErrorInvalidCode;
+
+  /// Pairing error: room already full
+  ///
+  /// In vi, this message translates to:
+  /// **'Phòng đã đủ hai thiết bị'**
+  String get pairingErrorRoomFull;
+
+  /// Pairing error: code expired
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã đã hết hạn'**
+  String get pairingErrorRoomExpired;
+
+  /// Pairing error: rate limited
+  ///
+  /// In vi, this message translates to:
+  /// **'Thử quá nhiều lần, vui lòng đợi'**
+  String get pairingErrorRateLimited;
+
+  /// Pairing error: signaling unreachable
+  ///
+  /// In vi, this message translates to:
+  /// **'Không kết nối được máy chủ'**
+  String get pairingErrorUnreachable;
+
+  /// Pairing error: signaling timeout
+  ///
+  /// In vi, this message translates to:
+  /// **'Kết nối quá thời gian'**
+  String get pairingErrorTimeout;
+
+  /// Pairing error: peer connection lost
+  ///
+  /// In vi, this message translates to:
+  /// **'Mất kết nối với thiết bị kia'**
+  String get pairingErrorConnectionLost;
+
+  /// Pairing error: generic fallback
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã xảy ra lỗi, vui lòng thử lại'**
+  String get pairingErrorGeneric;
 }
 
 class _AppLocalizationsDelegate

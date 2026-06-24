@@ -1,0 +1,63 @@
+import 'dart:async';
+
+import 'package:injectable/injectable.dart';
+import 'package:safe_send/core/domain/cubit/app_cubit.dart';
+import 'package:safe_send/core/domain/pairing/pairing_state.dart';
+import 'package:safe_send/features/pairing/domain/pairing_repository.dart';
+import 'package:safe_send/features/pairing/domain/usecases/host_session_usecase.dart';
+import 'package:safe_send/features/pairing/domain/usecases/join_session_usecase.dart';
+
+/// Drives the pairing flow for the UI (#003 dev debug screen; reused by #004
+/// Connect and #005 Receive). Holds the latest [PairingState] in the 4-state
+/// [AppCubit]: `loaded` carries the active lifecycle value, `error` carries the
+/// failure. The repository's stream is the source of truth.
+@injectable
+class PairingCubit extends AppCubit<PairingState> {
+  PairingCubit(this._host, this._join, this._repository);
+
+  final HostSessionUseCase _host;
+  final JoinSessionUseCase _join;
+  final PairingRepository _repository;
+
+  StreamSubscription<PairingState>? _sub;
+
+  /// Sender: generate a code and wait for a peer to connect.
+  Future<void> host() async {
+    emitLoading();
+    _listen();
+    final result = await _host();
+    result.fold((_) {}, emitError);
+  }
+
+  /// Receiver: join with [code] and connect.
+  Future<void> joinWithCode(String code) async {
+    emitLoading();
+    _listen();
+    final result = await _join(code);
+    result.fold((_) {}, emitError);
+  }
+
+  void _listen() {
+    _sub ??= _repository.state.listen((state) {
+      switch (state) {
+        case PairingFailed(:final failure):
+          emitError(failure);
+        case PairingIdle():
+        case PairingConnecting():
+        case PairingHosting():
+        case PairingJoining():
+        case PairingPeerPresent():
+        case PairingConnected():
+        case PairingClosed():
+          emitLoaded(state);
+      }
+    });
+  }
+
+  @override
+  Future<void> close() async {
+    await _sub?.cancel();
+    await _repository.dispose();
+    return super.close();
+  }
+}

@@ -1,0 +1,11 @@
+name: safesend_signaling
+description: "Shared Safe Send signaling wire protocol — versioned JSON frames exchanged between the app client and the relay (#003). Pure Dart, no Flutter."
+version: 0.1.0
+publish_to: "none"
+
+environment:
+  sdk: ^3.11.0
+
+dev_dependencies:
+  test: ^1.25.0
+  very_good_analysis: ">=10.0.0 <10.3.0"

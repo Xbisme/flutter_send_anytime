@@ -16,6 +16,27 @@ sealed class AppFailure with _$AppFailure {
   /// A feature that is intentionally not implemented yet (placeholder flows).
   const factory AppFailure.notImplemented() = AppFailureNotImplemented;
 
+  // --- #003 signaling / pairing failures ---
+
+  /// The signaling relay could not be reached (server down / no network).
+  const factory AppFailure.signalingUnreachable() =
+      AppFailureSignalingUnreachable;
+
+  /// The signaling exchange / handshake did not complete in time.
+  const factory AppFailure.signalingTimeout() = AppFailureSignalingTimeout;
+
+  /// The pairing code's TTL elapsed, or its room was torn down.
+  const factory AppFailure.roomExpired() = AppFailureRoomExpired;
+
+  /// The code is valid but its room already holds two peers.
+  const factory AppFailure.roomFull() = AppFailureRoomFull;
+
+  /// The entered code is unknown or malformed.
+  const factory AppFailure.invalidCode() = AppFailureInvalidCode;
+
+  /// Too many invalid join attempts on this connection.
+  const factory AppFailure.rateLimited() = AppFailureRateLimited;
+
   // --- #002 transport / transfer / file failures ---
 
   /// The peer could not be reached / no connection established in time.
