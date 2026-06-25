@@ -373,11 +373,20 @@ class TransferEngine {
                 await destinationDir.create(recursive: true);
               }
               dest = _resolveCollision(destinationDir, _items[index].name);
-              await _activePart!.rename(dest);
+              final src = _activePart!;
+              try {
+                await src.rename(dest);
+              } on FileSystemException {
+                // Some sandbox states reject rename — fall back to copy + delete.
+                await src.copy(dest);
+                if (src.existsSync()) await src.delete();
+              }
             } on FileSystemException catch (e) {
-              // OS error code only — the message can embed a path.
+              // OS error code + which path was missing (no full paths logged).
               AppLogger.error(
-                'finalize failed (errno ${e.osError?.errorCode})',
+                'finalize failed (errno ${e.osError?.errorCode}, '
+                'src=${_activePart?.existsSync() ?? false}, '
+                'dstDir=${destinationDir.existsSync()})',
               );
               return _terminate(TransferPhase.failed, _mapWriteError(e));
             }
@@ -420,6 +429,7 @@ class TransferEngine {
     }
     // Stream ended without a terminal frame → the peer dropped.
     if (!_terminated) {
+      AppLogger.warning('receive ended: inbound stream closed before complete');
       return _terminate(
         TransferPhase.failed,
         const AppFailure.connectionLost(),
@@ -483,6 +493,7 @@ class TransferEngine {
     unawaited(
       transport.closed.then((_) {
         if (!_terminated) {
+          AppLogger.warning('transport closed before transfer completed');
           unawaited(
             _terminate(
               TransferPhase.failed,
@@ -612,6 +623,7 @@ class TransferEngine {
     _stallTimer?.cancel();
     _stallTimer = Timer(TransferConstants.kStallTimeout, () {
       if (!_terminated) {
+        AppLogger.warning('transfer stalled (no data within timeout)');
         unawaited(
           _terminate(TransferPhase.failed, const AppFailure.connectionLost()),
         );

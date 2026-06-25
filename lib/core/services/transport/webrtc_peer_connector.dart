@@ -244,6 +244,9 @@ class _WebRtcDataTransport implements DataTransport {
     _channel.onBufferedAmountLow = null;
     try {
       await _pc.close();
+      // Release the native peer connection too — a lingering PC from a prior
+      // transfer can destabilize the next connection's ICE.
+      await _pc.dispose();
     } on Object catch (error) {
       AppLogger.warning('pc close failed (${error.runtimeType})');
     }
