@@ -235,9 +235,19 @@ class _WebRtcDataTransport implements DataTransport {
     if (_isClosed) return;
     _isClosed = true;
     if (!_closed.isCompleted) _closed.complete();
-    await _channel.close();
-    await _pc.close();
-    await _inbound.close();
-    await _low.close();
+    // Detach handlers first so no late native event reaches our controllers,
+    // then close the peer connection (which also tears down the data channel —
+    // closing the channel separately can make flutter_webrtc re-deliver a close
+    // event into its already-closed internal stream).
+    _channel.onMessage = null;
+    _channel.onDataChannelState = null;
+    _channel.onBufferedAmountLow = null;
+    try {
+      await _pc.close();
+    } on Object catch (error) {
+      AppLogger.warning('pc close failed (${error.runtimeType})');
+    }
+    if (!_inbound.isClosed) await _inbound.close();
+    if (!_low.isClosed) await _low.close();
   }
 }

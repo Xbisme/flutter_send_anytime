@@ -34,7 +34,7 @@ class _ReceiveEntryPageState extends State<ReceiveEntryPage> {
     if (!mounted) return;
     if (result == null) {
       // Backed out of pairing — leave the receive flow.
-      context.pop();
+      _leave();
       return;
     }
     await context.push<void>(
@@ -43,7 +43,18 @@ class _ReceiveEntryPageState extends State<ReceiveEntryPage> {
     );
     // The progress screen owns its terminal navigation (Home / restart). If it
     // returned here without navigating, fall back to Home.
-    if (mounted) context.pop();
+    if (mounted) _leave();
+  }
+
+  /// Leaves the receive flow. Pops when this page was pushed onto a stack;
+  /// otherwise (e.g. reached via "Nhận lại" with `go`, which resets the stack)
+  /// there is nothing to pop, so fall back to Home.
+  void _leave() {
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      context.go(AppRoutes.home);
+    }
   }
 
   @override

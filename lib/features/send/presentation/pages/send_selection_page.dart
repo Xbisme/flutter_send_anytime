@@ -76,7 +76,9 @@ class _SendSelectionView extends StatelessWidget {
                 FlowAppBar(
                   title: l10n.sendTitle,
                   leadingIcon: LucideIcons.x,
-                  onLeading: () => context.pop(),
+                  onLeading: () => context.canPop()
+                      ? context.pop()
+                      : context.go(AppRoutes.home),
                   leadingSemanticLabel: l10n.commonBack,
                 ),
                 Expanded(

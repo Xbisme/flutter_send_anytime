@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
 import 'package:safe_send/app/app.dart';
@@ -12,6 +13,24 @@ Future<void> bootstrap(AppConfig config) async {
 
   FlutterError.onError = (details) {
     AppLogger.error('FlutterError', details.exception, details.stack);
+  };
+
+  // flutter_webrtc can deliver a final native data-channel event AFTER we tear
+  // the transport down, hitting its already-closed internal broadcast stream
+  // ("Cannot add new events after calling close"). The transfer is already
+  // complete, so this teardown race is benign — swallow it rather than let it
+  // surface as an unhandled crash. All other async errors are reported.
+  PlatformDispatcher.instance.onError = (error, stack) {
+    final trace = stack.toString();
+    if (error is StateError &&
+        error.message.contains('Cannot add new events after calling close') &&
+        (trace.contains('rtc_data_channel') ||
+            trace.contains('flutter_webrtc'))) {
+      AppLogger.warning('ignored webrtc teardown event after close');
+      return true;
+    }
+    AppLogger.error('uncaught async error', error, stack);
+    return false;
   };
 
   await configureDependencies(config);
