@@ -5,6 +5,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:safe_send/core/domain/pairing/connect_link.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
 import 'package:safe_send/core/theme/app_dimens.dart';
+import 'package:safe_send/core/utils/app_logger.dart';
 import 'package:safe_send/core/utils/l10n_extension.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 
@@ -26,15 +27,36 @@ class _QrDisplayState extends State<QrDisplay> {
   @override
   void initState() {
     super.initState();
-    unawaited(
-      ScreenBrightness.instance.setApplicationScreenBrightness(1),
-    );
+    // Boost brightness so the QR scans reliably (FR-005a). Guarded: the plugin
+    // can fail on platforms that don't support it (e.g. the iOS simulator) — a
+    // brightness failure must never disrupt pairing.
+    unawaited(_setBrightness(1));
   }
 
   @override
   void dispose() {
-    unawaited(ScreenBrightness.instance.resetApplicationScreenBrightness());
+    unawaited(_resetBrightness());
     super.dispose();
+  }
+
+  Future<void> _setBrightness(double value) async {
+    try {
+      await ScreenBrightness.instance.setApplicationScreenBrightness(value);
+    } on Object catch (error) {
+      AppLogger.warning(
+        'screen brightness boost failed (${error.runtimeType})',
+      );
+    }
+  }
+
+  Future<void> _resetBrightness() async {
+    try {
+      await ScreenBrightness.instance.resetApplicationScreenBrightness();
+    } on Object catch (error) {
+      AppLogger.warning(
+        'screen brightness reset failed (${error.runtimeType})',
+      );
+    }
   }
 
   @override

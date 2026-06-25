@@ -29,6 +29,14 @@ abstract final class TransferConstants {
   /// Zero-progress watchdog during an active transfer.
   static const Duration kStallTimeout = Duration(seconds: 30);
 
+  /// After the sender emits `sessionComplete` it keeps the data channel open and
+  /// waits (bounded by this) for the RECEIVER to close it — proof the reliable
+  /// channel actually delivered the final frames. The sender must NOT close
+  /// proactively: `bufferedAmount == 0` only drains the local app buffer, not the
+  /// SCTP in-flight window, so closing early drops the last frames and strands
+  /// the receiver. This is the fallback if the receiver never signals close.
+  static const Duration kGracefulCloseTimeout = Duration(seconds: 10);
+
   /// Hidden quarantine subdirectory (created under the destination volume).
   static const String kQuarantineDirName = '.safesend_tmp';
 }
@@ -60,4 +68,10 @@ abstract final class TransferOpcode {
 
   /// Cancel/abort (either → either).
   static const int cancel = 0x08;
+
+  /// Session acknowledged: the receiver has received + verified every file
+  /// (receiver → sender). The sender waits for this before closing the channel
+  /// so the reliable transport can deliver the final frames first — closing on
+  /// a drained local buffer alone drops in-flight SCTP packets.
+  static const int sessionAck = 0x09;
 }

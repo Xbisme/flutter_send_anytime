@@ -77,6 +77,13 @@ class CancelFrame extends ProtocolFrame {
   final String origin;
 }
 
+/// Session-acknowledged frame: the receiver verified every file (receiver →
+/// sender). Lets the sender close the channel only after delivery is confirmed.
+class SessionAckFrame extends ProtocolFrame {
+  const SessionAckFrame(this.sessionId);
+  final String sessionId;
+}
+
 /// Encodes/decodes the `[1-byte opcode][payload]` wire protocol. Pure Dart and
 /// fully unit-testable without WebRTC (Constitution VIII).
 abstract final class TransferProtocol {
@@ -130,6 +137,10 @@ abstract final class TransferProtocol {
   static Uint8List encodeSessionComplete(String sessionId) =>
       _jsonFrame(TransferOpcode.sessionComplete, {'sessionId': sessionId});
 
+  /// Encode a session-acknowledged frame.
+  static Uint8List encodeSessionAck(String sessionId) =>
+      _jsonFrame(TransferOpcode.sessionAck, {'sessionId': sessionId});
+
   /// Encode a cancel frame.
   static Uint8List encodeCancel({
     required String sessionId,
@@ -172,6 +183,8 @@ abstract final class TransferProtocol {
           );
         case TransferOpcode.sessionComplete:
           return SessionCompleteFrame(map['sessionId'] as String);
+        case TransferOpcode.sessionAck:
+          return SessionAckFrame(map['sessionId'] as String);
         case TransferOpcode.cancel:
           return CancelFrame(
             sessionId: map['sessionId'] as String,

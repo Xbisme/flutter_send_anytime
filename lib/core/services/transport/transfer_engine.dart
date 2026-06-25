@@ -53,6 +53,15 @@ class TransferEngine {
   var _remoteCancelled = false;
   var _completedBytes = 0;
 
+  /// Sender-only: the full session (incl. `sessionComplete`) has been written to
+  /// the channel. A remote close after this is the receiver's acknowledgement —
+  /// success, not a drop. Mirror of [_allFilesReceived] on the receive side.
+  var _sendComplete = false;
+
+  /// Sender-only: completes when the receiver's `sessionAck` arrives, the
+  /// deterministic signal that delivery finished so the channel may be closed.
+  final _ackCompleter = Completer<void>();
+
   /// The single source-of-truth progress stream; closes after a terminal phase.
   Stream<TransferSnapshot> get snapshots => _snapshots.stream;
 
@@ -125,6 +134,8 @@ class TransferEngine {
           if (!acceptCompleter.isCompleted) acceptCompleter.complete(false);
         case CancelFrame():
           _remoteCancelled = true;
+        case SessionAckFrame():
+          if (!_ackCompleter.isCompleted) _ackCompleter.complete();
         case _:
           break;
       }
@@ -226,10 +237,16 @@ class TransferEngine {
     )) {
       return _result();
     }
-    // Let the final frames flush to the wire before we tear the channel down —
-    // closing immediately can drop the last FileComplete/sessionComplete and
-    // strand the receiver mid-transfer.
+    _sendComplete = true;
+    // Drain the local app buffer, then wait for the receiver's `sessionAck`
+    // before closing. We must NOT close proactively: `bufferedAmount == 0` only
+    // means our application buffer is empty, NOT that SCTP delivered + acked the
+    // final frames. Closing now drops in-flight packets and strands the receiver
+    // mid-transfer. Keeping the reliable/ordered channel open lets SCTP
+    // retransmit until delivered; the ack confirms the receiver verified
+    // everything, so the close is safe.
     await _drainBuffer(transport);
+    await _awaitAck();
     return _terminate(TransferPhase.done);
   }
 
@@ -238,6 +255,22 @@ class TransferEngine {
     for (var i = 0; i < 60; i++) {
       if (_terminated || transport.bufferedAmount == 0) return;
       await Future<void>.delayed(const Duration(milliseconds: 50));
+    }
+  }
+
+  /// Sender-side graceful close: wait for the receiver's `sessionAck` (proof the
+  /// reliable channel delivered the final frames) before terminating. A remote
+  /// close also unblocks this — and if neither arrives, fall back after the
+  /// grace timeout (delivery already drained, so the close is still safe).
+  Future<void> _awaitAck() async {
+    if (_terminated) return;
+    try {
+      await Future.any(<Future<void>>[
+        _ackCompleter.future,
+        _transport?.closed ?? Future<void>.value(),
+      ]).timeout(TransferConstants.kGracefulCloseTimeout);
+    } on TimeoutException {
+      AppLogger.warning('no session ack from receiver; tearing down on grace');
     }
   }
 
@@ -423,6 +456,14 @@ class TransferEngine {
             sink = null;
 
           case SessionCompleteFrame():
+            // Acknowledge so the sender can safely close, then drain our tiny
+            // ack to the wire before tearing the channel down (closing with the
+            // ack still buffered would drop it and force the sender's fallback).
+            await _send(
+              transport,
+              TransferProtocol.encodeSessionAck(_sessionId),
+            );
+            await _drainBuffer(transport);
             return _terminate(TransferPhase.done);
 
           case CancelFrame():
@@ -435,6 +476,7 @@ class TransferEngine {
 
           case AcceptFrame():
           case RejectFrame():
+          case SessionAckFrame():
             break;
         }
       }
@@ -520,7 +562,9 @@ class TransferEngine {
         // FileComplete/sessionComplete may still be queued) before deciding.
         await Future<void>.delayed(const Duration(milliseconds: 250));
         if (_terminated) return;
-        if (_allFilesReceived) {
+        // A close after we've received everything (receiver) or sent everything
+        // (sender) is the peer's graceful teardown — success, not a drop.
+        if (_allFilesReceived || _sendComplete) {
           await _terminate(TransferPhase.done);
           return;
         }

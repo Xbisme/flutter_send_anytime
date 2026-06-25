@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:safe_send/bootstrap.dart';
 import 'package:safe_send/core/config/app_config.dart';
 import 'package:safe_send/core/config/app_flavor.dart';
@@ -17,8 +18,12 @@ Future<void> main() => bootstrap(
     // Cleartext ws:// for local testing.
     //  • iOS simulator   → ws://localhost:8080   (ATS exempts localhost)
     //  • Android emulator → ws://10.0.2.2:8080    (host alias)
+    //  • Real Android device → ws://192.168.1.16:8080  (Mac LAN IP — device must
+    //    be on the same Wi-Fi; 10.0.2.2 only resolves inside the emulator)
     //  • Two real devices → ws://<Mac-LAN-IP>:8080 + iOS ATS cleartext exception
     //                        (deferred #003 task — non-localhost ws:// is ATS-blocked)
-    signalingEndpoint: Uri.parse('ws://localhost:8080'),
+    signalingEndpoint: Uri.parse(
+      Platform.isIOS ? 'ws://localhost:8080' : 'ws://192.168.1.16:8080',
+    ),
   ),
 );

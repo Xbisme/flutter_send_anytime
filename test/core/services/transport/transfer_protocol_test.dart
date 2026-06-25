@@ -44,6 +44,15 @@ void main() {
       );
     });
 
+    test('sessionAck', () {
+      expect(
+        (TransferProtocol.decode(TransferProtocol.encodeSessionAck('s'))
+                as SessionAckFrame)
+            .sessionId,
+        's',
+      );
+    });
+
     test('fileStart / fileComplete', () {
       final start =
           TransferProtocol.decode(
