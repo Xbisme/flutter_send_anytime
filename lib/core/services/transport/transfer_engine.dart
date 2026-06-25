@@ -357,6 +357,14 @@ class TransferEngine {
                 AppFailure.integrityCheckFailed(fileIndex: index),
               );
             }
+            if (index < 0 || index >= _items.length || _activePart == null) {
+              return _terminate(
+                TransferPhase.failed,
+                const AppFailure.unexpected(
+                  message: 'protocol:completeNoStart',
+                ),
+              );
+            }
             final dest = _resolveCollision(
               destinationDir,
               _items[index].name,
@@ -390,7 +398,14 @@ class TransferEngine {
         }
       }
     } on Object catch (error) {
-      AppLogger.error('receive failed (${error.runtimeType})');
+      // A FileSystemException's message can embed a path — log only its type.
+      // Other errors (e.g. TypeError) carry no sensitive data, so surface the
+      // message to aid diagnosis of protocol/runtime issues.
+      if (error is FileSystemException) {
+        AppLogger.error('receive failed (${error.runtimeType})');
+      } else {
+        AppLogger.error('receive failed (${error.runtimeType}): $error');
+      }
     }
     // Stream ended without a terminal frame → the peer dropped.
     if (!_terminated) {

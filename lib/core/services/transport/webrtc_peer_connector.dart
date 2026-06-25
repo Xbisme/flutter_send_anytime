@@ -188,7 +188,10 @@ class WebRtcPeerConnector implements PeerConnector {
 class _WebRtcDataTransport implements DataTransport {
   _WebRtcDataTransport(this._pc, this._channel) {
     _channel.onMessage = (message) {
-      if (message.isBinary) _inbound.add(message.binary);
+      if (!message.isBinary) return;
+      // Normalize to a fresh, zero-offset Uint8List — the native bridge can hand
+      // back a view/typed-list that downstream byte ops don't expect.
+      if (!_inbound.isClosed) _inbound.add(Uint8List.fromList(message.binary));
     };
     _channel.onDataChannelState = (state) {
       if (state == RTCDataChannelState.RTCDataChannelClosed) {

@@ -457,11 +457,16 @@ class HomeQuickActions extends StatelessWidget {
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
-        GridView.count(
-          crossAxisCount: 2,
-          mainAxisSpacing: AppSpacing.x3,
-          crossAxisSpacing: AppSpacing.x3,
-          childAspectRatio: 1.55,
+        GridView(
+          // A fixed per-card height (width-independent) so the cards never
+          // overflow as the screen width — and therefore an aspect-ratio'd
+          // height — changes across devices.
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: AppSpacing.x3,
+            crossAxisSpacing: AppSpacing.x3,
+            mainAxisExtent: 114,
+          ),
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           children: [
