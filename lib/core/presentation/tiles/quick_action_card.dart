@@ -49,12 +49,14 @@ class QuickActionCard extends StatelessWidget {
                   ),
                   child: Icon(icon, size: 19, color: Colors.white),
                 ),
-                const SizedBox(height: AppSpacing.x4),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
@@ -64,6 +66,8 @@ class QuickActionCard extends StatelessWidget {
                     const SizedBox(height: 1),
                     Text(
                       subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 11.5,

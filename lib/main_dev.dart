@@ -16,6 +16,6 @@ Future<void> main() => bootstrap(
     iceServers: _stunServers,
     // Cleartext ws:// for localhost / LAN testing (dev manifest allows it).
     // Use your machine's LAN IP when pairing two physical devices.
-    signalingEndpoint: Uri.parse('ws://localhost:8080'),
+    signalingEndpoint: Uri.parse('ws://192.168.1.139:8080'),
   ),
 );

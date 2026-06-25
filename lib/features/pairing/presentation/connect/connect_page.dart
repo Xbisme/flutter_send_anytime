@@ -13,6 +13,7 @@ import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/core/presentation/buttons/app_buttons.dart';
 import 'package:safe_send/core/presentation/inputs/segmented_tabs.dart';
 import 'package:safe_send/core/presentation/scaffolding/flow_app_bar.dart';
+import 'package:safe_send/core/presentation/scaffolding/flow_body.dart';
 import 'package:safe_send/core/presentation/transfer/transfer_spinner.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
 import 'package:safe_send/core/theme/app_dimens.dart';
@@ -169,7 +170,7 @@ class _HostingPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final c = AppColors.of(context);
-    return Padding(
+    return FlowBody(
       padding: const EdgeInsets.all(AppSpacing.x5),
       child: Column(
         children: [

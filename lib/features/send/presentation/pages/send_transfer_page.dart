@@ -12,6 +12,7 @@ import 'package:safe_send/core/domain/failures/app_failure.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/core/presentation/buttons/app_buttons.dart';
 import 'package:safe_send/core/presentation/files/file_widgets.dart';
+import 'package:safe_send/core/presentation/scaffolding/flow_body.dart';
 import 'package:safe_send/core/presentation/transfer/progress_bar.dart';
 import 'package:safe_send/core/presentation/transfer/transfer_spinner.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
@@ -126,7 +127,7 @@ class _ProgressView extends StatelessWidget {
     final c = AppColors.of(context);
     final v = view;
     final percent = ((v?.overallProgress ?? 0) * 100).round();
-    return Padding(
+    return FlowBody(
       padding: const EdgeInsets.all(AppSpacing.x5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -305,7 +306,7 @@ class _CompleteView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final c = AppColors.of(context);
-    return Padding(
+    return FlowBody(
       padding: const EdgeInsets.all(AppSpacing.x5),
       child: Column(
         children: [

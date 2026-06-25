@@ -22,6 +22,11 @@ class SignalingClient {
   SignalingClient(this._config, {SignalingSocketOpener? opener})
     : _open = opener ?? WebSocketSignalingSocket.connect;
 
+  /// DI entry point: injectable builds the client from [config] only, using the
+  /// real WebSocket opener. Tests use the default constructor with a fake opener.
+  @factoryMethod
+  factory SignalingClient.create(AppConfig config) => SignalingClient(config);
+
   final AppConfig _config;
   final SignalingSocketOpener _open;
 
