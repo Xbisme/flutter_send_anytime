@@ -8,14 +8,15 @@ import 'package:safe_send/core/domain/history/transfer_record.dart';
 import 'package:safe_send/core/domain/pairing/connect_handoff.dart';
 import 'package:safe_send/core/domain/transfer/file_source.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
-import 'package:safe_send/core/services/transport/data_transport.dart';
 import 'package:safe_send/features/history/presentation/history_detail_page.dart';
 import 'package:safe_send/features/history/presentation/history_page.dart';
 import 'package:safe_send/features/home/presentation/home_page.dart';
 import 'package:safe_send/features/pairing/presentation/connect/connect_page.dart';
 import 'package:safe_send/features/pairing/presentation/debug/pairing_debug_page.dart';
+import 'package:safe_send/features/pairing/presentation/scan/qr_scan_page.dart';
 import 'package:safe_send/features/receive/presentation/pages/receive_entry_page.dart';
 import 'package:safe_send/features/receive/presentation/pages/receive_transfer_page.dart';
+import 'package:safe_send/features/receive/presentation/receive_progress_args.dart';
 import 'package:safe_send/features/send/presentation/pages/send_selection_page.dart';
 import 'package:safe_send/features/send/presentation/pages/send_transfer_page.dart';
 import 'package:safe_send/features/send/presentation/send_progress_args.dart';
@@ -79,7 +80,8 @@ GoRouter createAppRouter({bool includeDevRoutes = false}) {
       GoRoute(
         path: AppRoutes.receive,
         parentNavigatorKey: rootKey,
-        builder: (_, _) => const ReceiveEntryPage(),
+        builder: (_, state) =>
+            ReceiveEntryPage(openScanner: state.extra as bool? ?? false),
       ),
       GoRoute(
         path: AppRoutes.connect,
@@ -91,6 +93,11 @@ GoRouter createAppRouter({bool includeDevRoutes = false}) {
         ),
       ),
       GoRoute(
+        path: AppRoutes.qrScan,
+        parentNavigatorKey: rootKey,
+        builder: (_, _) => const QrScanPage(),
+      ),
+      GoRoute(
         path: AppRoutes.sendProgress,
         parentNavigatorKey: rootKey,
         builder: (_, state) =>
@@ -100,7 +107,7 @@ GoRouter createAppRouter({bool includeDevRoutes = false}) {
         path: AppRoutes.receiveProgress,
         parentNavigatorKey: rootKey,
         builder: (_, state) =>
-            ReceiveTransferPage(transport: state.extra! as DataTransport),
+            ReceiveTransferPage(args: state.extra! as ReceiveProgressArgs),
       ),
       GoRoute(
         path: AppRoutes.historyDetail,

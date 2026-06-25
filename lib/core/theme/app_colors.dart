@@ -80,6 +80,11 @@ class AppColors extends ThemeExtension<AppColors> {
   /// On-accent text used over brand gradients (dark green for contrast).
   static const onAccentDark = Color(0xFF053019);
 
+  /// A fixed light surface for QR rendering — a QR must keep a light background
+  /// and dark modules in both themes to stay scannable (#007).
+  static const qrSurfaceLight = Color(0xFFFFFFFF);
+  static const qrModuleDark = Color(0xFF0E1512);
+
   static const light = AppColors(
     bgBase: Color(0xFFFFFFFF),
     bgSubtle: Color(0xFFF4F7F5),

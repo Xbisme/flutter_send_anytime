@@ -1061,6 +1061,90 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Không chia sẻ được'**
   String get receiveShareFailed;
+
+  /// Divider between two alternative actions
+  ///
+  /// In vi, this message translates to:
+  /// **'hoặc'**
+  String get commonOr;
+
+  /// Button on the receive screen that opens the QR scanner (#007)
+  ///
+  /// In vi, this message translates to:
+  /// **'Quét mã QR'**
+  String get receiveScanQr;
+
+  /// Instruction above the QR on the sender Connect QR tab
+  ///
+  /// In vi, this message translates to:
+  /// **'Để người nhận quét mã QR này'**
+  String get connectQrInstruction;
+
+  /// Accessibility label for the rendered pairing QR
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã QR chứa mã kết nối {code}'**
+  String connectQrCodeLabel(String code);
+
+  /// Title of the full-screen QR scanner
+  ///
+  /// In vi, this message translates to:
+  /// **'Quét mã QR'**
+  String get scanTitle;
+
+  /// Instruction on the QR scanner
+  ///
+  /// In vi, this message translates to:
+  /// **'Hướng camera vào mã QR của người gửi'**
+  String get scanInstruction;
+
+  /// Torch/flashlight toggle label on the scanner
+  ///
+  /// In vi, this message translates to:
+  /// **'Đèn pin'**
+  String get scanTorch;
+
+  /// Action to pick a QR image from the photo library
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn ảnh có mã QR'**
+  String get scanPickImage;
+
+  /// Toast when a scanned QR is not a valid Safe Send code
+  ///
+  /// In vi, this message translates to:
+  /// **'Đây không phải mã Safe Send'**
+  String get scanInvalidCode;
+
+  /// Toast when a picked image has no valid QR
+  ///
+  /// In vi, this message translates to:
+  /// **'Không tìm thấy mã QR trong ảnh'**
+  String get scanNoCodeFound;
+
+  /// Title shown when camera permission is blocked
+  ///
+  /// In vi, this message translates to:
+  /// **'Cần quyền camera'**
+  String get scanCameraBlockedTitle;
+
+  /// Body shown when camera permission is blocked
+  ///
+  /// In vi, this message translates to:
+  /// **'Cho phép Safe Send dùng camera để quét, hoặc chọn ảnh có sẵn mã QR.'**
+  String get scanCameraBlockedBody;
+
+  /// Open the OS app settings to grant camera
+  ///
+  /// In vi, this message translates to:
+  /// **'Mở Cài đặt'**
+  String get scanOpenSettings;
+
+  /// Request camera permission button
+  ///
+  /// In vi, this message translates to:
+  /// **'Cho phép camera'**
+  String get scanRequestPermission;
 }
 
 class _AppLocalizationsDelegate

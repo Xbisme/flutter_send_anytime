@@ -28,6 +28,8 @@ import 'package:safe_send/core/services/file/received_files_service.dart'
     as _i58;
 import 'package:safe_send/core/services/file/received_files_service_impl.dart'
     as _i423;
+import 'package:safe_send/core/services/permissions/camera_permission_service.dart'
+    as _i522;
 import 'package:safe_send/core/services/signaling/signaling_client.dart' as _i0;
 import 'package:safe_send/core/services/transport/data_transport.dart' as _i547;
 import 'package:safe_send/core/services/transport/transfer_engine.dart'
@@ -62,6 +64,8 @@ import 'package:safe_send/features/pairing/domain/usecases/join_session_usecase.
     as _i855;
 import 'package:safe_send/features/pairing/presentation/cubit/pairing_cubit.dart'
     as _i964;
+import 'package:safe_send/features/pairing/presentation/scan/cubit/qr_scan_cubit.dart'
+    as _i103;
 import 'package:safe_send/features/receive/domain/usecases/start_receive_usecase.dart'
     as _i590;
 import 'package:safe_send/features/receive/presentation/cubit/receive_transfer_cubit.dart'
@@ -89,6 +93,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i196.AppDatabase>(() => databaseModule.appDatabase);
     gh.lazySingleton<_i265.HomePlaceholderDataSource>(
       () => _i265.HomePlaceholderDataSource(),
+    );
+    gh.lazySingleton<_i522.CameraPermissionService>(
+      () => _i522.PermissionHandlerCameraService(),
     );
     gh.lazySingleton<_i58.ReceivedFilesService>(
       () => _i423.ReceivedFilesServiceImpl(),
@@ -131,6 +138,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i887.WatchRecentTransfersUseCase(
         gh<_i1016.TransferHistoryRepository>(),
       ),
+    );
+    gh.factory<_i103.QrScanCubit>(
+      () => _i103.QrScanCubit(gh<_i522.CameraPermissionService>()),
     );
     gh.factory<_i825.HostSessionUseCase>(
       () => _i825.HostSessionUseCase(gh<_i312.PairingRepository>()),

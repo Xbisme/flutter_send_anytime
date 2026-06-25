@@ -534,4 +534,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get receiveShareFailed => 'Couldn\'t share';
+
+  @override
+  String get commonOr => 'or';
+
+  @override
+  String get receiveScanQr => 'Scan QR code';
+
+  @override
+  String get connectQrInstruction => 'Have the receiver scan this QR code';
+
+  @override
+  String connectQrCodeLabel(String code) {
+    return 'QR code containing connection code $code';
+  }
+
+  @override
+  String get scanTitle => 'Scan QR code';
+
+  @override
+  String get scanInstruction => 'Point the camera at the sender\'s QR code';
+
+  @override
+  String get scanTorch => 'Torch';
+
+  @override
+  String get scanPickImage => 'Choose a photo with a QR code';
+
+  @override
+  String get scanInvalidCode => 'That\'s not a Safe Send code';
+
+  @override
+  String get scanNoCodeFound => 'No QR code found in the image';
+
+  @override
+  String get scanCameraBlockedTitle => 'Camera permission needed';
+
+  @override
+  String get scanCameraBlockedBody =>
+      'Allow Safe Send to use the camera, or choose a photo that has the QR code.';
+
+  @override
+  String get scanOpenSettings => 'Open Settings';
+
+  @override
+  String get scanRequestPermission => 'Allow camera';
 }

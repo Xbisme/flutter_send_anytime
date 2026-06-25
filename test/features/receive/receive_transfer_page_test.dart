@@ -15,6 +15,7 @@ import 'package:safe_send/core/services/transport/data_transport.dart';
 import 'package:safe_send/features/receive/domain/usecases/start_receive_usecase.dart';
 import 'package:safe_send/features/receive/presentation/cubit/receive_transfer_cubit.dart';
 import 'package:safe_send/features/receive/presentation/pages/receive_transfer_page.dart';
+import 'package:safe_send/features/receive/presentation/receive_progress_args.dart';
 
 import '../../helpers/fake_record_transfer.dart';
 import '../../helpers/pump_app.dart';
@@ -92,7 +93,7 @@ void main() {
   });
 
   Future<void> pumpPage(WidgetTester tester) => tester.pumpApp(
-    ReceiveTransferPage(transport: _FakeTransport()),
+    ReceiveTransferPage(args: ReceiveProgressArgs(transport: _FakeTransport())),
     locale: const Locale('en'),
   );
 

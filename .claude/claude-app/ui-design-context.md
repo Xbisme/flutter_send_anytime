@@ -123,11 +123,13 @@ Entry point. Cuộn dọc. Gồm: header (logomark + "Safe Send" + icon settings
 ### 02 · Gửi file (`send`) — flow — *Spec #004*
 AppBar back + "Gửi file". Banner `accent-subtle`: "N mục đã chọn" + tổng dung lượng mono + `check-check`. List **FileRow** có checkbox chọn/bỏ (tròn, tick trắng khi chọn). Footer 2 nút: **Thêm** (secondary, +icon) · **Tiếp tục** (CTA gradient, →icon).
 
-### 03 · Kết nối (`connect`) — flow — *Spec #003 (Mã 6 số) · #007 (QR) · #009 (Gần đây)*
-Nền `gradient-radar`. AppBar `x` + "Kết nối thiết bị". **SegmentedTabs: Mã 6 số / QR / Gần đây** (1 màn, 3 tab — đây là pairing hub). Tab Mã 6 số: vòng tròn smartphone với **2 sóng radar `ssRadar`**, "Chia sẻ mã này với người nhận", **4–6 CodeBox** số mono, "Hết hạn sau mm:ss" (mono + clock). Footer secondary "**Chia sẻ link mời**" (→ Spec #008). *(QR tab = #007, Gần đây tab = #009.)*
+### 03 · Kết nối (`connect`) — flow — *Spec #003 (Mã 6 số) · #007 (QR) ✅ · #009 (Gần đây)*
+Nền `gradient-radar`. AppBar `x` + "Kết nối thiết bị". **SegmentedTabs: Mã 6 số / QR / Gần đây** (1 màn, 3 tab — đây là pairing hub). Tab Mã 6 số: vòng tròn smartphone với **2 sóng radar `ssRadar`**, "Chia sẻ mã này với người nhận", **4–6 CodeBox** số mono, "Hết hạn sau mm:ss" (mono + clock). Footer secondary "**Chia sẻ link mời**" (→ Spec #008).
+**Tab QR (#007, implemented)**: render `QrImageView` (nền sáng cố định + module tối, scannable ở cả light/dark) encode `safesend://connect?v=1&code=NNNNNN` — **cùng một phiên hosting** với tab Mã 6 số (đổi tab KHÔNG sinh mã mới / mở socket thứ 2). Bên dưới QR hiện lại mã 6 số đọc được + countdown TTL. Trong khi hiện QR, **tăng độ sáng màn hình** (khôi phục khi rời tab). Tab này **chỉ ở vai trò người gửi** — vai trò người nhận ẩn segment QR. *(Gần đây tab = #009.)*
 
-### 04 · Nhận file (`receive`) — flow — *Spec #005 (nhập mã) · #007 (quét QR) · #009 (thiết bị gần)*
-AppBar back + "Nhận file". Tiêu đề "Nhập mã kết nối" 23px extrabold + phụ đề. **6 CodeBox nhập** (ô active có caret `accent`). Divider "hoặc". Nút "**Quét mã QR**" (secondary + qr-code icon, → #007). **DeviceRow** thiết bị gần đang chờ ("Minh's iPhone · đang chờ ở gần bạn" + nút "Nhận", → #009).
+### 04 · Nhận file (`receive`) — flow — *Spec #005 (nhập mã) · #007 (quét QR) ✅ · #009 (thiết bị gần)*
+AppBar back + "Nhận file". Tiêu đề "Nhập mã kết nối" 23px extrabold + phụ đề. **6 CodeBox nhập** (ô active có caret `accent`). Divider "hoặc". Nút "**Quét mã QR**" (secondary + qr-code icon).
+**Quét QR (#007, implemented)**: nút "Quét mã QR" mở **trang scanner full-screen riêng** (`AppRoutes.qrScan`, không phải tab) — camera (mobile_scanner) + nút **đèn pin** + **chọn ảnh từ thư viện** (reuse file_picker → analyzeImage). Quét hợp lệ → tự `joinWithCode` → thẳng vào prompt accept/reject (#005). QR lạ/hết hạn → toast nhẹ, vẫn quét tiếp. **Quyền camera** (lần đầu của app): granted → camera; denied → nút xin quyền; permanently-denied/restricted → "Mở Cài đặt" + chọn-ảnh fallback (không màn hình chết). Home "Quét QR" vào thẳng scanner. **DeviceRow** thiết bị gần (→ #009).
 
 ### 05 · Đang truyền (`progress`) — flow — *Spec #004/#005 (state machine #002)*
 Badge "ĐANG GỬI"/"ĐANG NHẬN" (`accent-subtle`). 2 avatar smartphone + `chevrons-right`. "tới **<tên thiết bị>**". **% lớn mono 64px**. ProgressBar gradient. Hàng mono: tốc độ (gauge icon, MB/s) · "còn m:ss · X/Y MB". Card file hiện tại (FileChip + tên + "file i / n" + spinner `ssSpin`). Footer **DangerButton "Hủy"**.

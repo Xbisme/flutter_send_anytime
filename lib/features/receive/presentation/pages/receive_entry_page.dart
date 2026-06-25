@@ -5,15 +5,19 @@ import 'package:go_router/go_router.dart';
 import 'package:safe_send/core/constants/app_routes.dart';
 import 'package:safe_send/core/domain/pairing/connect_handoff.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
-import 'package:safe_send/core/services/transport/data_transport.dart';
+import 'package:safe_send/features/receive/presentation/receive_progress_args.dart';
 
 /// Screen 04 entry (#005): the receive coordinator. Launched from the Home
 /// "Nhận" action, it pushes the shared Connect hub in receiver role; on a
-/// successful pairing it hands the open [DataTransport] to the receive progress
+/// successful pairing it hands the open transport to the receive progress
 /// route. Features never import each other — the handoff is a core-typed
 /// navigation payload (Constitution XI).
 class ReceiveEntryPage extends StatefulWidget {
-  const ReceiveEntryPage({super.key});
+  const ReceiveEntryPage({super.key, this.openScanner = false});
+
+  /// When true (Home "Quét QR"), the Connect hub opens the scanner straight
+  /// away (#007, FR-019).
+  final bool openScanner;
 
   @override
   State<ReceiveEntryPage> createState() => _ReceiveEntryPageState();
@@ -29,7 +33,10 @@ class _ReceiveEntryPageState extends State<ReceiveEntryPage> {
   Future<void> _open() async {
     final result = await context.push<ConnectResult>(
       AppRoutes.connect,
-      extra: const ConnectRequest(role: TransferRole.receiver),
+      extra: ConnectRequest(
+        role: TransferRole.receiver,
+        openScanner: widget.openScanner,
+      ),
     );
     if (!mounted) return;
     if (result == null) {
@@ -39,7 +46,10 @@ class _ReceiveEntryPageState extends State<ReceiveEntryPage> {
     }
     await context.push<void>(
       AppRoutes.receiveProgress,
-      extra: result.transport,
+      extra: ReceiveProgressArgs(
+        transport: result.transport,
+        method: result.method,
+      ),
     );
     // The progress screen owns its terminal navigation (Home / restart). If it
     // returned here without navigating, fall back to Home.

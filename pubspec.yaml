@@ -61,6 +61,16 @@ dependencies:
   share_plus: ^12.0.2
   open_filex: ^4.7.0
 
+  # QR Connect (#007) — render the pairing code as a QR + scan one to pair.
+  # qr_flutter: pure-Dart QR render (no native code). mobile_scanner 7.2.0:
+  # camera scan + analyzeImage(path) + torch; iOS 12 / Android minSdk 23 (≤ our
+  # iOS 13 / API 26 floor). permission_handler: camera status + openAppSettings
+  # (first runtime permission). screen_brightness: boost while showing the QR.
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^7.2.0
+  permission_handler: ^12.0.3
+  screen_brightness: ^2.1.11
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

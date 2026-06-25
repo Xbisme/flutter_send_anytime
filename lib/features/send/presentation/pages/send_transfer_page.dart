@@ -35,7 +35,9 @@ class SendTransferPage extends StatelessWidget {
     return BlocProvider<SendTransferCubit>(
       create: (_) {
         final cubit = getIt<SendTransferCubit>();
-        unawaited(cubit.start(args.sources, args.transport));
+        unawaited(
+          cubit.start(args.sources, args.transport, method: args.method),
+        );
         return cubit;
       },
       child: const _SendTransferView(),

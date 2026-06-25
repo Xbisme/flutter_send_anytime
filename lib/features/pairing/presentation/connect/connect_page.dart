@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:safe_send/core/constants/app_routes.dart';
 import 'package:safe_send/core/di/injection.dart';
 import 'package:safe_send/core/domain/cubit/app_state.dart';
 import 'package:safe_send/core/domain/failures/app_failure.dart';
+import 'package:safe_send/core/domain/history/transfer_history_enums.dart';
 import 'package:safe_send/core/domain/pairing/connect_handoff.dart';
 import 'package:safe_send/core/domain/pairing/pairing_state.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
@@ -22,6 +24,7 @@ import 'package:safe_send/core/utils/l10n_extension.dart';
 import 'package:safe_send/features/pairing/presentation/connect/widgets/code_display.dart';
 import 'package:safe_send/features/pairing/presentation/connect/widgets/code_input.dart';
 import 'package:safe_send/features/pairing/presentation/connect/widgets/connect_radar.dart';
+import 'package:safe_send/features/pairing/presentation/connect/widgets/qr_display.dart';
 import 'package:safe_send/features/pairing/presentation/cubit/pairing_cubit.dart';
 import 'package:safe_send/features/pairing/presentation/pairing_failure_l10n.dart';
 
@@ -55,11 +58,14 @@ class _ConnectView extends StatefulWidget {
 class _ConnectViewState extends State<_ConnectView> {
   int _tab = 0;
   Timer? _ticker;
+  bool _pairedViaQr = false;
+
+  TransferRole get _role => widget.request.role;
 
   @override
   void initState() {
     super.initState();
-    if (widget.request.role == TransferRole.sender) {
+    if (_role == TransferRole.sender) {
       unawaited(context.read<PairingCubit>().host());
     }
     // Refresh the expiry countdown once a second.
@@ -76,9 +82,39 @@ class _ConnectViewState extends State<_ConnectView> {
 
   void _onConnected() {
     final transport = context.read<PairingCubit>().takeTransport();
-    if (transport != null) {
-      context.pop(ConnectResult(transport: transport));
+    if (transport == null) return;
+    // QR when the receiver scanned, or the sender had the QR tab open at connect
+    // time; otherwise the 6-digit code (#007, FR-018).
+    final viaQr = _role == TransferRole.receiver ? _pairedViaQr : _tab == 1;
+    context.pop(
+      ConnectResult(
+        transport: transport,
+        method: viaQr ? PairingMethod.qr : PairingMethod.sixDigitCode,
+      ),
+    );
+  }
+
+  /// Receiver scanned a QR (#007) — remember the method, then join via the
+  /// existing code path (no new join logic).
+  void _onJoinViaQr(String code) {
+    setState(() => _pairedViaQr = true);
+    unawaited(context.read<PairingCubit>().joinWithCode(code));
+  }
+
+  Widget _buildTab() {
+    final l10n = context.l10n;
+    if (_tab == 0) {
+      return _CodeTab(
+        role: _role,
+        onJoinViaQr: _onJoinViaQr,
+        openScanner: widget.request.openScanner,
+      );
     }
+    // Sender QR tab (a presentation of the SAME hosting session — no new code).
+    if (_role == TransferRole.sender && _tab == 1) {
+      return const _SenderQrPanel();
+    }
+    return _ComingSoonTab(message: l10n.connectComingSoonTab);
   }
 
   @override
@@ -86,46 +122,52 @@ class _ConnectViewState extends State<_ConnectView> {
     final l10n = context.l10n;
     final c = AppColors.of(context);
     return Scaffold(
-      body: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: RadialGradient(
-            colors: [
-              AppColors.green500.withValues(alpha: 0.10),
-              c.bgSubtle,
-            ],
-            radius: 0.9,
+      // One connection listener for every tab (incl. the QR tab), so pairing
+      // pops the result no matter which presentation the sender is viewing.
+      body: BlocListener<PairingCubit, AppState<PairingState>>(
+        listenWhen: (_, state) =>
+            state is AppLoaded<PairingState> && state.data is PairingConnected,
+        listener: (_, _) => _onConnected(),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              colors: [
+                AppColors.green500.withValues(alpha: 0.10),
+                c.bgSubtle,
+              ],
+              radius: 0.9,
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              FlowAppBar(
-                title: l10n.connectTitle,
-                leadingIcon: LucideIcons.x,
-                onLeading: () => context.pop(),
-                leadingSemanticLabel: l10n.commonBack,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.x5),
-                child: SegmentedTabs(
-                  segments: [
-                    l10n.connectTabCode,
-                    l10n.connectTabQr,
-                    l10n.connectTabNearby,
-                  ],
-                  selectedIndex: _tab,
-                  onChanged: (i) => setState(() => _tab = i),
+          child: SafeArea(
+            child: Column(
+              children: [
+                FlowAppBar(
+                  title: l10n.connectTitle,
+                  leadingIcon: LucideIcons.x,
+                  onLeading: () => context.pop(),
+                  leadingSemanticLabel: l10n.commonBack,
                 ),
-              ),
-              Expanded(
-                child: _tab == 0
-                    ? _CodeTab(
-                        role: widget.request.role,
-                        onConnected: _onConnected,
-                      )
-                    : _ComingSoonTab(message: l10n.connectComingSoonTab),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.x5,
+                  ),
+                  child: SegmentedTabs(
+                    // QR is sender-only — the receiver scans via the button inside
+                    // the code tab, not a tab of its own (#007, FR-001).
+                    segments: _role == TransferRole.receiver
+                        ? [l10n.connectTabCode, l10n.connectTabNearby]
+                        : [
+                            l10n.connectTabCode,
+                            l10n.connectTabQr,
+                            l10n.connectTabNearby,
+                          ],
+                    selectedIndex: _tab,
+                    onChanged: (i) => setState(() => _tab = i),
+                  ),
+                ),
+                Expanded(child: _buildTab()),
+              ],
+            ),
           ),
         ),
       ),
@@ -134,22 +176,28 @@ class _ConnectViewState extends State<_ConnectView> {
 }
 
 class _CodeTab extends StatelessWidget {
-  const _CodeTab({required this.role, required this.onConnected});
+  const _CodeTab({
+    required this.role,
+    required this.onJoinViaQr,
+    required this.openScanner,
+  });
 
   final TransferRole role;
-  final VoidCallback onConnected;
+  final void Function(String code) onJoinViaQr;
+  final bool openScanner;
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<PairingCubit, AppState<PairingState>>(
-      listenWhen: (_, state) =>
-          state is AppLoaded<PairingState> && state.data is PairingConnected,
-      listener: (context, _) => onConnected(),
+    return BlocBuilder<PairingCubit, AppState<PairingState>>(
       builder: (context, state) {
         // Receiver: a code-entry panel that keeps the entered code on failure
         // (FR-023). The sender path issues + displays a code instead.
         if (role == TransferRole.receiver) {
-          return _ReceiverPanel(state: state);
+          return _ReceiverPanel(
+            state: state,
+            onJoinViaQr: onJoinViaQr,
+            openScanner: openScanner,
+          );
         }
         return switch (state) {
           AppError<PairingState>(:final failure) => _FailurePanel(
@@ -172,9 +220,15 @@ class _CodeTab extends StatelessWidget {
 /// Receiver code-entry panel (#005, US3). Owns the entered code so it survives
 /// rebuilds across a recoverable failure; submits via [PairingCubit.joinWithCode].
 class _ReceiverPanel extends StatefulWidget {
-  const _ReceiverPanel({required this.state});
+  const _ReceiverPanel({
+    required this.state,
+    required this.onJoinViaQr,
+    required this.openScanner,
+  });
 
   final AppState<PairingState> state;
+  final void Function(String code) onJoinViaQr;
+  final bool openScanner;
 
   @override
   State<_ReceiverPanel> createState() => _ReceiverPanelState();
@@ -182,6 +236,21 @@ class _ReceiverPanel extends StatefulWidget {
 
 class _ReceiverPanelState extends State<_ReceiverPanel> {
   String _code = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Home "Quét QR" lands the receiver straight on the scanner (#007, FR-019).
+    if (widget.openScanner) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _openScanner());
+    }
+  }
+
+  /// Open the full-screen scanner; a returned code joins via the parent.
+  Future<void> _openScanner() async {
+    final code = await context.push<String>(AppRoutes.qrScan);
+    if (code != null && mounted) widget.onJoinViaQr(code);
+  }
 
   bool get _isJoining {
     final state = widget.state;
@@ -234,7 +303,7 @@ class _ReceiverPanelState extends State<_ReceiverPanel> {
           const Spacer(),
           if (_isJoining)
             const TransferSpinner(size: 28)
-          else
+          else ...[
             PrimaryButton(
               label: l10n.receiveConnect,
               icon: LucideIcons.arrowRight,
@@ -244,6 +313,33 @@ class _ReceiverPanelState extends State<_ReceiverPanel> {
                     )
                   : null,
             ),
+            const SizedBox(height: AppSpacing.x4),
+            Row(
+              children: [
+                Expanded(child: Divider(color: c.borderSubtle)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.x3,
+                  ),
+                  child: Text(
+                    l10n.commonOr,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: c.textMuted),
+                  ),
+                ),
+                Expanded(child: Divider(color: c.borderSubtle)),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.x4),
+            // Scan the sender's QR instead of typing the code (#007). Stays
+            // available after a failure so an expired scan can be re-tried.
+            SecondaryButton(
+              label: l10n.receiveScanQr,
+              icon: LucideIcons.qrCode,
+              onPressed: () => unawaited(_openScanner()),
+            ),
+          ],
         ],
       ),
     );
@@ -370,6 +466,86 @@ class _FailurePanel extends StatelessWidget {
             label: l10n.commonBack,
             onPressed: () => context.pop(),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Sender QR tab (#007). A second presentation of the SAME hosting session as
+/// the 6-digit tab — it reads the live [PairingHosting] state and never issues a
+/// new code or opens a second socket (FR-004).
+class _SenderQrPanel extends StatelessWidget {
+  const _SenderQrPanel();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PairingCubit, AppState<PairingState>>(
+      builder: (context, state) {
+        return switch (state) {
+          AppError<PairingState>(:final failure) => _FailurePanel(
+            failure: failure,
+          ),
+          AppLoaded<PairingState>(:final data) when data is PairingHosting =>
+            _QrHostingPanel(
+              code: data.code.value,
+              remaining: data.code.remaining,
+            ),
+          AppLoaded<PairingState>(:final data) when data is PairingFailed =>
+            _FailurePanel(failure: data.failure),
+          _ => const _ConnectingPanel(),
+        };
+      },
+    );
+  }
+}
+
+class _QrHostingPanel extends StatelessWidget {
+  const _QrHostingPanel({required this.code, required this.remaining});
+
+  final String code;
+  final Duration remaining;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final c = AppColors.of(context);
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.x5),
+      child: Column(
+        children: [
+          const Spacer(),
+          QrDisplay(code: code),
+          const SizedBox(height: AppSpacing.x5),
+          Text(
+            l10n.connectQrInstruction,
+            textAlign: TextAlign.center,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: c.textSecondary),
+          ),
+          const SizedBox(height: AppSpacing.x4),
+          CodeDisplay(code: code),
+          const SizedBox(height: AppSpacing.x4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(LucideIcons.clock, size: 15, color: c.textMuted),
+              const SizedBox(width: AppSpacing.x2),
+              Text(
+                l10n.connectExpiresIn(Formatters.clock(remaining)),
+                style: AppTypography.mono(size: 13, color: c.textMuted),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.x3),
+          Text(
+            l10n.connectWaiting,
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: c.textMuted),
+          ),
+          const Spacer(),
         ],
       ),
     );

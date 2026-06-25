@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:injectable/injectable.dart';
 import 'package:safe_send/core/domain/cubit/app_cubit.dart';
+import 'package:safe_send/core/domain/history/transfer_history_enums.dart';
 import 'package:safe_send/core/domain/history/usecases/record_transfer_usecase.dart';
 import 'package:safe_send/core/domain/transfer/file_source.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
@@ -30,13 +31,20 @@ class SendTransferCubit extends AppCubit<TransferView> {
 
   StreamSubscription<TransferSnapshot>? _sub;
   List<FileSource> _sources = const [];
+  PairingMethod _method = PairingMethod.sixDigitCode;
   bool _started = false;
   bool _recorded = false;
 
-  /// Begin sending [sources] over the already-open [transport].
-  Future<void> start(List<FileSource> sources, DataTransport transport) async {
+  /// Begin sending [sources] over the already-open [transport]. [method] is how
+  /// the pair was made (#007), recorded with the history entry.
+  Future<void> start(
+    List<FileSource> sources,
+    DataTransport transport, {
+    PairingMethod method = PairingMethod.sixDigitCode,
+  }) async {
     emitLoading();
     _sources = sources;
+    _method = method;
     _projector.start();
     _sub = _startSend.snapshots.listen(_onSnapshot);
     // The snapshot stream drives state; the result is awaited for completion.
@@ -76,6 +84,7 @@ class SendTransferCubit extends AppCubit<TransferView> {
       createdAt: DateTime.now(),
       sources: _sources,
       view: view,
+      pairingMethod: _method,
     );
     unawaited(
       _recordTransfer(record).then(
