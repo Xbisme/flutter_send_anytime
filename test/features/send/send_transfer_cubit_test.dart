@@ -14,6 +14,7 @@ import 'package:safe_send/core/domain/transfer/transfer_view.dart';
 import 'package:safe_send/core/services/transport/data_transport.dart';
 import 'package:safe_send/features/send/domain/usecases/start_send_usecase.dart';
 import 'package:safe_send/features/send/presentation/cubit/send_transfer_cubit.dart';
+import '../../helpers/fake_record_transfer.dart';
 
 class _MockStartSend extends Mock implements StartSendUseCase {}
 
@@ -79,7 +80,7 @@ void main() {
 
   blocTest<SendTransferCubit, AppState<TransferView>>(
     'projects transferring then done snapshots into views',
-    build: () => SendTransferCubit(startSend),
+    build: () => SendTransferCubit(startSend, FakeRecordTransfer()),
     act: (cubit) async {
       await cubit.start([], _FakeTransport());
       snapshots
@@ -100,7 +101,7 @@ void main() {
 
   blocTest<SendTransferCubit, AppState<TransferView>>(
     'a failed snapshot surfaces as AppError',
-    build: () => SendTransferCubit(startSend),
+    build: () => SendTransferCubit(startSend, FakeRecordTransfer()),
     act: (cubit) async {
       await cubit.start([], _FakeTransport());
       snapshots.add(
@@ -120,7 +121,7 @@ void main() {
 
   blocTest<SendTransferCubit, AppState<TransferView>>(
     'cancel delegates to the use case',
-    build: () => SendTransferCubit(startSend),
+    build: () => SendTransferCubit(startSend, FakeRecordTransfer()),
     act: (cubit) async {
       await cubit.start([], _FakeTransport());
       await cubit.cancel();

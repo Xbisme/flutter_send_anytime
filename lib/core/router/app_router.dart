@@ -4,9 +4,12 @@ import 'package:safe_send/app/view/app_shell.dart';
 import 'package:safe_send/core/config/app_config.dart';
 import 'package:safe_send/core/constants/app_routes.dart';
 import 'package:safe_send/core/di/injection.dart';
+import 'package:safe_send/core/domain/history/transfer_record.dart';
 import 'package:safe_send/core/domain/pairing/connect_handoff.dart';
+import 'package:safe_send/core/domain/transfer/file_source.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/core/services/transport/data_transport.dart';
+import 'package:safe_send/features/history/presentation/history_detail_page.dart';
 import 'package:safe_send/features/history/presentation/history_page.dart';
 import 'package:safe_send/features/home/presentation/home_page.dart';
 import 'package:safe_send/features/pairing/presentation/connect/connect_page.dart';
@@ -70,7 +73,8 @@ GoRouter createAppRouter({bool includeDevRoutes = false}) {
       GoRoute(
         path: AppRoutes.send,
         parentNavigatorKey: rootKey,
-        builder: (_, _) => const SendSelectionPage(),
+        builder: (_, state) =>
+            SendSelectionPage(initialSources: state.extra as List<FileSource>?),
       ),
       GoRoute(
         path: AppRoutes.receive,
@@ -97,6 +101,12 @@ GoRouter createAppRouter({bool includeDevRoutes = false}) {
         parentNavigatorKey: rootKey,
         builder: (_, state) =>
             ReceiveTransferPage(transport: state.extra! as DataTransport),
+      ),
+      GoRoute(
+        path: AppRoutes.historyDetail,
+        parentNavigatorKey: rootKey,
+        builder: (_, state) =>
+            HistoryDetailPage(record: state.extra! as TransferRecord),
       ),
       if (includeDevRoutes)
         GoRoute(

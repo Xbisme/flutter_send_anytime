@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:safe_send/core/domain/history/transfer_record.dart';
 import 'package:safe_send/core/domain/transfer_enums.dart';
 
 /// Aggregate of all Home placeholder data (static mock in #001; real data from
@@ -104,6 +105,7 @@ class TransferGroupModel {
     required this.time,
     required this.thumbs,
     required this.moreCount,
+    this.record,
   });
 
   final TransferDirection direction;
@@ -112,4 +114,8 @@ class TransferGroupModel {
   final String time;
   final List<Gradient> thumbs;
   final int moreCount;
+
+  /// The backing history record (#006) when this row came from real data;
+  /// null for placeholder rows. Drives tap-through to the detail page.
+  final TransferRecord? record;
 }

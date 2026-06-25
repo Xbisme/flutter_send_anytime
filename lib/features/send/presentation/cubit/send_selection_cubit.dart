@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:safe_send/core/domain/cubit/app_cubit.dart';
 import 'package:safe_send/core/domain/cubit/app_state.dart';
+import 'package:safe_send/core/domain/transfer/file_source.dart';
 import 'package:safe_send/features/send/domain/models/send_selection.dart';
 import 'package:safe_send/features/send/domain/usecases/pick_files_usecase.dart';
 
@@ -30,6 +31,10 @@ class SendSelectionCubit extends AppCubit<SendSelection> {
       emitError,
     );
   }
+
+  /// Pre-populate the selection with [sources] (used by History re-send, #006).
+  void seed(List<FileSource> sources) =>
+      emitLoaded(SendSelection.empty().adding(sources));
 
   /// Remove the file at [index] from the selection.
   void removeAt(int index) => emitLoaded(selection.removingAt(index));

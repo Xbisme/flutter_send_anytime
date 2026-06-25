@@ -4,7 +4,9 @@ import 'package:safe_send/app/app.dart';
 import 'package:safe_send/core/config/app_config.dart';
 import 'package:safe_send/core/config/app_flavor.dart';
 import 'package:safe_send/core/di/injection.dart';
+import 'package:safe_send/core/domain/history/transfer_history_repository.dart';
 import 'package:safe_send/core/router/app_router.dart';
+import '../helpers/fake_history_repository.dart';
 
 // Widget tests render in the test-default locale (English). Vietnamese-primary
 // correctness is verified separately in test/l10n/localization_test.dart.
@@ -18,6 +20,9 @@ Future<void> _settleToHome(WidgetTester tester) async {
 void main() {
   setUp(() async {
     await configureDependencies(const AppConfig(flavor: AppFlavor.dev));
+    getIt
+      ..unregister<TransferHistoryRepository>()
+      ..registerFactory<TransferHistoryRepository>(FakeHistoryRepository.new);
   });
   tearDown(() async => getIt.reset());
 

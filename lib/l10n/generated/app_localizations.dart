@@ -308,6 +308,240 @@ abstract class AppLocalizations {
   /// **'File bạn gửi và nhận sẽ hiển thị ở đây.'**
   String get historyEmptyBody;
 
+  /// Generic label for the sender of a received transfer (until #010)
+  ///
+  /// In vi, this message translates to:
+  /// **'Người gửi'**
+  String get historyPeerSender;
+
+  /// Generic label for the recipient of a sent transfer (until #010)
+  ///
+  /// In vi, this message translates to:
+  /// **'Người nhận'**
+  String get historyPeerReceiver;
+
+  /// History day-section header for today
+  ///
+  /// In vi, this message translates to:
+  /// **'Hôm nay'**
+  String get historyToday;
+
+  /// History day-section header for yesterday
+  ///
+  /// In vi, this message translates to:
+  /// **'Hôm qua'**
+  String get historyYesterday;
+
+  /// Number of files in a transfer record
+  ///
+  /// In vi, this message translates to:
+  /// **'{count} tệp'**
+  String historyFilesCount(int count);
+
+  /// History meta: a partial transfer outcome
+  ///
+  /// In vi, this message translates to:
+  /// **'Một phần'**
+  String get historyStatusPartial;
+
+  /// History meta: a failed transfer outcome
+  ///
+  /// In vi, this message translates to:
+  /// **'Thất bại'**
+  String get historyStatusFailed;
+
+  /// History meta: a cancelled transfer outcome
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã huỷ'**
+  String get historyStatusCancelled;
+
+  /// History no-results (active filter) title
+  ///
+  /// In vi, this message translates to:
+  /// **'Không có kết quả'**
+  String get historyNoResultsTitle;
+
+  /// History no-results (active filter) body
+  ///
+  /// In vi, this message translates to:
+  /// **'Thử đổi từ khoá hoặc bộ lọc.'**
+  String get historyNoResultsBody;
+
+  /// History detail page title
+  ///
+  /// In vi, this message translates to:
+  /// **'Chi tiết'**
+  String get historyDetailTitle;
+
+  /// Back button label on the History detail page
+  ///
+  /// In vi, this message translates to:
+  /// **'Quay lại'**
+  String get historyBack;
+
+  /// Detail header for a sent transfer
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã gửi'**
+  String get historyDirectionSent;
+
+  /// Detail header for a received transfer
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã nhận'**
+  String get historyDirectionReceived;
+
+  /// Detail field label: status
+  ///
+  /// In vi, this message translates to:
+  /// **'Trạng thái'**
+  String get historyFieldStatus;
+
+  /// Detail field label: pairing method
+  ///
+  /// In vi, this message translates to:
+  /// **'Phương thức ghép nối'**
+  String get historyFieldMethod;
+
+  /// Detail field label: date/time
+  ///
+  /// In vi, this message translates to:
+  /// **'Thời gian'**
+  String get historyFieldDate;
+
+  /// Detail section label: files
+  ///
+  /// In vi, this message translates to:
+  /// **'Tệp'**
+  String get historyFieldFiles;
+
+  /// Status label: completed
+  ///
+  /// In vi, this message translates to:
+  /// **'Hoàn tất'**
+  String get historyStatusCompleted;
+
+  /// Pairing method: 6-digit code
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã 6 số'**
+  String get historyMethodSixDigit;
+
+  /// Pairing method: QR
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã QR'**
+  String get historyMethodQr;
+
+  /// Pairing method: share link
+  ///
+  /// In vi, this message translates to:
+  /// **'Link mời'**
+  String get historyMethodShareLink;
+
+  /// Pairing method: nearby radar
+  ///
+  /// In vi, this message translates to:
+  /// **'Gần đây'**
+  String get historyMethodNearby;
+
+  /// History search field placeholder
+  ///
+  /// In vi, this message translates to:
+  /// **'Tìm theo người hoặc tên tệp'**
+  String get historySearchHint;
+
+  /// Direction filter: all
+  ///
+  /// In vi, this message translates to:
+  /// **'Tất cả'**
+  String get historyFilterAll;
+
+  /// Date filter button label
+  ///
+  /// In vi, this message translates to:
+  /// **'Ngày'**
+  String get historyFilterDate;
+
+  /// Clear all filters button label
+  ///
+  /// In vi, this message translates to:
+  /// **'Xoá lọc'**
+  String get historyFilterClear;
+
+  /// Re-send a previous transfer
+  ///
+  /// In vi, this message translates to:
+  /// **'Gửi lại'**
+  String get historyActionResend;
+
+  /// Open a received file
+  ///
+  /// In vi, this message translates to:
+  /// **'Mở'**
+  String get historyActionOpen;
+
+  /// Share received files
+  ///
+  /// In vi, this message translates to:
+  /// **'Chia sẻ'**
+  String get historyActionShare;
+
+  /// Delete a history record
+  ///
+  /// In vi, this message translates to:
+  /// **'Xoá'**
+  String get historyActionDelete;
+
+  /// Clear all history
+  ///
+  /// In vi, this message translates to:
+  /// **'Xoá tất cả'**
+  String get historyClearAll;
+
+  /// Cancel a confirmation dialog
+  ///
+  /// In vi, this message translates to:
+  /// **'Huỷ'**
+  String get historyCancel;
+
+  /// Delete-record confirm title
+  ///
+  /// In vi, this message translates to:
+  /// **'Xoá mục này?'**
+  String get historyDeleteConfirmTitle;
+
+  /// Delete-record confirm body
+  ///
+  /// In vi, this message translates to:
+  /// **'Chỉ xoá khỏi lịch sử — tệp trên máy vẫn được giữ.'**
+  String get historyDeleteConfirmBody;
+
+  /// Clear-all confirm title
+  ///
+  /// In vi, this message translates to:
+  /// **'Xoá tất cả lịch sử?'**
+  String get historyClearConfirmTitle;
+
+  /// Clear-all confirm body
+  ///
+  /// In vi, this message translates to:
+  /// **'Mọi mục sẽ bị xoá — tệp trên máy vẫn được giữ.'**
+  String get historyClearConfirmBody;
+
+  /// Toast when a recorded file is missing
+  ///
+  /// In vi, this message translates to:
+  /// **'Tệp không còn khả dụng'**
+  String get historyFileUnavailable;
+
+  /// Home recent-transfers empty state
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có lượt truyền nào gần đây.'**
+  String get homeNoRecent;
+
   /// Settings tab title
   ///
   /// In vi, this message translates to:

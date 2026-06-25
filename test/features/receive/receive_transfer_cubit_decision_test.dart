@@ -15,6 +15,7 @@ import 'package:safe_send/core/domain/transfer/transfer_view.dart';
 import 'package:safe_send/core/services/transport/data_transport.dart';
 import 'package:safe_send/features/receive/domain/usecases/start_receive_usecase.dart';
 import 'package:safe_send/features/receive/presentation/cubit/receive_transfer_cubit.dart';
+import '../../helpers/fake_record_transfer.dart';
 
 class _MockStartReceive extends Mock implements StartReceiveUseCase {}
 
@@ -81,7 +82,7 @@ void main() {
   blocTest<ReceiveTransferCubit, AppState<TransferView>>(
     'manifest surfaces an awaiting-decision view with the offer; '
     'accept resolves the gate with true',
-    build: () => ReceiveTransferCubit(useCase),
+    build: () => ReceiveTransferCubit(useCase, FakeRecordTransfer()),
     act: (cubit) async {
       final running = cubit.start(_FakeTransport(), senderLabel: 'Người gửi');
       await pumpEventQueue();
@@ -108,7 +109,7 @@ void main() {
 
   blocTest<ReceiveTransferCubit, AppState<TransferView>>(
     'reject resolves the gate with false and flags a user reject',
-    build: () => ReceiveTransferCubit(useCase),
+    build: () => ReceiveTransferCubit(useCase, FakeRecordTransfer()),
     act: (cubit) async {
       final running = cubit.start(_FakeTransport(), senderLabel: 'Người gửi');
       await pumpEventQueue();
@@ -124,7 +125,7 @@ void main() {
   blocTest<ReceiveTransferCubit, AppState<TransferView>>(
     'a failed snapshot with some completed files emits a partial loaded view, '
     'not an error (FR-013a)',
-    build: () => ReceiveTransferCubit(useCase),
+    build: () => ReceiveTransferCubit(useCase, FakeRecordTransfer()),
     act: (cubit) async {
       final running = cubit.start(_FakeTransport(), senderLabel: 'Người gửi');
       await pumpEventQueue();

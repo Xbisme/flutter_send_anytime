@@ -116,6 +116,127 @@ class AppLocalizationsVi extends AppLocalizations {
   String get historyEmptyBody => 'File bạn gửi và nhận sẽ hiển thị ở đây.';
 
   @override
+  String get historyPeerSender => 'Người gửi';
+
+  @override
+  String get historyPeerReceiver => 'Người nhận';
+
+  @override
+  String get historyToday => 'Hôm nay';
+
+  @override
+  String get historyYesterday => 'Hôm qua';
+
+  @override
+  String historyFilesCount(int count) {
+    return '$count tệp';
+  }
+
+  @override
+  String get historyStatusPartial => 'Một phần';
+
+  @override
+  String get historyStatusFailed => 'Thất bại';
+
+  @override
+  String get historyStatusCancelled => 'Đã huỷ';
+
+  @override
+  String get historyNoResultsTitle => 'Không có kết quả';
+
+  @override
+  String get historyNoResultsBody => 'Thử đổi từ khoá hoặc bộ lọc.';
+
+  @override
+  String get historyDetailTitle => 'Chi tiết';
+
+  @override
+  String get historyBack => 'Quay lại';
+
+  @override
+  String get historyDirectionSent => 'Đã gửi';
+
+  @override
+  String get historyDirectionReceived => 'Đã nhận';
+
+  @override
+  String get historyFieldStatus => 'Trạng thái';
+
+  @override
+  String get historyFieldMethod => 'Phương thức ghép nối';
+
+  @override
+  String get historyFieldDate => 'Thời gian';
+
+  @override
+  String get historyFieldFiles => 'Tệp';
+
+  @override
+  String get historyStatusCompleted => 'Hoàn tất';
+
+  @override
+  String get historyMethodSixDigit => 'Mã 6 số';
+
+  @override
+  String get historyMethodQr => 'Mã QR';
+
+  @override
+  String get historyMethodShareLink => 'Link mời';
+
+  @override
+  String get historyMethodNearby => 'Gần đây';
+
+  @override
+  String get historySearchHint => 'Tìm theo người hoặc tên tệp';
+
+  @override
+  String get historyFilterAll => 'Tất cả';
+
+  @override
+  String get historyFilterDate => 'Ngày';
+
+  @override
+  String get historyFilterClear => 'Xoá lọc';
+
+  @override
+  String get historyActionResend => 'Gửi lại';
+
+  @override
+  String get historyActionOpen => 'Mở';
+
+  @override
+  String get historyActionShare => 'Chia sẻ';
+
+  @override
+  String get historyActionDelete => 'Xoá';
+
+  @override
+  String get historyClearAll => 'Xoá tất cả';
+
+  @override
+  String get historyCancel => 'Huỷ';
+
+  @override
+  String get historyDeleteConfirmTitle => 'Xoá mục này?';
+
+  @override
+  String get historyDeleteConfirmBody =>
+      'Chỉ xoá khỏi lịch sử — tệp trên máy vẫn được giữ.';
+
+  @override
+  String get historyClearConfirmTitle => 'Xoá tất cả lịch sử?';
+
+  @override
+  String get historyClearConfirmBody =>
+      'Mọi mục sẽ bị xoá — tệp trên máy vẫn được giữ.';
+
+  @override
+  String get historyFileUnavailable => 'Tệp không còn khả dụng';
+
+  @override
+  String get homeNoRecent => 'Chưa có lượt truyền nào gần đây.';
+
+  @override
   String get settingsTitle => 'Cài đặt';
 
   @override

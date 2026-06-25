@@ -118,6 +118,127 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your sent and received files will appear here.';
 
   @override
+  String get historyPeerSender => 'Sender';
+
+  @override
+  String get historyPeerReceiver => 'Recipient';
+
+  @override
+  String get historyToday => 'Today';
+
+  @override
+  String get historyYesterday => 'Yesterday';
+
+  @override
+  String historyFilesCount(int count) {
+    return '$count files';
+  }
+
+  @override
+  String get historyStatusPartial => 'Partial';
+
+  @override
+  String get historyStatusFailed => 'Failed';
+
+  @override
+  String get historyStatusCancelled => 'Cancelled';
+
+  @override
+  String get historyNoResultsTitle => 'No results';
+
+  @override
+  String get historyNoResultsBody => 'Try a different search or filter.';
+
+  @override
+  String get historyDetailTitle => 'Details';
+
+  @override
+  String get historyBack => 'Back';
+
+  @override
+  String get historyDirectionSent => 'Sent';
+
+  @override
+  String get historyDirectionReceived => 'Received';
+
+  @override
+  String get historyFieldStatus => 'Status';
+
+  @override
+  String get historyFieldMethod => 'Pairing method';
+
+  @override
+  String get historyFieldDate => 'Date';
+
+  @override
+  String get historyFieldFiles => 'Files';
+
+  @override
+  String get historyStatusCompleted => 'Completed';
+
+  @override
+  String get historyMethodSixDigit => '6-digit code';
+
+  @override
+  String get historyMethodQr => 'QR code';
+
+  @override
+  String get historyMethodShareLink => 'Share link';
+
+  @override
+  String get historyMethodNearby => 'Nearby';
+
+  @override
+  String get historySearchHint => 'Search by peer or file name';
+
+  @override
+  String get historyFilterAll => 'All';
+
+  @override
+  String get historyFilterDate => 'Date';
+
+  @override
+  String get historyFilterClear => 'Clear';
+
+  @override
+  String get historyActionResend => 'Re-send';
+
+  @override
+  String get historyActionOpen => 'Open';
+
+  @override
+  String get historyActionShare => 'Share';
+
+  @override
+  String get historyActionDelete => 'Delete';
+
+  @override
+  String get historyClearAll => 'Clear all';
+
+  @override
+  String get historyCancel => 'Cancel';
+
+  @override
+  String get historyDeleteConfirmTitle => 'Delete this record?';
+
+  @override
+  String get historyDeleteConfirmBody =>
+      'Removes it from history only — the files on your device are kept.';
+
+  @override
+  String get historyClearConfirmTitle => 'Clear all history?';
+
+  @override
+  String get historyClearConfirmBody =>
+      'Every record is removed — the files on your device are kept.';
+
+  @override
+  String get historyFileUnavailable => 'File is no longer available';
+
+  @override
+  String get homeNoRecent => 'No recent transfers yet.';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override
