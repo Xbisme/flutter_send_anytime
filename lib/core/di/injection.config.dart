@@ -78,6 +78,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i855.JoinSessionUseCase>(
       () => _i855.JoinSessionUseCase(gh<_i312.PairingRepository>()),
     );
+    gh.factory<_i964.PairingCubit>(
+      () => _i964.PairingCubit(gh<_i312.PairingRepository>()),
+    );
     gh.factory<_i953.TransferEngine>(
       () => _i953.TransferEngine(
         gh<_i547.PeerConnector>(),
@@ -89,13 +92,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i36.PickFilesUseCase>(
       () => _i36.PickFilesUseCase(gh<_i1069.FilePickerService>()),
-    );
-    gh.factory<_i964.PairingCubit>(
-      () => _i964.PairingCubit(
-        gh<_i825.HostSessionUseCase>(),
-        gh<_i855.JoinSessionUseCase>(),
-        gh<_i312.PairingRepository>(),
-      ),
     );
     gh.factory<_i353.SendSelectionCubit>(
       () => _i353.SendSelectionCubit(gh<_i36.PickFilesUseCase>()),

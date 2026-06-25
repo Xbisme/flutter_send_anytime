@@ -9,8 +9,6 @@ import 'package:safe_send/core/domain/pairing/pairing_state.dart';
 import 'package:safe_send/core/domain/result.dart';
 import 'package:safe_send/core/services/transport/data_transport.dart';
 import 'package:safe_send/features/pairing/domain/pairing_repository.dart';
-import 'package:safe_send/features/pairing/domain/usecases/host_session_usecase.dart';
-import 'package:safe_send/features/pairing/domain/usecases/join_session_usecase.dart';
 import 'package:safe_send/features/pairing/presentation/cubit/pairing_cubit.dart';
 
 class FakePairingRepository implements PairingRepository {
@@ -44,11 +42,7 @@ class FakePairingRepository implements PairingRepository {
 void main() {
   late FakePairingRepository repo;
 
-  PairingCubit build() => PairingCubit(
-    HostSessionUseCase(repo),
-    JoinSessionUseCase(repo),
-    repo,
-  );
+  PairingCubit build() => PairingCubit(repo);
 
   setUp(() => repo = FakePairingRepository());
 

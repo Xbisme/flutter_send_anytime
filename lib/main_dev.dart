@@ -14,8 +14,11 @@ Future<void> main() => bootstrap(
   AppConfig(
     flavor: AppFlavor.dev,
     iceServers: _stunServers,
-    // Cleartext ws:// for localhost / LAN testing (dev manifest allows it).
-    // Use your machine's LAN IP when pairing two physical devices.
-    signalingEndpoint: Uri.parse('ws://192.168.1.139:8080'),
+    // Cleartext ws:// for local testing.
+    //  • iOS simulator   → ws://localhost:8080   (ATS exempts localhost)
+    //  • Android emulator → ws://10.0.2.2:8080    (host alias)
+    //  • Two real devices → ws://<Mac-LAN-IP>:8080 + iOS ATS cleartext exception
+    //                        (deferred #003 task — non-localhost ws:// is ATS-blocked)
+    signalingEndpoint: Uri.parse('ws://localhost:8080'),
   ),
 );

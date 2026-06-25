@@ -16,8 +16,6 @@ import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/core/presentation/inputs/code_box.dart';
 import 'package:safe_send/core/services/transport/data_transport.dart';
 import 'package:safe_send/features/pairing/domain/pairing_repository.dart';
-import 'package:safe_send/features/pairing/domain/usecases/host_session_usecase.dart';
-import 'package:safe_send/features/pairing/domain/usecases/join_session_usecase.dart';
 import 'package:safe_send/features/pairing/presentation/connect/connect_page.dart';
 import 'package:safe_send/features/pairing/presentation/cubit/pairing_cubit.dart';
 import 'package:safe_send/l10n/generated/app_localizations.dart';
@@ -74,13 +72,7 @@ void main() {
     repo = _FakePairingRepository();
     getIt
       ..unregister<PairingCubit>()
-      ..registerFactory<PairingCubit>(
-        () => PairingCubit(
-          HostSessionUseCase(repo),
-          JoinSessionUseCase(repo),
-          repo,
-        ),
-      );
+      ..registerFactory<PairingCubit>(() => PairingCubit(repo));
   });
   tearDown(() async => getIt.reset());
 
