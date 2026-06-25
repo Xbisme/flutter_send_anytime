@@ -1,9 +1,9 @@
 <!-- SPECKIT START -->
 # Safe Send — Agent Context
 
-Active feature: **#004 Send Flow (Gửi)** (branch `004-send-flow`). #001 ✅ merged · #002 ✅ merged · #003 ✅ merged.
-Current plan: [specs/004-send-flow/plan.md](specs/004-send-flow/plan.md)
-Spec: [specs/004-send-flow/spec.md](specs/004-send-flow/spec.md)
+Active feature: **#005 Receive Flow (Nhận)** ⭐ MVP (branch `005-receive-flow`). #001 ✅ · #002 ✅ · #003 ✅ merged · #004 ✅ implemented.
+Current plan: [specs/005-receive-flow/plan.md](specs/005-receive-flow/plan.md)
+Spec: [specs/005-receive-flow/spec.md](specs/005-receive-flow/spec.md)
 
 ## Project meta (read these first)
 - Constitution (authoritative, 15 principles): [.specify/memory/constitution.md](.specify/memory/constitution.md)

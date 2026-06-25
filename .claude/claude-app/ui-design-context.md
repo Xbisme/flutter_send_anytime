@@ -143,9 +143,35 @@ Tiêu đề "Cài đặt" 23px extrabold. Card hồ sơ thiết bị (avatar gra
 
 ---
 
-## Dialogs & Toasts (xem `Dialogs & Toasts.dc.html` để chi tiết)
+## Dialogs & Toasts (distilled từ `Dialogs & Toasts.dc.html`, pulled 2026-06-25)
 
-Toast (file mới, hoàn tất, lỗi) + dialog (xác nhận hủy, từ chối nhận, ghi đè file). Pull file đó khi build #004/#005/#011. Toast tuân thủ component AppToast (token chung từ #001).
+> Nguồn: claude_design `SafeSend` → `Dialogs & Toasts.dc.html`. Light + Dark. Overlay `var(--overlay)`; card `surface-card`, radius 24px, `soft-shadow`, padding 24/22; icon-badge tròn 58px trên đầu; nút pill cao 48px xếp dọc (primary trên, secondary `surface-sunken` dưới). Mỗi dialog ≤ 1 primary + tối đa 1 secondary.
+
+### Dialog patterns (6 dạng)
+
+| Dạng | Icon badge | Title · Body | Primary | Secondary | Dùng ở |
+|---|---|---|---|---|---|
+| **Incoming transfer** (accept/reject) | avatar chữ-cái trên `gradient-brand-vivid` (generic tới #010) | "‹Peer› muốn gửi cho bạn" · "N tệp · TỔNG · loại file" | **Nhận** (gradient, `#053019`) | **Từ chối** | **#005** prompt |
+| **Cancel transfer** (xác nhận huỷ) | `alert-triangle` trên `danger` 14% | "Huỷ lượt truyền?" · "Đang gửi/nhận N tệp… Tiến độ sẽ mất." | **Huỷ truyền** (`danger`, trắng) | **Tiếp tục** | #004/#005 progress |
+| **Success** (hoàn tất) | `check` trên `gradient-brand`, trắng | "Đã gửi/nhận xong" · "N tệp … an toàn, không qua máy chủ." | **Xong** (gradient) | — | #004/#005 (có thể dùng Complete screen thay) |
+| **Connecting** (loading) | spinner 48px (`accent` top, `ssSpin` 0.8s) | "Đang kết nối…" · phụ đề | — | **Huỷ** | #004/#005 connect |
+| **Text input** (đổi tên / tên thiết bị) | — | title + ô input viền 2px (`accent` khi focus) | **Lưu** (gradient) | **Huỷ** (cùng hàng, 2 nút ngang) | #010 (đổi tên tệp / device name) |
+| **Permission** (mạng cục bộ) | `shield-check` trên `accent-subtle` | "Cho phép tìm thiết bị gần" · lý do | **Cho phép** (gradient) | **Để sau** | #009 |
+
+- **Bottom sheet** (file actions): handle 38×5px, header FileRow (chip type + tên + "KB · EXT"), list action-row (icon 20px + label 15/600); destructive = `#E5484D`. Actions mẫu: Gửi tệp này / Chia sẻ link / Đổi tên / Xoá. Dùng ở #006/#010.
+
+### Toast / Snackbar (tuân thủ `AppToast`, token chung #001)
+Card `surface-card` radius 15px + `soft-shadow`, icon tròn 34px màu theo loại, text 13.5/600, **tuỳ chọn** action (chữ `accent` in hoa) **hoặc** nút close `x`. 5 biến thể:
+
+| Loại | Icon · màu | Ví dụ | Action/Close |
+|---|---|---|---|
+| success | `check` · green | "Đã gửi N tệp thành công" | — |
+| error | `x` · `danger` | "Kết nối thất bại — thử lại" | action **Thử lại** |
+| info | `link` · `info` | "Đã sao chép link mời" | close |
+| warning | `clock` · `warning` | "Mã kết nối sắp hết hạn" | close |
+| neutral/undo | `trash-2` · `text-secondary` | "Đã xoá ‹tệp›" | action **Hoàn tác** |
+
+> #005 dùng: **Incoming-transfer dialog** (accept/reject) + **Cancel-transfer dialog** + toast **error "thử lại"** (lỗi nhận) + có thể **Success**. Avatar/tên peer = generic label tới #010.
 
 ---
 
