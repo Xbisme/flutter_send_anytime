@@ -16,6 +16,10 @@ import 'package:safe_send/core/services/file/file_picker_service.dart'
     as _i1069;
 import 'package:safe_send/core/services/file/file_picker_service_impl.dart'
     as _i661;
+import 'package:safe_send/core/services/file/received_files_service.dart'
+    as _i58;
+import 'package:safe_send/core/services/file/received_files_service_impl.dart'
+    as _i423;
 import 'package:safe_send/core/services/signaling/signaling_client.dart' as _i0;
 import 'package:safe_send/core/services/transport/data_transport.dart' as _i547;
 import 'package:safe_send/core/services/transport/transfer_engine.dart'
@@ -54,6 +58,9 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     gh.lazySingleton<_i265.HomePlaceholderDataSource>(
       () => _i265.HomePlaceholderDataSource(),
+    );
+    gh.lazySingleton<_i58.ReceivedFilesService>(
+      () => _i423.ReceivedFilesServiceImpl(),
     );
     gh.lazySingleton<_i547.PeerConnector>(() => _i603.WebRtcPeerConnector());
     gh.factory<_i1069.FilePickerService>(

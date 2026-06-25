@@ -48,6 +48,14 @@ dependencies:
   # Files (#004) — any-type multi-select via the system document picker
   file_picker: ^11.0.2
 
+  # Receive: save / open / share (#005) — app-owned dir, no runtime permission
+  path_provider: ^2.1.6
+  # Pinned to 12.x: share_plus 13.x needs win32 ^6 which conflicts with
+  # file_picker 11's win32 ^5.9 (Windows-only transitive); 12.0.2 has the same
+  # SharePlus.instance.share(ShareParams) API and needs no runtime permission.
+  share_plus: ^12.0.2
+  open_filex: ^4.7.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

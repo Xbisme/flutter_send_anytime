@@ -14,6 +14,10 @@ abstract final class AppRoutes {
   /// Send progress + completion screen (#004), driven by the transfer stream.
   static const sendProgress = '/send/progress';
 
+  /// Receive progress + completion screen (#005), driven by the transfer
+  /// stream; reuses the shared Connect hub (receiver role) for code entry.
+  static const receiveProgress = '/receive/progress';
+
   /// Dev-flavor-only signaling/pairing debug surface (#003, FR-021a). Mounted
   /// only when `AppConfig.flavor.isDev`; absent from prod builds.
   static const pairingDebug = '/dev/pairing';

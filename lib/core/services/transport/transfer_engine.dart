@@ -234,7 +234,32 @@ class TransferEngine {
 
     final transport = await _establish(signaling);
     if (transport == null) return _result();
+    return _runReceive(transport, destinationDir, onManifest);
+  }
 
+  /// #005 — Receive over an ALREADY-OPEN [transport] produced by the pairing
+  /// layer. Adopts the transport (ownership transfers to this engine — it closes
+  /// it on terminal/dispose) and runs the receive protocol from handshaking
+  /// onward; NO second WebRTC handshake. Mirror of [startSendOnTransport].
+  Future<Result<void>> startReceiveOnTransport({
+    required DataTransport transport,
+    required Directory destinationDir,
+    Future<bool> Function(TransferManifest manifest) onManifest = _autoAccept,
+  }) async {
+    _role = TransferRole.receiver;
+    _setPhase(TransferPhase.connecting);
+    _adoptTransport(transport);
+    return _runReceive(transport, destinationDir, onManifest);
+  }
+
+  /// Shared receive body — the frame loop, from handshaking onward. Used by both
+  /// [startReceive] (opens its own channel) and [startReceiveOnTransport]
+  /// (adopts the pairing-opened channel).
+  Future<Result<void>> _runReceive(
+    DataTransport transport,
+    Directory destinationDir,
+    Future<bool> Function(TransferManifest manifest) onManifest,
+  ) async {
     _setPhase(TransferPhase.handshaking);
     var currentIndex = -1;
     IOSink? sink;

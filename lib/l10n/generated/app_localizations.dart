@@ -636,6 +636,197 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Không đọc được file đã chọn'**
   String get sendErrorFileRead;
+
+  /// Receiver code-entry title
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập mã'**
+  String get receiveEnterCodeTitle;
+
+  /// Receiver code-entry instruction
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập mã 6 số từ người gửi'**
+  String get receiveEnterCodeInstruction;
+
+  /// Receiver connect button
+  ///
+  /// In vi, this message translates to:
+  /// **'Kết nối'**
+  String get receiveConnect;
+
+  /// Receiver connecting state
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang kết nối…'**
+  String get receiveConnecting;
+
+  /// Generic sender label until #010
+  ///
+  /// In vi, this message translates to:
+  /// **'Người gửi'**
+  String get receivePeerSender;
+
+  /// Incoming transfer prompt title
+  ///
+  /// In vi, this message translates to:
+  /// **'{peer} muốn gửi cho bạn'**
+  String receivePromptTitle(String peer);
+
+  /// Incoming transfer prompt body
+  ///
+  /// In vi, this message translates to:
+  /// **'{count} tệp · {size}'**
+  String receivePromptBody(int count, String size);
+
+  /// Accept incoming transfer
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhận'**
+  String get receiveAccept;
+
+  /// Reject incoming transfer
+  ///
+  /// In vi, this message translates to:
+  /// **'Từ chối'**
+  String get receiveReject;
+
+  /// Receive progress badge
+  ///
+  /// In vi, this message translates to:
+  /// **'ĐANG NHẬN'**
+  String get receiveProgressBadge;
+
+  /// Receiving from peer
+  ///
+  /// In vi, this message translates to:
+  /// **'từ {peer}'**
+  String receiveProgressFrom(String peer);
+
+  /// Current file position
+  ///
+  /// In vi, this message translates to:
+  /// **'tệp {index}/{total}'**
+  String receiveProgressFilePosition(int index, int total);
+
+  /// ETA remaining
+  ///
+  /// In vi, this message translates to:
+  /// **'còn {time}'**
+  String receiveProgressRemaining(String time);
+
+  /// Cancel receive button
+  ///
+  /// In vi, this message translates to:
+  /// **'Huỷ'**
+  String get receiveCancel;
+
+  /// Cancel-receive confirm title
+  ///
+  /// In vi, this message translates to:
+  /// **'Huỷ lượt nhận?'**
+  String get receiveCancelConfirmTitle;
+
+  /// Cancel-receive confirm body
+  ///
+  /// In vi, this message translates to:
+  /// **'Lượt nhận đang diễn ra sẽ dừng. Các tệp đã nhận xong vẫn được giữ.'**
+  String get receiveCancelConfirmBody;
+
+  /// Keep receiving
+  ///
+  /// In vi, this message translates to:
+  /// **'Tiếp tục nhận'**
+  String get receiveCancelConfirmKeep;
+
+  /// Receive complete title
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã nhận xong'**
+  String get receiveCompleteTitle;
+
+  /// Receive complete summary
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã nhận {count} tệp · {size} từ {peer} trong {duration}'**
+  String receiveCompleteDetail(
+    int count,
+    String size,
+    String peer,
+    String duration,
+  );
+
+  /// Partial receive title
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhận chưa đủ'**
+  String get receivePartialTitle;
+
+  /// Partial receive summary
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã nhận {received}/{total} tệp · {size}'**
+  String receivePartialDetail(int received, int total, String size);
+
+  /// Open a received file
+  ///
+  /// In vi, this message translates to:
+  /// **'Mở'**
+  String get receiveOpen;
+
+  /// Share received files
+  ///
+  /// In vi, this message translates to:
+  /// **'Chia sẻ'**
+  String get receiveShare;
+
+  /// Finish receive (return home)
+  ///
+  /// In vi, this message translates to:
+  /// **'Xong'**
+  String get receiveDone;
+
+  /// Receive failure title
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhận thất bại'**
+  String get receiveErrorTitle;
+
+  /// Retry receive
+  ///
+  /// In vi, this message translates to:
+  /// **'Thử lại'**
+  String get receiveRetry;
+
+  /// Integrity check failed
+  ///
+  /// In vi, this message translates to:
+  /// **'Tệp lỗi khi kiểm tra — nhận lại'**
+  String get receiveErrorIntegrity;
+
+  /// File write failed
+  ///
+  /// In vi, this message translates to:
+  /// **'Không lưu được tệp vào thiết bị'**
+  String get receiveErrorWrite;
+
+  /// Connection lost while receiving
+  ///
+  /// In vi, this message translates to:
+  /// **'Mất kết nối khi đang nhận'**
+  String get receiveErrorConnectionLost;
+
+  /// Open file failed toast
+  ///
+  /// In vi, this message translates to:
+  /// **'Không mở được tệp này'**
+  String get receiveOpenFailed;
+
+  /// Share failed toast
+  ///
+  /// In vi, this message translates to:
+  /// **'Không chia sẻ được'**
+  String get receiveShareFailed;
 }
 
 class _AppLocalizationsDelegate
