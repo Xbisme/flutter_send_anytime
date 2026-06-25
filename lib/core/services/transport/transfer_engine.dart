@@ -365,11 +365,22 @@ class TransferEngine {
                 ),
               );
             }
-            final dest = _resolveCollision(
-              destinationDir,
-              _items[index].name,
-            );
-            await _activePart!.rename(dest);
+            final String dest;
+            try {
+              // The destination dir may have been cleaned between sessions —
+              // recreate it before finalizing so the rename can't miss it.
+              if (!destinationDir.existsSync()) {
+                await destinationDir.create(recursive: true);
+              }
+              dest = _resolveCollision(destinationDir, _items[index].name);
+              await _activePart!.rename(dest);
+            } on FileSystemException catch (e) {
+              // OS error code only — the message can embed a path.
+              AppLogger.error(
+                'finalize failed (errno ${e.osError?.errorCode})',
+              );
+              return _terminate(TransferPhase.failed, _mapWriteError(e));
+            }
             _activePart = null;
             _completedBytes += expectedSize;
             _updateItem(
@@ -614,7 +625,12 @@ class TransferEngine {
     );
     await quarantine.create(recursive: true);
     _quarantineDir = quarantine;
-    return File('${quarantine.path}/${_uuid.v4()}.part');
+    final part = File('${quarantine.path}/${_uuid.v4()}.part');
+    // Materialize the file now: openWrite() is lazy, so a zero-byte file (no
+    // chunks) would never hit disk and the later rename would throw
+    // PathNotFoundException.
+    await part.create(recursive: true);
+    return part;
   }
 
   String _resolveCollision(Directory dir, String name) {
