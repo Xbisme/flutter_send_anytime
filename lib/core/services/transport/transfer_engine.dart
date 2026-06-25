@@ -65,6 +65,15 @@ class TransferEngine {
     failure: _failure,
   );
 
+  /// Receiver-only: every file in the manifest has arrived and been verified.
+  /// A channel close at this point is a success, not a drop — the sender may
+  /// have torn the channel down right after sending the final `sessionComplete`
+  /// frame, before we processed it.
+  bool get _allFilesReceived =>
+      _role == TransferRole.receiver &&
+      _items.isNotEmpty &&
+      _items.every((i) => i.status == FileItemStatus.completed);
+
   // --------------------------------------------------------------- sender ---
 
   /// Begin sending [session] over [signaling]. Resolves when the session
@@ -217,7 +226,19 @@ class TransferEngine {
     )) {
       return _result();
     }
+    // Let the final frames flush to the wire before we tear the channel down —
+    // closing immediately can drop the last FileComplete/sessionComplete and
+    // strand the receiver mid-transfer.
+    await _drainBuffer(transport);
     return _terminate(TransferPhase.done);
+  }
+
+  /// Wait (bounded) for the data channel's send buffer to flush.
+  Future<void> _drainBuffer(DataTransport transport) async {
+    for (var i = 0; i < 60; i++) {
+      if (_terminated || transport.bufferedAmount == 0) return;
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    }
   }
 
   // ------------------------------------------------------------- receiver ---
@@ -427,8 +448,10 @@ class TransferEngine {
         AppLogger.error('receive failed (${error.runtimeType}): $error');
       }
     }
-    // Stream ended without a terminal frame → the peer dropped.
+    // Stream ended. If every file already arrived + verified, the sender simply
+    // tore the channel down after the last frame — that's success, not a drop.
     if (!_terminated) {
+      if (_allFilesReceived) return _terminate(TransferPhase.done);
       AppLogger.warning('receive ended: inbound stream closed before complete');
       return _terminate(
         TransferPhase.failed,
@@ -491,16 +514,21 @@ class TransferEngine {
   void _adoptTransport(DataTransport transport) {
     _transport = transport;
     unawaited(
-      transport.closed.then((_) {
-        if (!_terminated) {
-          AppLogger.warning('transport closed before transfer completed');
-          unawaited(
-            _terminate(
-              TransferPhase.failed,
-              const AppFailure.connectionLost(),
-            ),
-          );
+      transport.closed.then((_) async {
+        if (_terminated) return;
+        // Give the inbound stream a moment to drain buffered frames (the final
+        // FileComplete/sessionComplete may still be queued) before deciding.
+        await Future<void>.delayed(const Duration(milliseconds: 250));
+        if (_terminated) return;
+        if (_allFilesReceived) {
+          await _terminate(TransferPhase.done);
+          return;
         }
+        AppLogger.warning('transport closed before transfer completed');
+        await _terminate(
+          TransferPhase.failed,
+          const AppFailure.connectionLost(),
+        );
       }),
     );
   }
