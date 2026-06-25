@@ -66,7 +66,7 @@ Both wrapped in `ReceivedFilesService` returning `Result<void>` so the cubit `.f
 
 **Alternatives rejected**: `open_file` (less maintained than `open_filex`); raw platform channels (reinventing maintained plugins, XIII).
 
-**Build notes (XV)**: `share_plus` 13.1.0 requires Java 17 / Kotlin 2.2 / AGP ≥ 8.12.1 on Android — verified now, folded into the deferred on-device build; if it forces Gradle churn beyond that build, pin to the newest 13.x compatible with the current toolchain and document it. `open_filex` 4.7.0 dropped the `REQUEST_INSTALL_PACKAGES` requirement; a `FileProvider` manifest entry is added only if a conflict surfaces at build. `path_provider` 2.1.6 is Flutter-verified, no native config.
+**Build notes (XV)**: `share_plus` was **pinned to 12.0.2** (not 13.1.0): 13.x depends on `win32 ^6`, which conflicts with `file_picker` 11's `win32 ^5.9` (a Windows-only transitive, irrelevant to iOS/Android but resolved by pub across all platforms). 12.0.2 exposes the identical `SharePlus.instance.share(ShareParams(files:[XFile]))` API, needs `win32 ^5.5.3` (compatible), and requires no runtime permission — verified pub.dev 2026-06-25. `open_filex` 4.7.0 dropped the `REQUEST_INSTALL_PACKAGES` requirement; a `FileProvider` manifest entry is added only if a conflict surfaces at build. `path_provider` 2.1.6 is Flutter-verified, no native config.
 
 ## R7. Shared Progress/Complete lift — reuse Send UI without cross-feature imports
 

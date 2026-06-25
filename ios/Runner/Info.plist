@@ -68,5 +68,10 @@
 		</array>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<!-- #005: expose received files (app Documents) in the Files app -->
+		<key>UIFileSharingEnabled</key>
+		<true/>
+		<key>LSSupportsOpeningDocumentsInPlace</key>
+		<true/>
 	</dict>
 </plist>

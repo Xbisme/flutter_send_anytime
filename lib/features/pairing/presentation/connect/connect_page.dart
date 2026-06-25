@@ -239,8 +239,9 @@ class _ReceiverPanelState extends State<_ReceiverPanel> {
               label: l10n.receiveConnect,
               icon: LucideIcons.arrowRight,
               onPressed: canConnect
-                  ? () =>
-                        unawaited(context.read<PairingCubit>().joinWithCode(_code))
+                  ? () => unawaited(
+                      context.read<PairingCubit>().joinWithCode(_code),
+                    )
                   : null,
             ),
         ],

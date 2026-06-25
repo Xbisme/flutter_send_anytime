@@ -123,7 +123,11 @@ class _ReceiveTransferViewState extends State<_ReceiveTransferView> {
     if (!context.mounted) return;
     result.fold(
       (_) {},
-      (_) => AppToast.show(context, l10n.receiveOpenFailed, type: AppToastType.error),
+      (_) => AppToast.show(
+        context,
+        l10n.receiveOpenFailed,
+        type: AppToastType.error,
+      ),
     );
   }
 
@@ -133,7 +137,11 @@ class _ReceiveTransferViewState extends State<_ReceiveTransferView> {
     if (!context.mounted) return;
     result.fold(
       (_) {},
-      (_) => AppToast.show(context, l10n.receiveShareFailed, type: AppToastType.error),
+      (_) => AppToast.show(
+        context,
+        l10n.receiveShareFailed,
+        type: AppToastType.error,
+      ),
     );
   }
 }
@@ -154,7 +162,11 @@ class _FailureView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(LucideIcons.circleAlert, size: 44, color: AppColors.danger),
+          const Icon(
+            LucideIcons.circleAlert,
+            size: 44,
+            color: AppColors.danger,
+          ),
           const SizedBox(height: AppSpacing.x4),
           Text(
             l10n.receiveErrorTitle,

@@ -116,7 +116,9 @@ class _ReceiverComplete extends StatelessWidget {
     final view = parent.view;
     final files = view.completedItems;
     final isPartial = view.isPartial;
-    final title = isPartial ? l10n.receivePartialTitle : l10n.receiveCompleteTitle;
+    final title = isPartial
+        ? l10n.receivePartialTitle
+        : l10n.receiveCompleteTitle;
     final detail = isPartial
         ? l10n.receivePartialDetail(
             view.completedCount,
@@ -182,7 +184,9 @@ class _ReceiverComplete extends StatelessWidget {
                   onPressed: files.isEmpty
                       ? null
                       : () => parent.onShare?.call(
-                          [for (final f in files) f.finalPath].whereType<String>().toList(),
+                          [
+                            for (final f in files) f.finalPath,
+                          ].whereType<String>().toList(),
                         ),
                 ),
               ),
@@ -200,8 +204,7 @@ class _ReceiverComplete extends StatelessWidget {
     );
   }
 
-  int _sum(List<FileTransferItem> items) =>
-      items.fold(0, (a, b) => a + b.size);
+  int _sum(List<FileTransferItem> items) => items.fold(0, (a, b) => a + b.size);
 }
 
 class _CheckBadge extends StatelessWidget {

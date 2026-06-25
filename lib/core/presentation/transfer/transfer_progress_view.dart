@@ -39,7 +39,9 @@ class TransferProgressView extends StatelessWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text(
-          receiver ? l10n.receiveCancelConfirmTitle : l10n.sendCancelConfirmTitle,
+          receiver
+              ? l10n.receiveCancelConfirmTitle
+              : l10n.sendCancelConfirmTitle,
         ),
         content: Text(
           receiver ? l10n.receiveCancelConfirmBody : l10n.sendCancelConfirmBody,

@@ -94,7 +94,11 @@ void main() {
           .having((s) => s.data.awaitingDecision, 'awaiting', true)
           .having((s) => s.data.incomingOffer?.fileCount, 'fileCount', 2)
           .having((s) => s.data.incomingOffer?.totalBytes, 'totalBytes', 300)
-          .having((s) => s.data.incomingOffer?.senderLabel, 'peer', 'Người gửi'),
+          .having(
+            (s) => s.data.incomingOffer?.senderLabel,
+            'peer',
+            'Người gửi',
+          ),
     ],
     verify: (cubit) {
       expect(decisionValue, isTrue);

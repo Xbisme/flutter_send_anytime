@@ -1,7 +1,7 @@
 <!-- SPECKIT START -->
 # Safe Send — Agent Context
 
-Active feature: **#005 Receive Flow (Nhận)** ⭐ MVP (branch `005-receive-flow`). #001 ✅ · #002 ✅ · #003 ✅ merged · #004 ✅ implemented.
+Active feature: **#005 Receive Flow (Nhận)** ✅ IMPLEMENTED ⭐ MVP (branch `005-receive-flow`). #001 ✅ · #002 ✅ · #003 ✅ merged · #004 ✅ · #005 ✅ implemented. **Next: #006 History.**
 Current plan: [specs/005-receive-flow/plan.md](specs/005-receive-flow/plan.md)
 Spec: [specs/005-receive-flow/spec.md](specs/005-receive-flow/spec.md)
 
