@@ -490,7 +490,8 @@ class HomeQuickActions extends StatelessWidget {
               label: l10n.homeActionScanQr,
               subtitle: l10n.homeActionScanQrSub,
               gradient: AppColors.gradientInfo,
-              onTap: () => context.push(AppRoutes.receive),
+              // Lands the receiver straight on the QR scanner (#007, FR-019).
+              onTap: () => context.push(AppRoutes.receive, extra: true),
             ),
             QuickActionCard(
               icon: LucideIcons.radar,

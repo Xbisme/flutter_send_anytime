@@ -529,4 +529,49 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get receiveShareFailed => 'Không chia sẻ được';
+
+  @override
+  String get commonOr => 'hoặc';
+
+  @override
+  String get receiveScanQr => 'Quét mã QR';
+
+  @override
+  String get connectQrInstruction => 'Để người nhận quét mã QR này';
+
+  @override
+  String connectQrCodeLabel(String code) {
+    return 'Mã QR chứa mã kết nối $code';
+  }
+
+  @override
+  String get scanTitle => 'Quét mã QR';
+
+  @override
+  String get scanInstruction => 'Hướng camera vào mã QR của người gửi';
+
+  @override
+  String get scanTorch => 'Đèn pin';
+
+  @override
+  String get scanPickImage => 'Chọn ảnh có mã QR';
+
+  @override
+  String get scanInvalidCode => 'Đây không phải mã Safe Send';
+
+  @override
+  String get scanNoCodeFound => 'Không tìm thấy mã QR trong ảnh';
+
+  @override
+  String get scanCameraBlockedTitle => 'Cần quyền camera';
+
+  @override
+  String get scanCameraBlockedBody =>
+      'Cho phép Safe Send dùng camera để quét, hoặc chọn ảnh có sẵn mã QR.';
+
+  @override
+  String get scanOpenSettings => 'Mở Cài đặt';
+
+  @override
+  String get scanRequestPermission => 'Cho phép camera';
 }

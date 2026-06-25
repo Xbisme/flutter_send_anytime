@@ -178,5 +178,20 @@
   "receiveErrorWrite": "Couldn't save the file to your device",
   "receiveErrorConnectionLost": "Lost connection while receiving",
   "receiveOpenFailed": "Couldn't open this file",
-  "receiveShareFailed": "Couldn't share"
+  "receiveShareFailed": "Couldn't share",
+
+  "commonOr": "or",
+  "receiveScanQr": "Scan QR code",
+  "connectQrInstruction": "Have the receiver scan this QR code",
+  "connectQrCodeLabel": "QR code containing connection code {code}",
+  "scanTitle": "Scan QR code",
+  "scanInstruction": "Point the camera at the sender's QR code",
+  "scanTorch": "Torch",
+  "scanPickImage": "Choose a photo with a QR code",
+  "scanInvalidCode": "That's not a Safe Send code",
+  "scanNoCodeFound": "No QR code found in the image",
+  "scanCameraBlockedTitle": "Camera permission needed",
+  "scanCameraBlockedBody": "Allow Safe Send to use the camera, or choose a photo that has the QR code.",
+  "scanOpenSettings": "Open Settings",
+  "scanRequestPermission": "Allow camera"
 }

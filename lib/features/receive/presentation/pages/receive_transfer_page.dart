@@ -14,12 +14,12 @@ import 'package:safe_send/core/presentation/buttons/app_buttons.dart';
 import 'package:safe_send/core/presentation/feedback/app_toast.dart';
 import 'package:safe_send/core/presentation/transfer/transfer_complete_view.dart';
 import 'package:safe_send/core/presentation/transfer/transfer_progress_view.dart';
-import 'package:safe_send/core/services/transport/data_transport.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
 import 'package:safe_send/core/theme/app_dimens.dart';
 import 'package:safe_send/core/utils/l10n_extension.dart';
 import 'package:safe_send/features/receive/presentation/cubit/receive_transfer_cubit.dart';
 import 'package:safe_send/features/receive/presentation/receive_failure_l10n.dart';
+import 'package:safe_send/features/receive/presentation/receive_progress_args.dart';
 import 'package:safe_send/features/receive/presentation/widgets/incoming_transfer_dialog.dart';
 
 /// Screens 05 (Đang truyền) + 06 (Hoàn tất) for the receiver (#005). Drives the
@@ -27,9 +27,9 @@ import 'package:safe_send/features/receive/presentation/widgets/incoming_transfe
 /// accept/reject prompt when the manifest arrives; routes Reject → Home and a
 /// recoverable failure → a retry that restarts the receive flow (FR-009/023).
 class ReceiveTransferPage extends StatelessWidget {
-  const ReceiveTransferPage({required this.transport, super.key});
+  const ReceiveTransferPage({required this.args, super.key});
 
-  final DataTransport transport;
+  final ReceiveProgressArgs args;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,13 @@ class ReceiveTransferPage extends StatelessWidget {
     return BlocProvider<ReceiveTransferCubit>(
       create: (_) {
         final cubit = getIt<ReceiveTransferCubit>();
-        unawaited(cubit.start(transport, senderLabel: senderLabel));
+        unawaited(
+          cubit.start(
+            args.transport,
+            senderLabel: senderLabel,
+            method: args.method,
+          ),
+        );
         return cubit;
       },
       child: const _ReceiveTransferView(),

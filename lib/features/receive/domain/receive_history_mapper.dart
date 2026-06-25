@@ -15,13 +15,14 @@ abstract final class ReceiveHistoryMapper {
     required String id,
     required DateTime createdAt,
     required TransferView view,
+    PairingMethod pairingMethod = PairingMethod.sixDigitCode,
     String peerLabel = '',
   }) {
     return TransferRecord(
       id: id,
       direction: TransferDirection.received,
       status: historyStatusForView(view),
-      pairingMethod: PairingMethod.sixDigitCode,
+      pairingMethod: pairingMethod,
       peerLabel: peerLabel,
       fileCount: view.items.length,
       totalBytes: view.items.fold(0, (sum, i) => sum + i.size),

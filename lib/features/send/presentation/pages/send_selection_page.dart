@@ -60,6 +60,7 @@ class _SendSelectionView extends StatelessWidget {
       extra: SendProgressArgs(
         sources: selection.toSources(),
         transport: result.transport,
+        method: result.method,
       ),
     );
   }

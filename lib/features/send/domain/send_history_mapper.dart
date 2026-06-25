@@ -16,6 +16,7 @@ abstract final class SendHistoryMapper {
     required DateTime createdAt,
     required List<FileSource> sources,
     required TransferView view,
+    PairingMethod pairingMethod = PairingMethod.sixDigitCode,
     String peerLabel = '',
   }) {
     final items = view.items;
@@ -23,7 +24,7 @@ abstract final class SendHistoryMapper {
       id: id,
       direction: TransferDirection.sent,
       status: historyStatusForView(view),
-      pairingMethod: PairingMethod.sixDigitCode,
+      pairingMethod: pairingMethod,
       peerLabel: peerLabel,
       fileCount: sources.length,
       totalBytes: sources.fold(0, (sum, s) => sum + s.size),

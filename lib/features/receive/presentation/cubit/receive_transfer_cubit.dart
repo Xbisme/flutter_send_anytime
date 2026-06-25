@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:injectable/injectable.dart';
 import 'package:safe_send/core/domain/cubit/app_cubit.dart';
 import 'package:safe_send/core/domain/cubit/app_state.dart';
+import 'package:safe_send/core/domain/history/transfer_history_enums.dart';
 import 'package:safe_send/core/domain/history/usecases/record_transfer_usecase.dart';
 import 'package:safe_send/core/domain/result.dart';
 import 'package:safe_send/core/domain/transfer/incoming_offer.dart';
@@ -33,6 +34,7 @@ class ReceiveTransferCubit extends AppCubit<TransferView> {
   Completer<bool>? _decision;
   IncomingOffer? _offer;
   int? _lastEta;
+  PairingMethod _method = PairingMethod.sixDigitCode;
   bool _rejectedByUser = false;
   bool _accepted = false;
   bool _recorded = false;
@@ -46,8 +48,10 @@ class ReceiveTransferCubit extends AppCubit<TransferView> {
   Future<void> start(
     DataTransport transport, {
     required String senderLabel,
+    PairingMethod method = PairingMethod.sixDigitCode,
   }) async {
     emitLoading();
+    _method = method;
     _projector.start();
     _sub = _startReceive.snapshots.listen(_onSnapshot);
     final result = await _startReceive(
@@ -134,6 +138,7 @@ class ReceiveTransferCubit extends AppCubit<TransferView> {
       id: _uuid.v4(),
       createdAt: DateTime.now(),
       view: view,
+      pairingMethod: _method,
     );
     unawaited(
       _recordTransfer(record).then(

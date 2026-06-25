@@ -23,6 +23,10 @@ abstract final class AppRoutes {
   /// stream; reuses the shared Connect hub (receiver role) for code entry.
   static const receiveProgress = '/receive/progress';
 
+  /// Full-screen QR scanner (#007). Pushed from the receiver's "Quét mã QR"
+  /// button; `context.push<String>` pops the parsed 6-digit code (or null).
+  static const qrScan = '/qr/scan';
+
   /// Dev-flavor-only signaling/pairing debug surface (#003, FR-021a). Mounted
   /// only when `AppConfig.flavor.isDev`; absent from prod builds.
   static const pairingDebug = '/dev/pairing';

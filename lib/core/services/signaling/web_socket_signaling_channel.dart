@@ -19,13 +19,32 @@ class WebSocketSignalingChannel implements SignalingChannel {
   final void Function(SignalingFrame) _sendFrame;
 
   // Broadcast so close() completes even if the engine never subscribed (a
-  // failure before peerPresent). The connector attaches its listener at
-  // peerPresent, before any relay frame is routed, so none are dropped.
+  // failure before peerPresent).
   final _inbound = StreamController<SignalingMessage>.broadcast();
   var _closed = false;
 
+  // The connector subscribes to [incoming] only AFTER `await
+  // createPeerConnection()` inside connect(). The peer's offer can be relayed
+  // during that async gap; a broadcast stream drops events added with no
+  // listener, which stranded the handshake (receiver never saw the offer). So we
+  // buffer relay frames until the first listener attaches, then replay them in
+  // order. After that, deliver straight through.
+  final _pending = <SignalingMessage>[];
+  var _hasListener = false;
+
   @override
-  Stream<SignalingMessage> get incoming => _inbound.stream;
+  Stream<SignalingMessage> get incoming {
+    _inbound.onListen = () {
+      _hasListener = true;
+      if (_pending.isEmpty) return;
+      final buffered = List<SignalingMessage>.of(_pending);
+      _pending.clear();
+      for (final m in buffered) {
+        if (!_inbound.isClosed) _inbound.add(m);
+      }
+    };
+    return _inbound.stream;
+  }
 
   @override
   Future<Result<void>> send(SignalingMessage message) async {
@@ -50,6 +69,13 @@ class WebSocketSignalingChannel implements SignalingChannel {
   /// `relay` (or `peer-left`) frame arrives.
   void deliverFromPeer(SignalingMessage message) {
     if (_closed || _inbound.isClosed) return;
+    // Before the connector subscribes, hold frames so the offer (relayed during
+    // the connector's `await createPeerConnection`) isn't dropped; replayed by
+    // [incoming]'s onListen. Once listening, deliver straight through.
+    if (!_hasListener) {
+      _pending.add(message);
+      return;
+    }
     _inbound.add(message);
   }
 

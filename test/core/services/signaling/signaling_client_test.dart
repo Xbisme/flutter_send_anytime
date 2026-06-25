@@ -85,6 +85,23 @@ void main() {
       await Future<void>.delayed(Duration.zero);
       expect(received.single, isA<SignalingOffer>());
     });
+
+    test('frames delivered BEFORE the listener attaches are buffered, '
+        'not dropped, and replayed in order on subscribe', () async {
+      // Regression: the connector subscribes only after `await
+      // createPeerConnection()`; the peer's offer can be relayed during that
+      // gap. A broadcast stream would drop it, stranding the handshake.
+      final received = <SignalingMessage>[];
+      WebSocketSignalingChannel(sendFrame: (_) {})
+        ..deliverFromPeer(const SignalingMessage.offer(sdp: 'o'))
+        ..deliverFromPeer(const SignalingMessage.iceCandidate(candidate: 'c'))
+        ..incoming.listen(received.add);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(received, hasLength(2));
+      expect(received[0], isA<SignalingOffer>());
+      expect(received[1], isA<SignalingIceCandidate>());
+    });
   });
 
   group('SignalingClient host', () {

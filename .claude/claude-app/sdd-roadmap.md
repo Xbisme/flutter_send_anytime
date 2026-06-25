@@ -202,7 +202,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #007: QR Connect
 
-- **Status**: ⬜ Not started
+- **Status**: ✅ **Implemented (code)** — branch `007-qr-connect` (2026-06-25). Sender QR tab (same hosting session + brightness boost) + receiver full-screen scanner (camera + torch + pick-from-photo + camera-permission recovery), reusing the #003 rendezvous unchanged; core `ConnectLink` codec (`safesend://connect?v=1&code=…`, deep-link-ready for #008); `pairingMethod=qr` recorded. `dart analyze` 0 · `flutter test` 199 passed. Two-device QR smoke + first `pod install` deferred. See [`changelog.md`](changelog.md).
 - **Branch**: `007-qr-connect`
 - **Depends on**: #003, #004, #005
 - **Design**: fills the **"QR" tab** of Screen 03 (Kết nối) + the **"Quét mã QR"** button on Screen 04 (Nhận). See [`ui-design-context.md`](ui-design-context.md) §Screen 03/04.
