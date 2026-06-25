@@ -22,6 +22,11 @@ class SignalingClient {
   SignalingClient(this._config, {SignalingSocketOpener? opener})
     : _open = opener ?? WebSocketSignalingSocket.connect;
 
+  /// DI entry point: injectable builds the client from [config] only, using the
+  /// real WebSocket opener. Tests use the default constructor with a fake opener.
+  @factoryMethod
+  factory SignalingClient.create(AppConfig config) => SignalingClient(config);
+
   final AppConfig _config;
   final SignalingSocketOpener _open;
 
@@ -113,7 +118,9 @@ class SignalingClient {
     _emit(const PairingState.connecting());
     try {
       final socket = _open(endpoint);
-      await socket.ready;
+      // Bound the connect so a dropped/blocked endpoint (e.g. iOS ATS blocking
+      // cleartext ws:// to a LAN IP) surfaces as a failure instead of hanging.
+      await socket.ready.timeout(SignalingTimeouts.connect);
       _socket = socket;
       _channel ??= WebSocketSignalingChannel(sendFrame: _sendFrame);
       _sub = socket.incoming.listen(

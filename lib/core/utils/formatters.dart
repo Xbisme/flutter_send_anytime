@@ -22,4 +22,24 @@ abstract final class Formatters {
   /// Short time of day, e.g. `14:20`.
   static String timeOfDay(DateTime dateTime, {String? locale}) =>
       DateFormat.Hm(locale).format(dateTime);
+
+  /// Transfer rate, e.g. `2.4 MB/s` (per-second byte size).
+  static String speed(double bytesPerSec, {String? locale}) {
+    final rounded = bytesPerSec <= 0 ? 0 : bytesPerSec.round();
+    return '${bytes(rounded, locale: locale)}/s';
+  }
+
+  /// Clock-style duration `m:ss` (or `h:mm:ss` past an hour), e.g. `1:05`.
+  static String clock(Duration duration) {
+    final total = duration.isNegative ? Duration.zero : duration;
+    final hours = total.inHours;
+    final minutes = total.inMinutes.remainder(60);
+    final seconds = total.inSeconds.remainder(60);
+    final ss = seconds.toString().padLeft(2, '0');
+    if (hours > 0) {
+      final mm = minutes.toString().padLeft(2, '0');
+      return '$hours:$mm:$ss';
+    }
+    return '$minutes:$ss';
+  }
 }

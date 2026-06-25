@@ -45,6 +45,9 @@ dependencies:
   safesend_signaling:
     path: packages/safesend_signaling
 
+  # Files (#004) — any-type multi-select via the system document picker
+  file_picker: ^11.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

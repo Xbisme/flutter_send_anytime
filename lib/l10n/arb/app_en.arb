@@ -61,5 +61,44 @@
   "pairingErrorUnreachable": "Can't reach the server",
   "pairingErrorTimeout": "Connection timed out",
   "pairingErrorConnectionLost": "Lost connection to the other device",
-  "pairingErrorGeneric": "Something went wrong, please try again"
+  "pairingErrorGeneric": "Something went wrong, please try again",
+
+  "sendTitle": "Send files",
+  "sendSelectedSummary": "{count} items · {size}",
+  "sendAdd": "Add",
+  "sendContinue": "Continue",
+  "sendEmptyTitle": "No files selected",
+  "sendEmptyBody": "Tap Add to choose files to send",
+  "sendRemove": "Remove",
+
+  "connectTitle": "Connect devices",
+  "connectTabCode": "6-digit",
+  "connectTabQr": "QR",
+  "connectTabNearby": "Nearby",
+  "connectShareInstruction": "Share this code with the receiver",
+  "connectExpiresIn": "Expires in {time}",
+  "connectWaiting": "Waiting for the other device…",
+  "connectShareLink": "Share invite link",
+  "connectRefreshCode": "Get a new code",
+  "connectComingSoonTab": "This option is coming soon",
+
+  "sendProgressBadge": "SENDING",
+  "sendPeerReceiver": "the receiver",
+  "sendProgressTo": "to {peer}",
+  "sendProgressFilePosition": "file {index}/{total}",
+  "sendProgressRemaining": "{time} left",
+  "sendCancel": "Cancel",
+  "sendCancelConfirmTitle": "Cancel this send?",
+  "sendCancelConfirmBody": "The transfer in progress will stop.",
+  "sendCancelConfirmKeep": "Keep sending",
+
+  "sendCompleteTitle": "Done!",
+  "sendCompleteDetail": "Sent {count} files · {size} to {peer} in {duration}",
+  "sendDone": "Done",
+  "sendAgain": "Send more",
+
+  "sendErrorTitle": "Send failed",
+  "sendRetry": "Try again",
+  "sendErrorRejected": "The receiver declined",
+  "sendErrorFileRead": "Couldn't read the selected file"
 }

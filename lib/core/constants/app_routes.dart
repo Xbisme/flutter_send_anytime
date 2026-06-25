@@ -7,6 +7,13 @@ abstract final class AppRoutes {
   static const send = '/send';
   static const receive = '/receive';
 
+  /// Shared pairing hub (#004) — reused by Send and Receive (#005). Returns a
+  /// `ConnectResult` (the open data transport) to its caller.
+  static const connect = '/connect';
+
+  /// Send progress + completion screen (#004), driven by the transfer stream.
+  static const sendProgress = '/send/progress';
+
   /// Dev-flavor-only signaling/pairing debug surface (#003, FR-021a). Mounted
   /// only when `AppConfig.flavor.isDev`; absent from prod builds.
   static const pairingDebug = '/dev/pairing';

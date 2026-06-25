@@ -4,11 +4,16 @@ import 'package:safe_send/app/view/app_shell.dart';
 import 'package:safe_send/core/config/app_config.dart';
 import 'package:safe_send/core/constants/app_routes.dart';
 import 'package:safe_send/core/di/injection.dart';
+import 'package:safe_send/core/domain/pairing/connect_handoff.dart';
+import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/features/history/presentation/history_page.dart';
 import 'package:safe_send/features/home/presentation/home_page.dart';
+import 'package:safe_send/features/pairing/presentation/connect/connect_page.dart';
 import 'package:safe_send/features/pairing/presentation/debug/pairing_debug_page.dart';
 import 'package:safe_send/features/receive/presentation/receive_page.dart';
-import 'package:safe_send/features/send/presentation/send_page.dart';
+import 'package:safe_send/features/send/presentation/pages/send_selection_page.dart';
+import 'package:safe_send/features/send/presentation/pages/send_transfer_page.dart';
+import 'package:safe_send/features/send/presentation/send_progress_args.dart';
 import 'package:safe_send/features/settings/presentation/settings_page.dart';
 import 'package:safe_send/features/splash/presentation/splash_page.dart';
 
@@ -63,12 +68,27 @@ GoRouter createAppRouter({bool includeDevRoutes = false}) {
       GoRoute(
         path: AppRoutes.send,
         parentNavigatorKey: rootKey,
-        builder: (_, _) => const SendPage(),
+        builder: (_, _) => const SendSelectionPage(),
       ),
       GoRoute(
         path: AppRoutes.receive,
         parentNavigatorKey: rootKey,
         builder: (_, _) => const ReceivePage(),
+      ),
+      GoRoute(
+        path: AppRoutes.connect,
+        parentNavigatorKey: rootKey,
+        builder: (_, state) => ConnectPage(
+          request:
+              state.extra as ConnectRequest? ??
+              const ConnectRequest(role: TransferRole.sender),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.sendProgress,
+        parentNavigatorKey: rootKey,
+        builder: (_, state) =>
+            SendTransferPage(args: state.extra! as SendProgressArgs),
       ),
       if (includeDevRoutes)
         GoRoute(

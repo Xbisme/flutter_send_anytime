@@ -158,7 +158,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #004: Send Flow (Gửi)
 
-- **Status**: 🟡 **Next**
+- **Status**: ✅ **Implemented (code)** — branch `004-send-flow` (2026-06-24). File selection (`file_picker` 11.0.2, any-type multi-select, no runtime permission) → production Connect hub (6-digit functional; QR/Gần đây stubbed; role-parameterized for #005) → progress (#002 snapshot stream) → complete / typed retryable failure. Engine reused via additive seams `TransferEngine.startSendOnTransport` + `PairingRepository.takeTransport`; features decoupled via `core/router` + go_router extra. `dart analyze` 0 · `flutter test` 107 passed · two-device send smoke deferred. See [`changelog.md`](changelog.md).
 - **Branch**: `004-send-flow`
 - **Depends on**: #002, #003
 - **Design**: Screens 02 **Gửi file (send)** → 03 **Kết nối** → 05 **Đang truyền (progress)** → 06 **Hoàn tất (complete)**, launched from the Home "Gửi" action. See [`ui-design-context.md`](ui-design-context.md) §Screen 02/05/06.
@@ -172,7 +172,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #005: Receive Flow (Nhận)
 
-- **Status**: ⬜ Not started — ⭐ **MVP CHECKPOINT after merge**
+- **Status**: 🟡 **Next** — ⭐ **MVP CHECKPOINT after merge**
 - **Branch**: `005-receive-flow`
 - **Depends on**: #002, #003, #004
 - **Design**: Screen 04 **Nhận file (receive)** → 05 **Đang truyền** → 06 **Hoàn tất**, launched from the Home "Nhận" action. Reuses Progress/Complete from #004. See [`ui-design-context.md`](ui-design-context.md) §Screen 04.

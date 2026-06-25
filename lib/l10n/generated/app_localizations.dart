@@ -427,6 +427,215 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Đã xảy ra lỗi, vui lòng thử lại'**
   String get pairingErrorGeneric;
+
+  /// Send file-selection screen title
+  ///
+  /// In vi, this message translates to:
+  /// **'Gửi file'**
+  String get sendTitle;
+
+  /// Selection header: item count + total size
+  ///
+  /// In vi, this message translates to:
+  /// **'{count} mục · {size}'**
+  String sendSelectedSummary(int count, String size);
+
+  /// Add more files button
+  ///
+  /// In vi, this message translates to:
+  /// **'Thêm'**
+  String get sendAdd;
+
+  /// Continue to pairing button
+  ///
+  /// In vi, this message translates to:
+  /// **'Tiếp tục'**
+  String get sendContinue;
+
+  /// Empty selection title
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa chọn file nào'**
+  String get sendEmptyTitle;
+
+  /// Empty selection body
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhấn Thêm để chọn file gửi đi'**
+  String get sendEmptyBody;
+
+  /// Remove a file from selection (semantic label)
+  ///
+  /// In vi, this message translates to:
+  /// **'Bỏ chọn'**
+  String get sendRemove;
+
+  /// Connect/pairing hub title
+  ///
+  /// In vi, this message translates to:
+  /// **'Kết nối thiết bị'**
+  String get connectTitle;
+
+  /// Connect tab: 6-digit code
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã 6 số'**
+  String get connectTabCode;
+
+  /// Connect tab: QR
+  ///
+  /// In vi, this message translates to:
+  /// **'QR'**
+  String get connectTabQr;
+
+  /// Connect tab: nearby
+  ///
+  /// In vi, this message translates to:
+  /// **'Gần đây'**
+  String get connectTabNearby;
+
+  /// Instruction above the code
+  ///
+  /// In vi, this message translates to:
+  /// **'Chia sẻ mã này với người nhận'**
+  String get connectShareInstruction;
+
+  /// Code expiry countdown
+  ///
+  /// In vi, this message translates to:
+  /// **'Hết hạn sau {time}'**
+  String connectExpiresIn(String time);
+
+  /// Waiting-for-peer status
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang chờ thiết bị kia kết nối…'**
+  String get connectWaiting;
+
+  /// Share invite link action (stub)
+  ///
+  /// In vi, this message translates to:
+  /// **'Chia sẻ link mời'**
+  String get connectShareLink;
+
+  /// Get a fresh code action
+  ///
+  /// In vi, this message translates to:
+  /// **'Lấy mã mới'**
+  String get connectRefreshCode;
+
+  /// Disabled tab placeholder
+  ///
+  /// In vi, this message translates to:
+  /// **'Tính năng này sắp ra mắt'**
+  String get connectComingSoonTab;
+
+  /// Sending status badge
+  ///
+  /// In vi, this message translates to:
+  /// **'ĐANG GỬI'**
+  String get sendProgressBadge;
+
+  /// Generic destination-peer label (until #010)
+  ///
+  /// In vi, this message translates to:
+  /// **'Thiết bị nhận'**
+  String get sendPeerReceiver;
+
+  /// Destination line on progress
+  ///
+  /// In vi, this message translates to:
+  /// **'tới {peer}'**
+  String sendProgressTo(String peer);
+
+  /// Current file position in the batch
+  ///
+  /// In vi, this message translates to:
+  /// **'file {index}/{total}'**
+  String sendProgressFilePosition(int index, int total);
+
+  /// Time remaining
+  ///
+  /// In vi, this message translates to:
+  /// **'còn {time}'**
+  String sendProgressRemaining(String time);
+
+  /// Cancel transfer button
+  ///
+  /// In vi, this message translates to:
+  /// **'Hủy'**
+  String get sendCancel;
+
+  /// Cancel confirmation title
+  ///
+  /// In vi, this message translates to:
+  /// **'Hủy lượt gửi?'**
+  String get sendCancelConfirmTitle;
+
+  /// Cancel confirmation body
+  ///
+  /// In vi, this message translates to:
+  /// **'Lượt truyền đang diễn ra sẽ bị dừng.'**
+  String get sendCancelConfirmBody;
+
+  /// Dismiss cancel dialog (keep sending)
+  ///
+  /// In vi, this message translates to:
+  /// **'Tiếp tục gửi'**
+  String get sendCancelConfirmKeep;
+
+  /// Completion title
+  ///
+  /// In vi, this message translates to:
+  /// **'Hoàn tất!'**
+  String get sendCompleteTitle;
+
+  /// Completion summary line
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã gửi {count} file · {size} tới {peer} trong {duration}'**
+  String sendCompleteDetail(
+    int count,
+    String size,
+    String peer,
+    String duration,
+  );
+
+  /// Finish (return home) button
+  ///
+  /// In vi, this message translates to:
+  /// **'Xong'**
+  String get sendDone;
+
+  /// Start a new send button
+  ///
+  /// In vi, this message translates to:
+  /// **'Gửi tiếp'**
+  String get sendAgain;
+
+  /// Send failure title
+  ///
+  /// In vi, this message translates to:
+  /// **'Gửi thất bại'**
+  String get sendErrorTitle;
+
+  /// Retry the send
+  ///
+  /// In vi, this message translates to:
+  /// **'Thử lại'**
+  String get sendRetry;
+
+  /// Receiver declined the transfer
+  ///
+  /// In vi, this message translates to:
+  /// **'Người nhận đã từ chối'**
+  String get sendErrorRejected;
+
+  /// A selected file could not be read
+  ///
+  /// In vi, this message translates to:
+  /// **'Không đọc được file đã chọn'**
+  String get sendErrorFileRead;
 }
 
 class _AppLocalizationsDelegate
