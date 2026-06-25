@@ -8,6 +8,7 @@ import 'package:safe_send/core/domain/pairing/pairing_role.dart';
 import 'package:safe_send/core/domain/pairing/pairing_state.dart';
 import 'package:safe_send/core/domain/result.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
+import 'package:safe_send/core/services/pairing/active_hosting_registry.dart';
 import 'package:safe_send/core/services/signaling/signaling_client.dart';
 import 'package:safe_send/core/services/transport/data_transport.dart';
 import 'package:safe_send/features/pairing/domain/pairing_repository.dart';
@@ -18,16 +19,26 @@ import 'package:safe_send/features/pairing/domain/pairing_repository.dart';
 /// opens (#003 stops here; transfer is #004/#005).
 @Injectable(as: PairingRepository)
 class PairingRepositoryImpl implements PairingRepository {
-  PairingRepositoryImpl(this._client, this._connector, this._config);
+  PairingRepositoryImpl(
+    this._client,
+    this._connector,
+    this._config,
+    this._hostingRegistry,
+  );
 
   final SignalingClient _client;
   final PeerConnector _connector;
   final AppConfig _config;
+  final ActiveHostingRegistry _hostingRegistry;
 
   final _state = StreamController<PairingState>.broadcast();
   StreamSubscription<PairingState>? _clientSub;
   DataTransport? _transport;
   var _connecting = false;
+
+  /// Non-null once this session has issued a hosting code — so [dispose] clears
+  /// the registry only for a session that actually set it (#008, FR-015).
+  String? _hostingCode;
 
   @override
   Stream<PairingState> get state => _state.stream;
@@ -53,6 +64,8 @@ class PairingRepositoryImpl implements PairingRepository {
 
   @override
   Future<void> dispose() async {
+    // Clear the registry only if this session is the one that set it (#008).
+    if (_hostingCode != null) _hostingRegistry.clear();
     await _clientSub?.cancel();
     await _transport?.close();
     await _client.dispose();
@@ -61,6 +74,12 @@ class PairingRepositoryImpl implements PairingRepository {
 
   void _bind(PairingRole role) {
     _clientSub ??= _client.state.listen((state) {
+      // Track the live hosting code so a deep-link self-invite can be detected
+      // (#008, FR-015). Set as the sender's code is issued / rotates.
+      if (state is PairingHosting) {
+        _hostingCode = state.code.value;
+        _hostingRegistry.setHosting(state.code.value);
+      }
       _emit(state);
       if (state is PairingPeerPresent && !_connecting) {
         _connecting = true;

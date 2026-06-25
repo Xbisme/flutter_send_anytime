@@ -1,6 +1,6 @@
 # Safe Send — Project Context
 
-> Last updated: 2026-06-24 (Project bootstrapped — Speckit scaffolding in place; no specs started. Roadmap drafted.)
+> Last updated: 2026-06-26 (Specs #001–#007 all merged into `main` via PRs #1–#7. **Active focus: #008 Share Link** — not started.)
 > **Mục đích**: Snapshot tối thiểu để LLM/người đọc bắt đầu một session làm việc — context hiện tại, focus, links. Không chứa ship history hay alignment decisions.
 >
 > **Đọc file nào khi nào**:
@@ -34,7 +34,8 @@ Two devices agree on a **rendezvous identifier** (a 6-digit code, a QR, a link, 
 - **Latest**: **Spec #005 Receive Flow (Nhận)** ✅ **IMPLEMENTED** on branch `005-receive-flow` (2026-06-25). ⭐ MVP loop closed in code: enter 6-digit code (Connect hub receiver branch + `CodeInput`) → incoming-transfer accept/reject prompt → stream to app sandbox → live Progress/Complete (shared, role-parameterized, lifted to `core/`) with per-file Open + Share-all; partial outcome on mid-transfer drop (FR-013a). Additive seam `TransferEngine.startReceiveOnTransport`; `permission_handler` still deferred (app-sandbox save). **`dart analyze lib test` = 0 · `flutter test` = 128 passed · `dart format` clean.** Deferred: two-device receive smoke (T034). See [changelog.md](changelog.md) + [specs/005-receive-flow/](../../specs/005-receive-flow/). **Next spec: #006 History.**
 - **Latest**: **Spec #006 Lịch sử (History)** ✅ **IMPLEMENTED** on branch `006-history` (2026-06-25). drift (SQLite) persistence in `core/data/` + `TransferHistoryRepository` (core, shared by Send/Receive/History/Home); one additive `RecordTransferUseCase` writes a record on each agreed-and-started terminal transfer (pairing-stage failures excluded, FR-001). Lịch sử tab = day-grouped list + search/direction/date filter + detail; actions re-send (all-or-nothing) / open / share / delete / clear-all (record-only, never deletes files). Home recent backfilled from the same store (FR-008 seam). **`dart analyze lib test` = 0 · `flutter test` = 167 passed · `dart format` clean.** Packages: `drift` 2.34.0 + `drift_flutter` 0.3.0 + `drift_dev` pinned 2.34.0 (2.34.1 needs analyzer ^13, conflicts with freezed 3.2.5). Deferred (device-only): on-device quickstart + first `pod install`. See [changelog.md](changelog.md) + [specs/006-history/](../../specs/006-history/). **Next spec: #007 QR Connect.**
 - **Latest**: **Spec #007 QR Connect** ✅ **IMPLEMENTED** on branch `007-qr-connect` (2026-06-25). Sender QR tab (same hosting session, brightness boost) + receiver full-screen scanner (camera + torch + pick-from-photo + graceful camera-permission recovery) reusing the #003 rendezvous; `ConnectLink` codec (`safesend://connect?v=1&code=…`, deep-link-ready for #008); `pairingMethod=qr` recorded. **`dart analyze lib test` = 0 · `flutter test` = 199 passed · `dart format` clean.** Packages: `qr_flutter` 4.1.0 + `mobile_scanner` 7.2.0 + `permission_handler` 12.0.3 + `screen_brightness` 2.1.11. Deferred (device-only): two-device QR smoke + first `pod install`. See [changelog.md](changelog.md) + [specs/007-qr-connect/](../../specs/007-qr-connect/). **Next spec: #008 Share Link.**
-- **Next spec**: **#008 Share Link** — generate a `safesend://`/universal-link invite (reusing the #007 `ConnectLink` payload) + cold/warm deep-link handling into Receive. iOS Associated Domains + Android App Links.
+- **Latest**: **Spec #008 Share Link** ✅ **IMPLEMENTED** on branch `008-share-link` (2026-06-26). Third connection method: sender shares a `safesend://connect?v=1&code=…` invite (reusing #007 `ConnectLink` verbatim) via the Connect hub "Chia sẻ link mời" action; receiver taps it (warm/cold) → auto-joins into the Receive accept/reject prompt. Custom scheme only (no universal links/domain/web fallback — deferred). Core-pure `DeepLinkService` + `ActiveHostingRegistry` + `DeepLinkCoordinator` (imports no feature pages); additive `ConnectRequest.autoJoinCode` + `ReceiveEntryRequest`; `pairingMethod=shareLink` both sides. Guards: invalid/expired→toast+Home, self-invite→toast, in-transfer→confirm dialog, latest-wins. **`dart analyze lib test` = 0 · `flutter test` = 211 passed · `dart format` clean.** Packages: `app_links` **6.4.1** (pinned — 7.x needs Dart 3.12/Flutter 3.44). Deferred (device): two-device cold/warm smoke + first `pod install`. See [changelog.md](changelog.md) + [specs/008-share-link/](../../specs/008-share-link/). **Next spec: #009 Nearby Radar.**
+- **Next spec**: **#009 Nearby Radar** — local discovery (mDNS/UDP multicast, evaluate BLE) + animated radar UI on the Connect "Gần đây" tab + Receive nearby DeviceRow; tap-to-connect onto the same rendezvous. Local Network (iOS 14+) + nearby-Wi-Fi/BLE (Android 12+) permissions.
 - **Toolchain note**: `flutter analyze` crashes on this detached-HEAD Flutter checkout (AOT analysis-server snapshot) — use **`dart analyze`** (gate-equivalent, same engine + `analysis_options.yaml`).
 - **Active blockers**: none. (Decisions to confirm at #003 planning: signaling-server language — Dart `shelf` vs Node — and hosting target for dev/prod. Bundle ids `app.safesend` / `app.safesend.dev` proposed, user-confirmable before store setup.)
 
@@ -42,14 +43,14 @@ Two devices agree on a **rendezvous identifier** (a 6-digit code, a QR, a link, 
 
 | # | Name | Status | Branch / merge |
 |---|---|---|---|
-| 001 | Project Foundation & Navigation | ✅ Implemented (code) · native/device deferred | `001-project-foundation` |
-| 002 | WebRTC Transport & Transfer Protocol Core | ✅ Implemented (code) · 2-device smoke deferred | `002-webrtc-transport-core` |
-| 003 | Signaling Server + 6-Digit Key Pairing | ✅ Implemented (code) · 2-device smoke deferred | `003-signaling-6digit` |
-| 004 | Send Flow (Gửi) | ✅ Implemented (code) · 2-device smoke deferred | `004-send-flow` |
-| 005 | Receive Flow (Nhận) ⭐ MVP | ✅ Implemented · **device-validated on 2 iPhones** | `005-receive-flow` |
-| 006 | Lịch sử (History) | ✅ Implemented (code) · device quickstart deferred | `006-history` |
-| 007 | QR Connect | ✅ Implemented (code) · 2-device smoke deferred | `007-qr-connect` |
-| 008 | Share Link | ⬜ Not started | `008-share-link` |
+| 001 | Project Foundation & Navigation | ✅ **Merged** (PR #1) | `001-project-foundation` |
+| 002 | WebRTC Transport & Transfer Protocol Core | ✅ **Merged** (PR #2) | `002-webrtc-transport-core` |
+| 003 | Signaling Server + 6-Digit Key Pairing | ✅ **Merged** (PR #3) | `003-signaling-6digit` |
+| 004 | Send Flow (Gửi) | ✅ **Merged** (PR #4) | `004-send-flow` |
+| 005 | Receive Flow (Nhận) ⭐ MVP | ✅ **Merged** (PR #5) · device-validated on 2 iPhones | `005-receive-flow` |
+| 006 | Lịch sử (History) | ✅ **Merged** (PR #6) | `006-history` |
+| 007 | QR Connect | ✅ **Merged** (PR #7) | `007-qr-connect` |
+| 008 | Share Link | ✅ Implemented (code) · 2-device smoke deferred | `008-share-link` |
 | 009 | Nearby Radar | ⬜ Not started | `009-nearby-radar` |
 | 010 | Settings & Preferences | ⬜ Not started | `010-settings` |
 | 011 | Polish & v1.0 Release | ⬜ Not started | `011-polish-v1-release` |

@@ -20,6 +20,10 @@ import 'package:safe_send/core/domain/history/transfer_history_repository.dart'
     as _i1016;
 import 'package:safe_send/core/domain/history/usecases/record_transfer_usecase.dart'
     as _i1032;
+import 'package:safe_send/core/services/deeplink/deep_link_service.dart'
+    as _i572;
+import 'package:safe_send/core/services/deeplink/deep_link_service_impl.dart'
+    as _i1;
 import 'package:safe_send/core/services/file/file_picker_service.dart'
     as _i1069;
 import 'package:safe_send/core/services/file/file_picker_service_impl.dart'
@@ -28,6 +32,8 @@ import 'package:safe_send/core/services/file/received_files_service.dart'
     as _i58;
 import 'package:safe_send/core/services/file/received_files_service_impl.dart'
     as _i423;
+import 'package:safe_send/core/services/pairing/active_hosting_registry.dart'
+    as _i639;
 import 'package:safe_send/core/services/permissions/camera_permission_service.dart'
     as _i522;
 import 'package:safe_send/core/services/signaling/signaling_client.dart' as _i0;
@@ -94,8 +100,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i265.HomePlaceholderDataSource>(
       () => _i265.HomePlaceholderDataSource(),
     );
+    gh.lazySingleton<_i572.DeepLinkService>(() => _i1.DeepLinkServiceImpl());
     gh.lazySingleton<_i522.CameraPermissionService>(
       () => _i522.PermissionHandlerCameraService(),
+    );
+    gh.lazySingleton<_i639.ActiveHostingRegistry>(
+      () => _i639.ActiveHostingRegistryImpl(),
     );
     gh.lazySingleton<_i58.ReceivedFilesService>(
       () => _i423.ReceivedFilesServiceImpl(),
@@ -109,13 +119,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i1016.TransferHistoryRepository>(
       () => _i835.TransferHistoryRepositoryImpl(gh<_i196.AppDatabase>()),
-    );
-    gh.factory<_i312.PairingRepository>(
-      () => _i181.PairingRepositoryImpl(
-        gh<_i0.SignalingClient>(),
-        gh<_i547.PeerConnector>(),
-        gh<_i132.AppConfig>(),
-      ),
     );
     gh.factory<_i1032.RecordTransferUseCase>(
       () =>
@@ -141,15 +144,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i103.QrScanCubit>(
       () => _i103.QrScanCubit(gh<_i522.CameraPermissionService>()),
-    );
-    gh.factory<_i825.HostSessionUseCase>(
-      () => _i825.HostSessionUseCase(gh<_i312.PairingRepository>()),
-    );
-    gh.factory<_i855.JoinSessionUseCase>(
-      () => _i855.JoinSessionUseCase(gh<_i312.PairingRepository>()),
-    );
-    gh.factory<_i964.PairingCubit>(
-      () => _i964.PairingCubit(gh<_i312.PairingRepository>()),
     );
     gh.factory<_i953.TransferEngine>(
       () => _i953.TransferEngine(
@@ -178,6 +172,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i560.HistoryCubit>(
       () => _i560.HistoryCubit(gh<_i951.WatchHistoryUseCase>()),
     );
+    gh.factory<_i312.PairingRepository>(
+      () => _i181.PairingRepositoryImpl(
+        gh<_i0.SignalingClient>(),
+        gh<_i547.PeerConnector>(),
+        gh<_i132.AppConfig>(),
+        gh<_i639.ActiveHostingRegistry>(),
+      ),
+    );
     gh.factory<_i259.SendTransferCubit>(
       () => _i259.SendTransferCubit(
         gh<_i343.StartSendUseCase>(),
@@ -192,6 +194,15 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i353.SendSelectionCubit>(
       () => _i353.SendSelectionCubit(gh<_i36.PickFilesUseCase>()),
+    );
+    gh.factory<_i825.HostSessionUseCase>(
+      () => _i825.HostSessionUseCase(gh<_i312.PairingRepository>()),
+    );
+    gh.factory<_i855.JoinSessionUseCase>(
+      () => _i855.JoinSessionUseCase(gh<_i312.PairingRepository>()),
+    );
+    gh.factory<_i964.PairingCubit>(
+      () => _i964.PairingCubit(gh<_i312.PairingRepository>()),
     );
     return this;
   }

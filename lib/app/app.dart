@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:safe_send/app/view/deep_link_listener.dart';
 import 'package:safe_send/core/router/app_router.dart';
 import 'package:safe_send/core/theme/app_theme.dart';
 import 'package:safe_send/l10n/generated/app_localizations.dart';
@@ -25,6 +26,10 @@ class SafeSendApp extends StatelessWidget {
         // themeMode defaults to ThemeMode.system — the app follows the OS
         // theme; there is no in-app scheme picker (#001).
         routerConfig: router ?? appRouter,
+        // Route incoming safesend:// invite links (#008). Sits under the
+        // navigator + toast overlay but inside the router.
+        builder: (context, child) =>
+            DeepLinkListener(child: child ?? const SizedBox.shrink()),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         localeResolutionCallback: (locale, supported) {

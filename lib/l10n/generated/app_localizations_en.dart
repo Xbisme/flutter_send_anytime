@@ -579,4 +579,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scanRequestPermission => 'Allow camera';
+
+  @override
+  String get connectShareLinkMessage =>
+      'I\'d like to send you some files via Safe Send — tap the link to receive:';
+
+  @override
+  String get shareLinkInvalid => 'Invalid invite link';
+
+  @override
+  String get shareLinkExpired => 'This invite link has expired';
+
+  @override
+  String get shareLinkOwn => 'This is your own invite link';
+
+  @override
+  String get shareLinkLeaveTransferTitle => 'Leave the current transfer?';
+
+  @override
+  String get shareLinkLeaveTransferBody =>
+      'A transfer is in progress. Opening a new invite link will stop it.';
+
+  @override
+  String get shareLinkLeaveTransferConfirm => 'Leave and open link';
+
+  @override
+  String get shareLinkLeaveTransferCancel => 'Keep transferring';
 }

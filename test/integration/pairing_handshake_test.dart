@@ -9,6 +9,7 @@ import 'package:safe_send/core/domain/pairing/pairing_code.dart';
 import 'package:safe_send/core/domain/pairing/pairing_state.dart';
 import 'package:safe_send/core/domain/result.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
+import 'package:safe_send/core/services/pairing/active_hosting_registry.dart';
 import 'package:safe_send/core/services/signaling/signaling_channel.dart';
 import 'package:safe_send/core/services/signaling/signaling_client.dart';
 import 'package:safe_send/core/services/transport/data_transport.dart';
@@ -88,6 +89,7 @@ void main() {
     SignalingClient(config),
     FakeHandshakeConnector(),
     config,
+    ActiveHostingRegistryImpl(),
   );
 
   test(

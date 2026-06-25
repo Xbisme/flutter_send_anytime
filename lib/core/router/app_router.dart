@@ -6,6 +6,7 @@ import 'package:safe_send/core/constants/app_routes.dart';
 import 'package:safe_send/core/di/injection.dart';
 import 'package:safe_send/core/domain/history/transfer_record.dart';
 import 'package:safe_send/core/domain/pairing/connect_handoff.dart';
+import 'package:safe_send/core/domain/pairing/receive_entry_request.dart';
 import 'package:safe_send/core/domain/transfer/file_source.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/features/history/presentation/history_detail_page.dart';
@@ -80,8 +81,11 @@ GoRouter createAppRouter({bool includeDevRoutes = false}) {
       GoRoute(
         path: AppRoutes.receive,
         parentNavigatorKey: rootKey,
-        builder: (_, state) =>
-            ReceiveEntryPage(openScanner: state.extra as bool? ?? false),
+        builder: (_, state) => ReceiveEntryPage(
+          request:
+              state.extra as ReceiveEntryRequest? ??
+              const ReceiveEntryRequest(),
+        ),
       ),
       GoRoute(
         path: AppRoutes.connect,

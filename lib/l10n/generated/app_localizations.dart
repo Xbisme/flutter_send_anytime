@@ -1145,6 +1145,54 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Cho phép camera'**
   String get scanRequestPermission;
+
+  /// Invite text shared alongside the share-link (#008)
+  ///
+  /// In vi, this message translates to:
+  /// **'Mình muốn gửi bạn vài tệp qua Safe Send — chạm vào link để nhận:'**
+  String get connectShareLinkMessage;
+
+  /// Toast when an opened invite link is malformed or not a Safe Send link
+  ///
+  /// In vi, this message translates to:
+  /// **'Link mời không hợp lệ'**
+  String get shareLinkInvalid;
+
+  /// Toast when an opened invite link's code has expired
+  ///
+  /// In vi, this message translates to:
+  /// **'Link mời đã hết hạn'**
+  String get shareLinkExpired;
+
+  /// Toast when the host taps their own invite link
+  ///
+  /// In vi, this message translates to:
+  /// **'Đây là link mời của chính bạn'**
+  String get shareLinkOwn;
+
+  /// Confirm dialog title when an invite link arrives during a transfer
+  ///
+  /// In vi, this message translates to:
+  /// **'Rời phiên truyền hiện tại?'**
+  String get shareLinkLeaveTransferTitle;
+
+  /// Confirm dialog body when an invite link arrives during a transfer
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn đang truyền tệp. Mở link mời mới sẽ dừng phiên hiện tại.'**
+  String get shareLinkLeaveTransferBody;
+
+  /// Confirm-and-leave action in the interrupt dialog
+  ///
+  /// In vi, this message translates to:
+  /// **'Rời và mở link'**
+  String get shareLinkLeaveTransferConfirm;
+
+  /// Cancel (keep transferring) action in the interrupt dialog
+  ///
+  /// In vi, this message translates to:
+  /// **'Tiếp tục truyền'**
+  String get shareLinkLeaveTransferCancel;
 }
 
 class _AppLocalizationsDelegate

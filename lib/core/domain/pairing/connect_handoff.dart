@@ -8,7 +8,11 @@ import 'package:safe_send/core/services/transport/data_transport.dart';
 ///
 /// Passed as `go_router` `extra` into the Connect route.
 class ConnectRequest {
-  const ConnectRequest({required this.role, this.openScanner = false});
+  const ConnectRequest({
+    required this.role,
+    this.openScanner = false,
+    this.autoJoinCode,
+  });
 
   /// Which side this device is — sender (Send) or receiver (Receive #005).
   final TransferRole role;
@@ -16,6 +20,11 @@ class ConnectRequest {
   /// When true (receiver only), the Connect hub opens the QR scanner straight
   /// away — used by the Home "Quét QR" quick action (#007, FR-019).
   final bool openScanner;
+
+  /// A 6-digit code to auto-join immediately (receiver only) — set when the
+  /// receiver arrived via a share-link invite (#008, FR-012). The receiver
+  /// panel joins this code on init and records `pairingMethod = shareLink`.
+  final String? autoJoinCode;
 }
 
 /// Returned (via `context.pop`) from the Connect route once the direct channel

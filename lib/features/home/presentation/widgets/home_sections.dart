@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:safe_send/core/constants/app_routes.dart';
+import 'package:safe_send/core/domain/pairing/receive_entry_request.dart';
 import 'package:safe_send/core/domain/transfer_enums.dart';
 import 'package:safe_send/core/presentation/files/file_widgets.dart';
 import 'package:safe_send/core/presentation/tiles/quick_action_card.dart';
@@ -491,7 +492,10 @@ class HomeQuickActions extends StatelessWidget {
               subtitle: l10n.homeActionScanQrSub,
               gradient: AppColors.gradientInfo,
               // Lands the receiver straight on the QR scanner (#007, FR-019).
-              onTap: () => context.push(AppRoutes.receive, extra: true),
+              onTap: () => context.push(
+                AppRoutes.receive,
+                extra: const ReceiveEntryRequest(openScanner: true),
+              ),
             ),
             QuickActionCard(
               icon: LucideIcons.radar,

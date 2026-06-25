@@ -574,4 +574,30 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get scanRequestPermission => 'Cho phép camera';
+
+  @override
+  String get connectShareLinkMessage =>
+      'Mình muốn gửi bạn vài tệp qua Safe Send — chạm vào link để nhận:';
+
+  @override
+  String get shareLinkInvalid => 'Link mời không hợp lệ';
+
+  @override
+  String get shareLinkExpired => 'Link mời đã hết hạn';
+
+  @override
+  String get shareLinkOwn => 'Đây là link mời của chính bạn';
+
+  @override
+  String get shareLinkLeaveTransferTitle => 'Rời phiên truyền hiện tại?';
+
+  @override
+  String get shareLinkLeaveTransferBody =>
+      'Bạn đang truyền tệp. Mở link mời mới sẽ dừng phiên hiện tại.';
+
+  @override
+  String get shareLinkLeaveTransferConfirm => 'Rời và mở link';
+
+  @override
+  String get shareLinkLeaveTransferCancel => 'Tiếp tục truyền';
 }
