@@ -140,10 +140,13 @@ abstract final class TransferProtocol {
   });
 
   /// Decode a frame. Throws [ProtocolException] on any malformed/unknown input.
-  static ProtocolFrame decode(Uint8List frame) {
+  /// Accepts any `List<int>` and normalizes it, so a non-`Uint8List` payload
+  /// from the native data-channel bridge can never escape as a runtime error.
+  static ProtocolFrame decode(List<int> frame) {
     if (frame.isEmpty) throw const ProtocolException('empty');
-    final opcode = frame[0];
-    final payload = Uint8List.sublistView(frame, 1);
+    final bytes = frame is Uint8List ? frame : Uint8List.fromList(frame);
+    final opcode = bytes[0];
+    final payload = Uint8List.sublistView(bytes, 1);
     if (opcode == TransferOpcode.chunk) {
       return ChunkFrame(Uint8List.fromList(payload));
     }

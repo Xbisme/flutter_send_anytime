@@ -116,24 +116,40 @@ class SignalingClient {
       return const AppFailure.signalingUnreachable();
     }
     _emit(const PairingState.connecting());
-    try {
-      final socket = _open(endpoint);
-      // Bound the connect so a dropped/blocked endpoint (e.g. iOS ATS blocking
-      // cleartext ws:// to a LAN IP) surfaces as a failure instead of hanging.
-      await socket.ready.timeout(SignalingTimeouts.connect);
-      _socket = socket;
-      _channel ??= WebSocketSignalingChannel(sendFrame: _sendFrame);
-      _sub = socket.incoming.listen(
-        _onData,
-        onDone: _onSocketClosed,
-        onError: (Object _) => _onSocketClosed(),
-      );
-      return null;
-    } on Object catch (error) {
-      AppLogger.error('signaling connect failed (${error.runtimeType})');
-      _emitFailed(const AppFailure.signalingUnreachable());
-      return const AppFailure.signalingUnreachable();
+    // Opening a fresh socket immediately after a prior session closed can
+    // momentarily fail (the OS/relay is still releasing the old connection), so
+    // a single short-backoff retry recovers a new transfer right after one
+    // finished. A genuinely unreachable endpoint still fails after the retry.
+    for (var attempt = 0; attempt < 2; attempt++) {
+      if (_disposed) return const AppFailure.signalingUnreachable();
+      SignalingSocket? socket;
+      try {
+        socket = _open(endpoint);
+        // Bound the connect so a dropped/blocked endpoint (e.g. iOS ATS blocking
+        // cleartext ws:// to a LAN IP) surfaces as a failure instead of hanging.
+        await socket.ready.timeout(SignalingTimeouts.connect);
+        _socket = socket;
+        _channel ??= WebSocketSignalingChannel(sendFrame: _sendFrame);
+        _sub = socket.incoming.listen(
+          _onData,
+          onDone: _onSocketClosed,
+          onError: (Object _) => _onSocketClosed(),
+        );
+        return null;
+      } on Object catch (error) {
+        AppLogger.error('signaling connect failed (${error.runtimeType})');
+        if (socket != null) {
+          unawaited(socket.close().catchError((Object _) {}));
+        }
+        if (attempt == 0) {
+          await Future<void>.delayed(const Duration(milliseconds: 400));
+          continue;
+        }
+        _emitFailed(const AppFailure.signalingUnreachable());
+        return const AppFailure.signalingUnreachable();
+      }
     }
+    return const AppFailure.signalingUnreachable();
   }
 
   void _onData(String raw) {

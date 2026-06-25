@@ -298,4 +298,119 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sendErrorFileRead => 'Couldn\'t read the selected file';
+
+  @override
+  String get receiveEnterCodeTitle => 'Enter the code';
+
+  @override
+  String get receiveEnterCodeInstruction =>
+      'Enter the 6-digit code from the sender';
+
+  @override
+  String get receiveConnect => 'Connect';
+
+  @override
+  String get receiveConnecting => 'Connecting…';
+
+  @override
+  String get receivePeerSender => 'the sender';
+
+  @override
+  String receivePromptTitle(String peer) {
+    return '$peer wants to send you files';
+  }
+
+  @override
+  String receivePromptBody(int count, String size) {
+    return '$count files · $size';
+  }
+
+  @override
+  String get receiveAccept => 'Accept';
+
+  @override
+  String get receiveReject => 'Decline';
+
+  @override
+  String get receiveProgressBadge => 'RECEIVING';
+
+  @override
+  String receiveProgressFrom(String peer) {
+    return 'from $peer';
+  }
+
+  @override
+  String receiveProgressFilePosition(int index, int total) {
+    return 'file $index/$total';
+  }
+
+  @override
+  String receiveProgressRemaining(String time) {
+    return '$time left';
+  }
+
+  @override
+  String get receiveCancel => 'Cancel';
+
+  @override
+  String get receiveCancelConfirmTitle => 'Cancel this transfer?';
+
+  @override
+  String get receiveCancelConfirmBody =>
+      'The transfer in progress will stop. Files already received are kept.';
+
+  @override
+  String get receiveCancelConfirmKeep => 'Keep receiving';
+
+  @override
+  String get receiveCompleteTitle => 'Received!';
+
+  @override
+  String receiveCompleteDetail(
+    int count,
+    String size,
+    String peer,
+    String duration,
+  ) {
+    return 'Received $count files · $size from $peer in $duration';
+  }
+
+  @override
+  String get receivePartialTitle => 'Partly received';
+
+  @override
+  String receivePartialDetail(int received, int total, String size) {
+    return 'Received $received/$total files · $size';
+  }
+
+  @override
+  String get receiveOpen => 'Open';
+
+  @override
+  String get receiveShare => 'Share';
+
+  @override
+  String get receiveDone => 'Done';
+
+  @override
+  String get receiveErrorTitle => 'Receive failed';
+
+  @override
+  String get receiveRetry => 'Try again';
+
+  @override
+  String get receiveErrorIntegrity =>
+      'A file failed its integrity check — receive again';
+
+  @override
+  String get receiveErrorWrite => 'Couldn\'t save the file to your device';
+
+  @override
+  String get receiveErrorConnectionLost => 'Lost connection while receiving';
+
+  @override
+  String get receiveOpenFailed => 'Couldn\'t open this file';
+
+  @override
+  String get receiveShareFailed => 'Couldn\'t share';
 }

@@ -82,8 +82,26 @@ class WebRtcPeerConnector implements PeerConnector {
       }
 
       final pcRef = pc;
+      // ICE candidates can arrive (trickle) before the remote description is
+      // set; adding one before `setRemoteDescription` throws "remote
+      // description was null". Buffer early candidates and flush them once the
+      // remote SDP is in place. Signal handling is serialized (chained) so the
+      // remote-set flag and the pending buffer never race.
+      final pending = <RTCIceCandidate>[];
+      var remoteSet = false;
+      var chain = Future<void>.value();
       sub = signaling.incoming.listen((message) {
-        unawaited(_handleSignal(pcRef, role, message, signaling));
+        chain = chain.then(
+          (_) => _handleSignal(
+            pc: pcRef,
+            role: role,
+            message: message,
+            signaling: signaling,
+            pending: pending,
+            isRemoteSet: () => remoteSet,
+            onRemoteSet: () => remoteSet = true,
+          ),
+        );
       });
 
       final channel = await channelCompleter.future.timeout(timeout);
@@ -104,32 +122,65 @@ class WebRtcPeerConnector implements PeerConnector {
     }
   }
 
-  Future<void> _handleSignal(
-    RTCPeerConnection pc,
-    TransferRole role,
-    SignalingMessage message,
-    SignalingChannel signaling,
-  ) async {
+  Future<void> _handleSignal({
+    required RTCPeerConnection pc,
+    required TransferRole role,
+    required SignalingMessage message,
+    required SignalingChannel signaling,
+    required List<RTCIceCandidate> pending,
+    required bool Function() isRemoteSet,
+    required void Function() onRemoteSet,
+  }) async {
     switch (message) {
       case SignalingOffer(:final sdp) when role == TransferRole.receiver:
         await pc.setRemoteDescription(RTCSessionDescription(sdp, 'offer'));
+        onRemoteSet();
+        await _flushCandidates(pc, pending);
         final answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
         await signaling.send(SignalingMessage.answer(sdp: answer.sdp ?? ''));
       case SignalingAnswer(:final sdp) when role == TransferRole.sender:
         await pc.setRemoteDescription(RTCSessionDescription(sdp, 'answer'));
+        onRemoteSet();
+        await _flushCandidates(pc, pending);
       case SignalingIceCandidate(
         :final candidate,
         :final sdpMid,
         :final sdpMLineIndex,
       ):
-        await pc.addCandidate(
-          RTCIceCandidate(candidate, sdpMid, sdpMLineIndex),
-        );
+        final ice = RTCIceCandidate(candidate, sdpMid, sdpMLineIndex);
+        if (isRemoteSet()) {
+          await _addCandidate(pc, ice);
+        } else {
+          // Remote SDP not set yet — buffer until it is (flushed above).
+          pending.add(ice);
+        }
       case SignalingOffer():
       case SignalingAnswer():
       case SignalingBye():
         break;
+    }
+  }
+
+  /// Add the candidates buffered before the remote description was set.
+  Future<void> _flushCandidates(
+    RTCPeerConnection pc,
+    List<RTCIceCandidate> pending,
+  ) async {
+    final buffered = List<RTCIceCandidate>.from(pending);
+    pending.clear();
+    for (final ice in buffered) {
+      await _addCandidate(pc, ice);
+    }
+  }
+
+  /// Add a single candidate, tolerating per-candidate failures (a bad candidate
+  /// must not tear down an otherwise-healthy negotiation). Logs the type only.
+  Future<void> _addCandidate(RTCPeerConnection pc, RTCIceCandidate ice) async {
+    try {
+      await pc.addCandidate(ice);
+    } on Object catch (error) {
+      AppLogger.error('addCandidate failed (${error.runtimeType})');
     }
   }
 }
@@ -137,7 +188,10 @@ class WebRtcPeerConnector implements PeerConnector {
 class _WebRtcDataTransport implements DataTransport {
   _WebRtcDataTransport(this._pc, this._channel) {
     _channel.onMessage = (message) {
-      if (message.isBinary) _inbound.add(message.binary);
+      if (!message.isBinary) return;
+      // Normalize to a fresh, zero-offset Uint8List — the native bridge can hand
+      // back a view/typed-list that downstream byte ops don't expect.
+      if (!_inbound.isClosed) _inbound.add(Uint8List.fromList(message.binary));
     };
     _channel.onDataChannelState = (state) {
       if (state == RTCDataChannelState.RTCDataChannelClosed) {
@@ -181,9 +235,22 @@ class _WebRtcDataTransport implements DataTransport {
     if (_isClosed) return;
     _isClosed = true;
     if (!_closed.isCompleted) _closed.complete();
-    await _channel.close();
-    await _pc.close();
-    await _inbound.close();
-    await _low.close();
+    // Detach handlers first so no late native event reaches our controllers,
+    // then close the peer connection (which also tears down the data channel —
+    // closing the channel separately can make flutter_webrtc re-deliver a close
+    // event into its already-closed internal stream).
+    _channel.onMessage = null;
+    _channel.onDataChannelState = null;
+    _channel.onBufferedAmountLow = null;
+    try {
+      await _pc.close();
+      // Release the native peer connection too — a lingering PC from a prior
+      // transfer can destabilize the next connection's ICE.
+      await _pc.dispose();
+    } on Object catch (error) {
+      AppLogger.warning('pc close failed (${error.runtimeType})');
+    }
+    if (!_inbound.isClosed) await _inbound.close();
+    if (!_low.isClosed) await _low.close();
   }
 }

@@ -16,6 +16,10 @@ import 'package:safe_send/core/services/file/file_picker_service.dart'
     as _i1069;
 import 'package:safe_send/core/services/file/file_picker_service_impl.dart'
     as _i661;
+import 'package:safe_send/core/services/file/received_files_service.dart'
+    as _i58;
+import 'package:safe_send/core/services/file/received_files_service_impl.dart'
+    as _i423;
 import 'package:safe_send/core/services/signaling/signaling_client.dart' as _i0;
 import 'package:safe_send/core/services/transport/data_transport.dart' as _i547;
 import 'package:safe_send/core/services/transport/transfer_engine.dart'
@@ -36,6 +40,10 @@ import 'package:safe_send/features/pairing/domain/usecases/join_session_usecase.
     as _i855;
 import 'package:safe_send/features/pairing/presentation/cubit/pairing_cubit.dart'
     as _i964;
+import 'package:safe_send/features/receive/domain/usecases/start_receive_usecase.dart'
+    as _i590;
+import 'package:safe_send/features/receive/presentation/cubit/receive_transfer_cubit.dart'
+    as _i67;
 import 'package:safe_send/features/send/domain/usecases/pick_files_usecase.dart'
     as _i36;
 import 'package:safe_send/features/send/domain/usecases/start_send_usecase.dart'
@@ -54,6 +62,9 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     gh.lazySingleton<_i265.HomePlaceholderDataSource>(
       () => _i265.HomePlaceholderDataSource(),
+    );
+    gh.lazySingleton<_i58.ReceivedFilesService>(
+      () => _i423.ReceivedFilesServiceImpl(),
     );
     gh.lazySingleton<_i547.PeerConnector>(() => _i603.WebRtcPeerConnector());
     gh.factory<_i1069.FilePickerService>(
@@ -93,8 +104,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i36.PickFilesUseCase>(
       () => _i36.PickFilesUseCase(gh<_i1069.FilePickerService>()),
     );
+    gh.factory<_i590.StartReceiveUseCase>(
+      () => _i590.StartReceiveUseCase(
+        gh<_i953.TransferEngine>(),
+        gh<_i58.ReceivedFilesService>(),
+      ),
+    );
     gh.factory<_i353.SendSelectionCubit>(
       () => _i353.SendSelectionCubit(gh<_i36.PickFilesUseCase>()),
+    );
+    gh.factory<_i67.ReceiveTransferCubit>(
+      () => _i67.ReceiveTransferCubit(gh<_i590.StartReceiveUseCase>()),
     );
     gh.factory<_i259.SendTransferCubit>(
       () => _i259.SendTransferCubit(gh<_i343.StartSendUseCase>()),

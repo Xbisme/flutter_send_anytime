@@ -218,5 +218,102 @@
   "sendErrorRejected": "Người nhận đã từ chối",
   "@sendErrorRejected": { "description": "Receiver declined the transfer" },
   "sendErrorFileRead": "Không đọc được file đã chọn",
-  "@sendErrorFileRead": { "description": "A selected file could not be read" }
+  "@sendErrorFileRead": { "description": "A selected file could not be read" },
+
+  "receiveEnterCodeTitle": "Nhập mã",
+  "@receiveEnterCodeTitle": { "description": "Receiver code-entry title" },
+  "receiveEnterCodeInstruction": "Nhập mã 6 số từ người gửi",
+  "@receiveEnterCodeInstruction": { "description": "Receiver code-entry instruction" },
+  "receiveConnect": "Kết nối",
+  "@receiveConnect": { "description": "Receiver connect button" },
+  "receiveConnecting": "Đang kết nối…",
+  "@receiveConnecting": { "description": "Receiver connecting state" },
+
+  "receivePeerSender": "Người gửi",
+  "@receivePeerSender": { "description": "Generic sender label until #010" },
+  "receivePromptTitle": "{peer} muốn gửi cho bạn",
+  "@receivePromptTitle": {
+    "description": "Incoming transfer prompt title",
+    "placeholders": { "peer": { "type": "String" } }
+  },
+  "receivePromptBody": "{count} tệp · {size}",
+  "@receivePromptBody": {
+    "description": "Incoming transfer prompt body",
+    "placeholders": { "count": { "type": "int" }, "size": { "type": "String" } }
+  },
+  "receiveAccept": "Nhận",
+  "@receiveAccept": { "description": "Accept incoming transfer" },
+  "receiveReject": "Từ chối",
+  "@receiveReject": { "description": "Reject incoming transfer" },
+
+  "receiveProgressBadge": "ĐANG NHẬN",
+  "@receiveProgressBadge": { "description": "Receive progress badge" },
+  "receiveProgressFrom": "từ {peer}",
+  "@receiveProgressFrom": {
+    "description": "Receiving from peer",
+    "placeholders": { "peer": { "type": "String" } }
+  },
+  "receiveProgressFilePosition": "tệp {index}/{total}",
+  "@receiveProgressFilePosition": {
+    "description": "Current file position",
+    "placeholders": { "index": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "receiveProgressRemaining": "còn {time}",
+  "@receiveProgressRemaining": {
+    "description": "ETA remaining",
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "receiveCancel": "Huỷ",
+  "@receiveCancel": { "description": "Cancel receive button" },
+  "receiveCancelConfirmTitle": "Huỷ lượt nhận?",
+  "@receiveCancelConfirmTitle": { "description": "Cancel-receive confirm title" },
+  "receiveCancelConfirmBody": "Lượt nhận đang diễn ra sẽ dừng. Các tệp đã nhận xong vẫn được giữ.",
+  "@receiveCancelConfirmBody": { "description": "Cancel-receive confirm body" },
+  "receiveCancelConfirmKeep": "Tiếp tục nhận",
+  "@receiveCancelConfirmKeep": { "description": "Keep receiving" },
+
+  "receiveCompleteTitle": "Đã nhận xong",
+  "@receiveCompleteTitle": { "description": "Receive complete title" },
+  "receiveCompleteDetail": "Đã nhận {count} tệp · {size} từ {peer} trong {duration}",
+  "@receiveCompleteDetail": {
+    "description": "Receive complete summary",
+    "placeholders": {
+      "count": { "type": "int" },
+      "size": { "type": "String" },
+      "peer": { "type": "String" },
+      "duration": { "type": "String" }
+    }
+  },
+  "receivePartialTitle": "Nhận chưa đủ",
+  "@receivePartialTitle": { "description": "Partial receive title" },
+  "receivePartialDetail": "Đã nhận {received}/{total} tệp · {size}",
+  "@receivePartialDetail": {
+    "description": "Partial receive summary",
+    "placeholders": {
+      "received": { "type": "int" },
+      "total": { "type": "int" },
+      "size": { "type": "String" }
+    }
+  },
+  "receiveOpen": "Mở",
+  "@receiveOpen": { "description": "Open a received file" },
+  "receiveShare": "Chia sẻ",
+  "@receiveShare": { "description": "Share received files" },
+  "receiveDone": "Xong",
+  "@receiveDone": { "description": "Finish receive (return home)" },
+
+  "receiveErrorTitle": "Nhận thất bại",
+  "@receiveErrorTitle": { "description": "Receive failure title" },
+  "receiveRetry": "Thử lại",
+  "@receiveRetry": { "description": "Retry receive" },
+  "receiveErrorIntegrity": "Tệp lỗi khi kiểm tra — nhận lại",
+  "@receiveErrorIntegrity": { "description": "Integrity check failed" },
+  "receiveErrorWrite": "Không lưu được tệp vào thiết bị",
+  "@receiveErrorWrite": { "description": "File write failed" },
+  "receiveErrorConnectionLost": "Mất kết nối khi đang nhận",
+  "@receiveErrorConnectionLost": { "description": "Connection lost while receiving" },
+  "receiveOpenFailed": "Không mở được tệp này",
+  "@receiveOpenFailed": { "description": "Open file failed toast" },
+  "receiveShareFailed": "Không chia sẻ được",
+  "@receiveShareFailed": { "description": "Share failed toast" }
 }

@@ -10,8 +10,8 @@ import 'package:safe_send/core/domain/result.dart';
 import 'package:safe_send/core/domain/transfer/file_source.dart';
 import 'package:safe_send/core/domain/transfer/file_transfer_item.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
+import 'package:safe_send/core/domain/transfer/transfer_view.dart';
 import 'package:safe_send/core/services/transport/data_transport.dart';
-import 'package:safe_send/features/send/domain/models/send_transfer_view.dart';
 import 'package:safe_send/features/send/domain/usecases/start_send_usecase.dart';
 import 'package:safe_send/features/send/presentation/cubit/send_transfer_cubit.dart';
 
@@ -77,7 +77,7 @@ void main() {
 
   tearDown(() => snapshots.close());
 
-  blocTest<SendTransferCubit, AppState<SendTransferView>>(
+  blocTest<SendTransferCubit, AppState<TransferView>>(
     'projects transferring then done snapshots into views',
     build: () => SendTransferCubit(startSend),
     act: (cubit) async {
@@ -88,17 +88,17 @@ void main() {
       await pumpEventQueue();
     },
     expect: () => [
-      isA<AppLoading<SendTransferView>>(),
-      isA<AppLoaded<SendTransferView>>()
+      isA<AppLoading<TransferView>>(),
+      isA<AppLoaded<TransferView>>()
           .having((s) => s.data.phase, 'phase', TransferPhase.transferring)
           .having((s) => s.data.overallProgress, 'progress', 0.5),
-      isA<AppLoaded<SendTransferView>>()
+      isA<AppLoaded<TransferView>>()
           .having((s) => s.data.isDone, 'done', true)
           .having((s) => s.data.overallProgress, 'progress', 1.0),
     ],
   );
 
-  blocTest<SendTransferCubit, AppState<SendTransferView>>(
+  blocTest<SendTransferCubit, AppState<TransferView>>(
     'a failed snapshot surfaces as AppError',
     build: () => SendTransferCubit(startSend),
     act: (cubit) async {
@@ -109,8 +109,8 @@ void main() {
       await pumpEventQueue();
     },
     expect: () => [
-      isA<AppLoading<SendTransferView>>(),
-      isA<AppError<SendTransferView>>().having(
+      isA<AppLoading<TransferView>>(),
+      isA<AppError<TransferView>>().having(
         (s) => s.failure,
         'failure',
         isA<AppFailureConnectionLost>(),
@@ -118,7 +118,7 @@ void main() {
     ],
   );
 
-  blocTest<SendTransferCubit, AppState<SendTransferView>>(
+  blocTest<SendTransferCubit, AppState<TransferView>>(
     'cancel delegates to the use case',
     build: () => SendTransferCubit(startSend),
     act: (cubit) async {

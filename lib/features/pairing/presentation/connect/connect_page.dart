@@ -20,6 +20,7 @@ import 'package:safe_send/core/theme/app_typography.dart';
 import 'package:safe_send/core/utils/formatters.dart';
 import 'package:safe_send/core/utils/l10n_extension.dart';
 import 'package:safe_send/features/pairing/presentation/connect/widgets/code_display.dart';
+import 'package:safe_send/features/pairing/presentation/connect/widgets/code_input.dart';
 import 'package:safe_send/features/pairing/presentation/connect/widgets/connect_radar.dart';
 import 'package:safe_send/features/pairing/presentation/cubit/pairing_cubit.dart';
 import 'package:safe_send/features/pairing/presentation/pairing_failure_l10n.dart';
@@ -118,7 +119,10 @@ class _ConnectViewState extends State<_ConnectView> {
               ),
               Expanded(
                 child: _tab == 0
-                    ? _CodeTab(onConnected: _onConnected)
+                    ? _CodeTab(
+                        role: widget.request.role,
+                        onConnected: _onConnected,
+                      )
                     : _ComingSoonTab(message: l10n.connectComingSoonTab),
               ),
             ],
@@ -130,8 +134,9 @@ class _ConnectViewState extends State<_ConnectView> {
 }
 
 class _CodeTab extends StatelessWidget {
-  const _CodeTab({required this.onConnected});
+  const _CodeTab({required this.role, required this.onConnected});
 
+  final TransferRole role;
   final VoidCallback onConnected;
 
   @override
@@ -141,6 +146,11 @@ class _CodeTab extends StatelessWidget {
           state is AppLoaded<PairingState> && state.data is PairingConnected,
       listener: (context, _) => onConnected(),
       builder: (context, state) {
+        // Receiver: a code-entry panel that keeps the entered code on failure
+        // (FR-023). The sender path issues + displays a code instead.
+        if (role == TransferRole.receiver) {
+          return _ReceiverPanel(state: state);
+        }
         return switch (state) {
           AppError<PairingState>(:final failure) => _FailurePanel(
             failure: failure,
@@ -155,6 +165,87 @@ class _CodeTab extends StatelessWidget {
           _ => const _ConnectingPanel(),
         };
       },
+    );
+  }
+}
+
+/// Receiver code-entry panel (#005, US3). Owns the entered code so it survives
+/// rebuilds across a recoverable failure; submits via [PairingCubit.joinWithCode].
+class _ReceiverPanel extends StatefulWidget {
+  const _ReceiverPanel({required this.state});
+
+  final AppState<PairingState> state;
+
+  @override
+  State<_ReceiverPanel> createState() => _ReceiverPanelState();
+}
+
+class _ReceiverPanelState extends State<_ReceiverPanel> {
+  String _code = '';
+
+  bool get _isJoining {
+    final state = widget.state;
+    return state is AppLoading<PairingState> ||
+        (state is AppLoaded<PairingState> &&
+            (state.data is PairingConnecting ||
+                state.data is PairingJoining ||
+                state.data is PairingPeerPresent ||
+                state.data is PairingConnected));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final c = AppColors.of(context);
+    final state = widget.state;
+    final failure = state is AppError<PairingState> ? state.failure : null;
+    final canConnect = _code.length == 6 && !_isJoining;
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.x5),
+      child: Column(
+        children: [
+          const Spacer(),
+          Text(
+            l10n.receiveEnterCodeTitle,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: AppSpacing.x2),
+          Text(
+            l10n.receiveEnterCodeInstruction,
+            textAlign: TextAlign.center,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: c.textSecondary),
+          ),
+          const SizedBox(height: AppSpacing.x6),
+          CodeInput(
+            semanticLabel: l10n.receiveEnterCodeTitle,
+            onChanged: (v) => setState(() => _code = v),
+          ),
+          const SizedBox(height: AppSpacing.x4),
+          if (failure != null)
+            Text(
+              failure.pairingMessage(l10n),
+              textAlign: TextAlign.center,
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: AppColors.danger),
+            ),
+          const Spacer(),
+          if (_isJoining)
+            const TransferSpinner(size: 28)
+          else
+            PrimaryButton(
+              label: l10n.receiveConnect,
+              icon: LucideIcons.arrowRight,
+              onPressed: canConnect
+                  ? () => unawaited(
+                      context.read<PairingCubit>().joinWithCode(_code),
+                    )
+                  : null,
+            ),
+        ],
+      ),
     );
   }
 }

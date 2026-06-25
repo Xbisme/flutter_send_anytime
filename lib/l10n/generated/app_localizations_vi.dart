@@ -295,4 +295,117 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get sendErrorFileRead => 'Không đọc được file đã chọn';
+
+  @override
+  String get receiveEnterCodeTitle => 'Nhập mã';
+
+  @override
+  String get receiveEnterCodeInstruction => 'Nhập mã 6 số từ người gửi';
+
+  @override
+  String get receiveConnect => 'Kết nối';
+
+  @override
+  String get receiveConnecting => 'Đang kết nối…';
+
+  @override
+  String get receivePeerSender => 'Người gửi';
+
+  @override
+  String receivePromptTitle(String peer) {
+    return '$peer muốn gửi cho bạn';
+  }
+
+  @override
+  String receivePromptBody(int count, String size) {
+    return '$count tệp · $size';
+  }
+
+  @override
+  String get receiveAccept => 'Nhận';
+
+  @override
+  String get receiveReject => 'Từ chối';
+
+  @override
+  String get receiveProgressBadge => 'ĐANG NHẬN';
+
+  @override
+  String receiveProgressFrom(String peer) {
+    return 'từ $peer';
+  }
+
+  @override
+  String receiveProgressFilePosition(int index, int total) {
+    return 'tệp $index/$total';
+  }
+
+  @override
+  String receiveProgressRemaining(String time) {
+    return 'còn $time';
+  }
+
+  @override
+  String get receiveCancel => 'Huỷ';
+
+  @override
+  String get receiveCancelConfirmTitle => 'Huỷ lượt nhận?';
+
+  @override
+  String get receiveCancelConfirmBody =>
+      'Lượt nhận đang diễn ra sẽ dừng. Các tệp đã nhận xong vẫn được giữ.';
+
+  @override
+  String get receiveCancelConfirmKeep => 'Tiếp tục nhận';
+
+  @override
+  String get receiveCompleteTitle => 'Đã nhận xong';
+
+  @override
+  String receiveCompleteDetail(
+    int count,
+    String size,
+    String peer,
+    String duration,
+  ) {
+    return 'Đã nhận $count tệp · $size từ $peer trong $duration';
+  }
+
+  @override
+  String get receivePartialTitle => 'Nhận chưa đủ';
+
+  @override
+  String receivePartialDetail(int received, int total, String size) {
+    return 'Đã nhận $received/$total tệp · $size';
+  }
+
+  @override
+  String get receiveOpen => 'Mở';
+
+  @override
+  String get receiveShare => 'Chia sẻ';
+
+  @override
+  String get receiveDone => 'Xong';
+
+  @override
+  String get receiveErrorTitle => 'Nhận thất bại';
+
+  @override
+  String get receiveRetry => 'Thử lại';
+
+  @override
+  String get receiveErrorIntegrity => 'Tệp lỗi khi kiểm tra — nhận lại';
+
+  @override
+  String get receiveErrorWrite => 'Không lưu được tệp vào thiết bị';
+
+  @override
+  String get receiveErrorConnectionLost => 'Mất kết nối khi đang nhận';
+
+  @override
+  String get receiveOpenFailed => 'Không mở được tệp này';
+
+  @override
+  String get receiveShareFailed => 'Không chia sẻ được';
 }

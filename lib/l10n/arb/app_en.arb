@@ -100,5 +100,41 @@
   "sendErrorTitle": "Send failed",
   "sendRetry": "Try again",
   "sendErrorRejected": "The receiver declined",
-  "sendErrorFileRead": "Couldn't read the selected file"
+  "sendErrorFileRead": "Couldn't read the selected file",
+
+  "receiveEnterCodeTitle": "Enter the code",
+  "receiveEnterCodeInstruction": "Enter the 6-digit code from the sender",
+  "receiveConnect": "Connect",
+  "receiveConnecting": "Connecting…",
+
+  "receivePeerSender": "the sender",
+  "receivePromptTitle": "{peer} wants to send you files",
+  "receivePromptBody": "{count} files · {size}",
+  "receiveAccept": "Accept",
+  "receiveReject": "Decline",
+
+  "receiveProgressBadge": "RECEIVING",
+  "receiveProgressFrom": "from {peer}",
+  "receiveProgressFilePosition": "file {index}/{total}",
+  "receiveProgressRemaining": "{time} left",
+  "receiveCancel": "Cancel",
+  "receiveCancelConfirmTitle": "Cancel this transfer?",
+  "receiveCancelConfirmBody": "The transfer in progress will stop. Files already received are kept.",
+  "receiveCancelConfirmKeep": "Keep receiving",
+
+  "receiveCompleteTitle": "Received!",
+  "receiveCompleteDetail": "Received {count} files · {size} from {peer} in {duration}",
+  "receivePartialTitle": "Partly received",
+  "receivePartialDetail": "Received {received}/{total} files · {size}",
+  "receiveOpen": "Open",
+  "receiveShare": "Share",
+  "receiveDone": "Done",
+
+  "receiveErrorTitle": "Receive failed",
+  "receiveRetry": "Try again",
+  "receiveErrorIntegrity": "A file failed its integrity check — receive again",
+  "receiveErrorWrite": "Couldn't save the file to your device",
+  "receiveErrorConnectionLost": "Lost connection while receiving",
+  "receiveOpenFailed": "Couldn't open this file",
+  "receiveShareFailed": "Couldn't share"
 }

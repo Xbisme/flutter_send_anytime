@@ -65,6 +65,15 @@ class TransferEngine {
     failure: _failure,
   );
 
+  /// Receiver-only: every file in the manifest has arrived and been verified.
+  /// A channel close at this point is a success, not a drop — the sender may
+  /// have torn the channel down right after sending the final `sessionComplete`
+  /// frame, before we processed it.
+  bool get _allFilesReceived =>
+      _role == TransferRole.receiver &&
+      _items.isNotEmpty &&
+      _items.every((i) => i.status == FileItemStatus.completed);
+
   // --------------------------------------------------------------- sender ---
 
   /// Begin sending [session] over [signaling]. Resolves when the session
@@ -217,7 +226,19 @@ class TransferEngine {
     )) {
       return _result();
     }
+    // Let the final frames flush to the wire before we tear the channel down —
+    // closing immediately can drop the last FileComplete/sessionComplete and
+    // strand the receiver mid-transfer.
+    await _drainBuffer(transport);
     return _terminate(TransferPhase.done);
+  }
+
+  /// Wait (bounded) for the data channel's send buffer to flush.
+  Future<void> _drainBuffer(DataTransport transport) async {
+    for (var i = 0; i < 60; i++) {
+      if (_terminated || transport.bufferedAmount == 0) return;
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    }
   }
 
   // ------------------------------------------------------------- receiver ---
@@ -234,7 +255,32 @@ class TransferEngine {
 
     final transport = await _establish(signaling);
     if (transport == null) return _result();
+    return _runReceive(transport, destinationDir, onManifest);
+  }
 
+  /// #005 — Receive over an ALREADY-OPEN [transport] produced by the pairing
+  /// layer. Adopts the transport (ownership transfers to this engine — it closes
+  /// it on terminal/dispose) and runs the receive protocol from handshaking
+  /// onward; NO second WebRTC handshake. Mirror of [startSendOnTransport].
+  Future<Result<void>> startReceiveOnTransport({
+    required DataTransport transport,
+    required Directory destinationDir,
+    Future<bool> Function(TransferManifest manifest) onManifest = _autoAccept,
+  }) async {
+    _role = TransferRole.receiver;
+    _setPhase(TransferPhase.connecting);
+    _adoptTransport(transport);
+    return _runReceive(transport, destinationDir, onManifest);
+  }
+
+  /// Shared receive body — the frame loop, from handshaking onward. Used by both
+  /// [startReceive] (opens its own channel) and [startReceiveOnTransport]
+  /// (adopts the pairing-opened channel).
+  Future<Result<void>> _runReceive(
+    DataTransport transport,
+    Directory destinationDir,
+    Future<bool> Function(TransferManifest manifest) onManifest,
+  ) async {
     _setPhase(TransferPhase.handshaking);
     var currentIndex = -1;
     IOSink? sink;
@@ -332,11 +378,39 @@ class TransferEngine {
                 AppFailure.integrityCheckFailed(fileIndex: index),
               );
             }
-            final dest = _resolveCollision(
-              destinationDir,
-              _items[index].name,
-            );
-            await _activePart!.rename(dest);
+            if (index < 0 || index >= _items.length || _activePart == null) {
+              return _terminate(
+                TransferPhase.failed,
+                const AppFailure.unexpected(
+                  message: 'protocol:completeNoStart',
+                ),
+              );
+            }
+            final String dest;
+            try {
+              // The destination dir may have been cleaned between sessions —
+              // recreate it before finalizing so the rename can't miss it.
+              if (!destinationDir.existsSync()) {
+                await destinationDir.create(recursive: true);
+              }
+              dest = _resolveCollision(destinationDir, _items[index].name);
+              final src = _activePart!;
+              try {
+                await src.rename(dest);
+              } on FileSystemException {
+                // Some sandbox states reject rename — fall back to copy + delete.
+                await src.copy(dest);
+                if (src.existsSync()) await src.delete();
+              }
+            } on FileSystemException catch (e) {
+              // OS error code + which path was missing (no full paths logged).
+              AppLogger.error(
+                'finalize failed (errno ${e.osError?.errorCode}, '
+                'src=${_activePart?.existsSync() ?? false}, '
+                'dstDir=${destinationDir.existsSync()})',
+              );
+              return _terminate(TransferPhase.failed, _mapWriteError(e));
+            }
             _activePart = null;
             _completedBytes += expectedSize;
             _updateItem(
@@ -365,10 +439,20 @@ class TransferEngine {
         }
       }
     } on Object catch (error) {
-      AppLogger.error('receive failed (${error.runtimeType})');
+      // A FileSystemException's message can embed a path — log only its type.
+      // Other errors (e.g. TypeError) carry no sensitive data, so surface the
+      // message to aid diagnosis of protocol/runtime issues.
+      if (error is FileSystemException) {
+        AppLogger.error('receive failed (${error.runtimeType})');
+      } else {
+        AppLogger.error('receive failed (${error.runtimeType}): $error');
+      }
     }
-    // Stream ended without a terminal frame → the peer dropped.
+    // Stream ended. If every file already arrived + verified, the sender simply
+    // tore the channel down after the last frame — that's success, not a drop.
     if (!_terminated) {
+      if (_allFilesReceived) return _terminate(TransferPhase.done);
+      AppLogger.warning('receive ended: inbound stream closed before complete');
       return _terminate(
         TransferPhase.failed,
         const AppFailure.connectionLost(),
@@ -430,15 +514,21 @@ class TransferEngine {
   void _adoptTransport(DataTransport transport) {
     _transport = transport;
     unawaited(
-      transport.closed.then((_) {
-        if (!_terminated) {
-          unawaited(
-            _terminate(
-              TransferPhase.failed,
-              const AppFailure.connectionLost(),
-            ),
-          );
+      transport.closed.then((_) async {
+        if (_terminated) return;
+        // Give the inbound stream a moment to drain buffered frames (the final
+        // FileComplete/sessionComplete may still be queued) before deciding.
+        await Future<void>.delayed(const Duration(milliseconds: 250));
+        if (_terminated) return;
+        if (_allFilesReceived) {
+          await _terminate(TransferPhase.done);
+          return;
         }
+        AppLogger.warning('transport closed before transfer completed');
+        await _terminate(
+          TransferPhase.failed,
+          const AppFailure.connectionLost(),
+        );
       }),
     );
   }
@@ -561,6 +651,7 @@ class TransferEngine {
     _stallTimer?.cancel();
     _stallTimer = Timer(TransferConstants.kStallTimeout, () {
       if (!_terminated) {
+        AppLogger.warning('transfer stalled (no data within timeout)');
         unawaited(
           _terminate(TransferPhase.failed, const AppFailure.connectionLost()),
         );
@@ -569,12 +660,18 @@ class TransferEngine {
   }
 
   Future<File> _newPartFile(Directory destinationDir) async {
-    final quarantine = Directory(
-      '${destinationDir.path}/${TransferConstants.kQuarantineDirName}',
-    );
-    await quarantine.create(recursive: true);
-    _quarantineDir = quarantine;
-    return File('${quarantine.path}/${_uuid.v4()}.part');
+    // Stage the .part IN the destination directory (dot-prefixed to keep it out
+    // of the way) so finalizing is an atomic SAME-directory rename. A separate
+    // quarantine subdir made finalize a cross-directory rename, which failed
+    // with ENOENT in the iOS app sandbox. The in-flight .part is removed on
+    // failure/cancel by _deleteActivePart.
+    await destinationDir.create(recursive: true);
+    final part = File('${destinationDir.path}/.ss-${_uuid.v4()}.part');
+    // Materialize the file now: openWrite() is lazy, so a zero-byte file (no
+    // chunks) would never hit disk and the later rename would throw
+    // PathNotFoundException.
+    await part.create(recursive: true);
+    return part;
   }
 
   String _resolveCollision(Directory dir, String name) {
