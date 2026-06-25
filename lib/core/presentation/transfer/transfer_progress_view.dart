@@ -78,41 +78,53 @@ class TransferProgressView extends StatelessWidget {
     final peerLine = receiver
         ? l10n.receiveProgressFrom(l10n.receivePeerSender)
         : l10n.sendProgressTo(l10n.sendPeerReceiver);
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.x5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: AppSpacing.x4),
-          _Badge(label: badge, color: c.accent),
-          const SizedBox(height: AppSpacing.x6),
-          const _PeerRow(),
-          const SizedBox(height: AppSpacing.x3),
-          Text(
-            peerLine,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleMedium,
+    // Fit-or-scroll: the Spacers centre the content when there is room, and the
+    // view scrolls (instead of overflowing) on short screens.
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          child: IntrinsicHeight(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.x5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: AppSpacing.x4),
+                  _Badge(label: badge, color: c.accent),
+                  const SizedBox(height: AppSpacing.x6),
+                  const _PeerRow(),
+                  const SizedBox(height: AppSpacing.x3),
+                  Text(
+                    peerLine,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const Spacer(),
+                  Text(
+                    '$percent%',
+                    textAlign: TextAlign.center,
+                    semanticsLabel: '${badge.toLowerCase()} $percent%',
+                    style: AppTypography.mono(size: 64, color: c.textPrimary),
+                  ),
+                  const SizedBox(height: AppSpacing.x4),
+                  ProgressBar(value: v?.overallProgress ?? 0),
+                  const SizedBox(height: AppSpacing.x3),
+                  _SpeedRow(view: v),
+                  const SizedBox(height: AppSpacing.x6),
+                  if (v != null && v.currentFileName != null)
+                    _CurrentFileCard(view: v),
+                  const Spacer(),
+                  DangerButton(
+                    label: receiver ? l10n.receiveCancel : l10n.sendCancel,
+                    icon: LucideIcons.x,
+                    onPressed: () => _confirmCancel(context),
+                  ),
+                ],
+              ),
+            ),
           ),
-          const Spacer(),
-          Text(
-            '$percent%',
-            textAlign: TextAlign.center,
-            semanticsLabel: '${badge.toLowerCase()} $percent%',
-            style: AppTypography.mono(size: 64, color: c.textPrimary),
-          ),
-          const SizedBox(height: AppSpacing.x4),
-          ProgressBar(value: v?.overallProgress ?? 0),
-          const SizedBox(height: AppSpacing.x3),
-          _SpeedRow(view: v),
-          const SizedBox(height: AppSpacing.x6),
-          if (v != null && v.currentFileName != null) _CurrentFileCard(view: v),
-          const Spacer(),
-          DangerButton(
-            label: receiver ? l10n.receiveCancel : l10n.sendCancel,
-            icon: LucideIcons.x,
-            onPressed: () => _confirmCancel(context),
-          ),
-        ],
+        ),
       ),
     );
   }
