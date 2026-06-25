@@ -620,12 +620,13 @@ class TransferEngine {
   }
 
   Future<File> _newPartFile(Directory destinationDir) async {
-    final quarantine = Directory(
-      '${destinationDir.path}/${TransferConstants.kQuarantineDirName}',
-    );
-    await quarantine.create(recursive: true);
-    _quarantineDir = quarantine;
-    final part = File('${quarantine.path}/${_uuid.v4()}.part');
+    // Stage the .part IN the destination directory (dot-prefixed to keep it out
+    // of the way) so finalizing is an atomic SAME-directory rename. A separate
+    // quarantine subdir made finalize a cross-directory rename, which failed
+    // with ENOENT in the iOS app sandbox. The in-flight .part is removed on
+    // failure/cancel by _deleteActivePart.
+    await destinationDir.create(recursive: true);
+    final part = File('${destinationDir.path}/.ss-${_uuid.v4()}.part');
     // Materialize the file now: openWrite() is lazy, so a zero-byte file (no
     // chunks) would never hit disk and the later rename would throw
     // PathNotFoundException.
