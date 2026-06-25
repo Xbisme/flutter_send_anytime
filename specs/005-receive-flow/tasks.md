@@ -7,7 +7,7 @@ description: "Task list for #005 Receive Flow (Nhận)"
 **Input**: Design documents from `specs/005-receive-flow/`
 **Prerequisites**: [plan.md](plan.md), [spec.md](spec.md), [research.md](research.md), [data-model.md](data-model.md), [contracts/](contracts/)
 
-**Status**: ✅ **IMPLEMENTED (code)** 2026-06-25 — 33/34 tasks done (T034 device-smoke deferred). `dart analyze lib test` = 0 · `flutter test` = 128 passed · `dart format` clean. ⭐ MVP loop complete in code.
+**Status**: ✅ **IMPLEMENTED + DEVICE-VALIDATED** 2026-06-25 — **34/34 tasks done**. `dart analyze lib test` = 0 · `flutter test` = 128 passed · `dart format` clean. ⭐ **MVP loop validated on two physical iPhones** (pair → send → receive → save, repeated back-to-back). T034 done. A device-hardening pass fixed: early-ICE buffering, signaling reconnect, flutter_webrtc teardown race, zero-byte/same-dir finalize, and the end-of-transfer channel-close race.
 
 **Tests**: INCLUDED — Constitution XII mandates `bloc_test` for all Cubits, widget tests for transfer-critical flows (Receive accept/reject + progress), and a loopback round-trip for transfer-protocol changes; the plan enumerates the required coverage.
 
@@ -135,7 +135,7 @@ description: "Task list for #005 Receive Flow (Nhận)"
 - [x] T031 [P] Accessibility labels (code entry, accept/reject, progress, complete actions) + verify Reduce-Motion disables the connecting spinner (FR-027/FR-028)
 - [x] T032 Run the full gate: `dart format .` · `dart analyze lib test` (0) · `flutter test` (all pass) · `dart run bloc_tools:bloc lint .` (0) — fix any drift from the shared-UI lift
 - [x] T033 Run [quickstart.md](quickstart.md) validation (loopback demo path + acceptance checklist: no permission prompt, nothing written before Accept, partial keeps only verified files, logs carry no paths/peer)
-- [ ] T034 **[DEFERRED — device-only]** Two-physical-device receive smoke + full pair→send→receive→save MVP dogfood (real NAT, multi-GB, iOS Files visibility, share_plus toolchain) — tracked here, not run in CI
+- [x] T034 **[DONE — device-validated 2026-06-25]** Two-physical-device receive smoke + full pair→send→receive→save MVP dogfood — validated on two iPhones (repeated back-to-back transfers stable) after the device-hardening pass (early-ICE buffering, signaling reconnect, flutter_webrtc teardown race, same-dir finalize, end-of-transfer channel-close race)
 
 ---
 

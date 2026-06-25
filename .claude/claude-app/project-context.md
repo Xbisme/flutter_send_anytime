@@ -44,7 +44,7 @@ Two devices agree on a **rendezvous identifier** (a 6-digit code, a QR, a link, 
 | 002 | WebRTC Transport & Transfer Protocol Core | ✅ Implemented (code) · 2-device smoke deferred | `002-webrtc-transport-core` |
 | 003 | Signaling Server + 6-Digit Key Pairing | ✅ Implemented (code) · 2-device smoke deferred | `003-signaling-6digit` |
 | 004 | Send Flow (Gửi) | ✅ Implemented (code) · 2-device smoke deferred | `004-send-flow` |
-| 005 | Receive Flow (Nhận) ⭐ MVP | ✅ Implemented (code) · 2-device smoke deferred | `005-receive-flow` |
+| 005 | Receive Flow (Nhận) ⭐ MVP | ✅ Implemented · **device-validated on 2 iPhones** | `005-receive-flow` |
 | 006 | Lịch sử (History) | ⬜ Not started | `006-history` |
 | 007 | QR Connect | ⬜ Not started | `007-qr-connect` |
 | 008 | Share Link | ⬜ Not started | `008-share-link` |
