@@ -372,65 +372,80 @@ class HomeRecentTransfers extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SectionHeader(context.l10n.homeRecentTransfers),
-        for (final t in transfers) ...[
-          Container(
-            padding: const EdgeInsets.all(AppSpacing.x4 - 2),
-            decoration: BoxDecoration(
-              color: c.surfaceCard,
-              borderRadius: AppRadii.cardRadius,
-              boxShadow: isDark ? AppShadow.softDark : AppShadow.softLight,
+        if (transfers.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.x2),
+            child: Text(
+              context.l10n.homeNoRecent,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: c.textMuted),
             ),
-            child: Row(
-              children: [
-                Container(
-                  width: 34,
-                  height: 34,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: t.direction == TransferDirection.sent
-                        ? c.accentSubtle
-                        : AppColors.info.withValues(alpha: 0.14),
-                    shape: BoxShape.circle,
+          ),
+        for (final t in transfers) ...[
+          GestureDetector(
+            onTap: t.record == null
+                ? null
+                : () => context.push(AppRoutes.historyDetail, extra: t.record),
+            child: Container(
+              padding: const EdgeInsets.all(AppSpacing.x4 - 2),
+              decoration: BoxDecoration(
+                color: c.surfaceCard,
+                borderRadius: AppRadii.cardRadius,
+                boxShadow: isDark ? AppShadow.softDark : AppShadow.softLight,
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 34,
+                    height: 34,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: t.direction == TransferDirection.sent
+                          ? c.accentSubtle
+                          : AppColors.info.withValues(alpha: 0.14),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      t.direction == TransferDirection.sent
+                          ? LucideIcons.arrowUpRight
+                          : LucideIcons.arrowDownLeft,
+                      size: 17,
+                      color: t.direction == TransferDirection.sent
+                          ? c.accent
+                          : AppColors.info,
+                    ),
                   ),
-                  child: Icon(
-                    t.direction == TransferDirection.sent
-                        ? LucideIcons.arrowUpRight
-                        : LucideIcons.arrowDownLeft,
-                    size: 17,
-                    color: t.direction == TransferDirection.sent
-                        ? c.accent
-                        : AppColors.info,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.x3 - 1),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        t.title,
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                      Text(
-                        t.meta,
-                        style: AppTypography.mono(
-                          size: 11,
-                          color: c.textMuted,
-                          weight: FontWeight.w400,
+                  const SizedBox(width: AppSpacing.x3 - 1),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          t.title,
+                          style: Theme.of(context).textTheme.titleSmall,
                         ),
-                      ),
-                    ],
+                        Text(
+                          t.meta,
+                          style: AppTypography.mono(
+                            size: 11,
+                            color: c.textMuted,
+                            weight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Text(
-                  t.time,
-                  style: AppTypography.mono(
-                    size: 11,
-                    color: c.textMuted,
-                    weight: FontWeight.w400,
+                  Text(
+                    t.time,
+                    style: AppTypography.mono(
+                      size: 11,
+                      color: c.textMuted,
+                      weight: FontWeight.w400,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           if (t != transfers.last) const SizedBox(height: AppSpacing.x3),

@@ -18,12 +18,16 @@ abstract interface class FileSource {
 
 /// A [FileSource] backed by an on-disk file path.
 class DiskFileSource implements FileSource {
-  DiskFileSource(String path, {this.mimeType})
+  DiskFileSource(this.path, {this.mimeType})
     : _file = File(path),
       name = _basename(path),
       size = File(path).existsSync() ? File(path).lengthSync() : 0;
 
   final File _file;
+
+  /// The originating on-disk path. Used by History (#006) to record a sent
+  /// file's source for the re-send existence check; never written to logs.
+  final String path;
 
   @override
   final String name;

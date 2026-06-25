@@ -5,10 +5,13 @@ import 'package:safe_send/app/app.dart';
 import 'package:safe_send/core/config/app_config.dart';
 import 'package:safe_send/core/config/app_flavor.dart';
 import 'package:safe_send/core/di/injection.dart';
+import 'package:safe_send/core/domain/history/transfer_history_repository.dart';
 import 'package:safe_send/core/presentation/tiles/quick_action_card.dart';
 import 'package:safe_send/core/router/app_router.dart';
 import 'package:safe_send/features/receive/presentation/pages/receive_entry_page.dart';
 import 'package:safe_send/features/send/presentation/pages/send_selection_page.dart';
+
+import '../../helpers/fake_history_repository.dart';
 
 // Widget tests render in the test-default locale (English).
 Future<void> _settleToHome(WidgetTester tester) async {
@@ -34,6 +37,9 @@ Future<void> _tapAction(WidgetTester tester, String label) async {
 void main() {
   setUp(() async {
     await configureDependencies(const AppConfig(flavor: AppFlavor.dev));
+    getIt
+      ..unregister<TransferHistoryRepository>()
+      ..registerFactory<TransferHistoryRepository>(FakeHistoryRepository.new);
   });
   tearDown(() async => getIt.reset());
 

@@ -3,6 +3,11 @@ abstract final class AppRoutes {
   static const splash = '/';
   static const home = '/home';
   static const history = '/history';
+
+  /// History record detail (#006). Pushed full-screen with a core-typed
+  /// `TransferRecord` as the go_router `extra`.
+  static const historyDetail = '/history/detail';
+
   static const settings = '/settings';
   static const send = '/send';
   static const receive = '/receive';

@@ -6,6 +6,7 @@ import 'package:safe_send/core/constants/app_routes.dart';
 import 'package:safe_send/core/di/injection.dart';
 import 'package:safe_send/core/domain/cubit/app_state.dart';
 import 'package:safe_send/core/domain/pairing/connect_handoff.dart';
+import 'package:safe_send/core/domain/transfer/file_source.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/core/presentation/buttons/app_buttons.dart';
 import 'package:safe_send/core/presentation/feedback/app_toast.dart';
@@ -24,12 +25,22 @@ import 'package:safe_send/features/send/presentation/send_progress_args.dart';
 /// Screen 02 — Gửi file: pick any-type files, review per-file + total size,
 /// remove mistakes, then continue to pairing. Full-screen, nav-less (#004).
 class SendSelectionPage extends StatelessWidget {
-  const SendSelectionPage({super.key});
+  const SendSelectionPage({super.key, this.initialSources});
+
+  /// Optional files to pre-populate the tray with — used by History re-send
+  /// (#006). Passed as a core-typed `go_router` extra; null for a fresh pick.
+  final List<FileSource>? initialSources;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SendSelectionCubit>(
-      create: (_) => getIt<SendSelectionCubit>(),
+      create: (_) {
+        final cubit = getIt<SendSelectionCubit>();
+        if (initialSources != null && initialSources!.isNotEmpty) {
+          cubit.seed(initialSources!);
+        }
+        return cubit;
+      },
       child: const _SendSelectionView(),
     );
   }

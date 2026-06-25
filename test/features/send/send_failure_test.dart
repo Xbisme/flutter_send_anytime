@@ -17,6 +17,7 @@ import 'package:safe_send/features/send/presentation/cubit/send_transfer_cubit.d
 import 'package:safe_send/features/send/presentation/pages/send_transfer_page.dart';
 import 'package:safe_send/features/send/presentation/send_progress_args.dart';
 
+import '../../helpers/fake_record_transfer.dart';
 import '../../helpers/pump_app.dart';
 
 class _MockStartSend extends Mock implements StartSendUseCase {}
@@ -62,7 +63,9 @@ void main() {
     when(() => startSend.dispose()).thenAnswer((_) async {});
     getIt
       ..unregister<SendTransferCubit>()
-      ..registerFactory<SendTransferCubit>(() => SendTransferCubit(startSend));
+      ..registerFactory<SendTransferCubit>(
+        () => SendTransferCubit(startSend, FakeRecordTransfer()),
+      );
   });
   tearDown(() async {
     await snapshots.close();
