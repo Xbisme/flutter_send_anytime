@@ -74,14 +74,14 @@ description: "Task list for #005 Receive Flow (Nhận)"
 
 ### Tests for User Story 2
 
-- [ ] T015 [P] [US2] `bloc_test` for `ReceiveTransferCubit` decision bridge (onManifest → loaded `awaitingDecision:true` + correct `IncomingOffer`; `accept()` completes true → transferring; `reject()` completes false → reject frame + `_rejectedByUser` set; no write before accept) in `test/features/receive/receive_transfer_cubit_decision_test.dart`
-- [ ] T016 [P] [US2] Widget test for `IncomingTransferDialog` (renders senderLabel/count/total/types per the Dialogs spec; **Nhận**→`accept`, **Từ chối**→`reject`) in `test/features/receive/incoming_transfer_dialog_test.dart`
+- [x] T015 [P] [US2] `bloc_test` for `ReceiveTransferCubit` decision bridge (onManifest → loaded `awaitingDecision:true` + correct `IncomingOffer`; `accept()` completes true → transferring; `reject()` completes false → reject frame + `_rejectedByUser` set; no write before accept) in `test/features/receive/receive_transfer_cubit_decision_test.dart`
+- [x] T016 [P] [US2] Widget test for `IncomingTransferDialog` (renders senderLabel/count/total/types per the Dialogs spec; **Nhận**→`accept`, **Từ chối**→`reject`) in `test/features/receive/incoming_transfer_dialog_test.dart`
 
 ### Implementation for User Story 2
 
-- [ ] T017 [P] [US2] Create `StartReceiveUseCase` (resolves `destinationDirectory()` then `engine.startReceiveOnTransport`; exposes `snapshots`, `cancel`, `dispose`) in `lib/features/receive/domain/usecases/start_receive_usecase.dart` — per [contracts/receive-flow-contract.md](contracts/receive-flow-contract.md) §2
-- [ ] T018 [US2] Create `ReceiveTransferCubit : AppCubit<TransferView>` (snapshot→`TransferView(role: receiver)` projection via `TransferProgressProjector`; `Completer<bool>` decision bridge with `onManifest`; `accept()`/`reject()` + `_rejectedByUser`; `start(transport)`; `cancel()`; `close()` disposes the use case) in `lib/features/receive/presentation/cubit/receive_transfer_cubit.dart` (depends on T017)
-- [ ] T019 [US2] Create `IncomingTransferDialog` (built from `IncomingOffer`; avatar badge + title/body + Nhận gradient / Từ chối; Cupertino/Material-appropriate; ARB copy; mono sizes) in `lib/features/receive/presentation/widgets/incoming_transfer_dialog.dart`
+- [x] T017 [P] [US2] Create `StartReceiveUseCase` (resolves `destinationDirectory()` then `engine.startReceiveOnTransport`; exposes `snapshots`, `cancel`, `dispose`) in `lib/features/receive/domain/usecases/start_receive_usecase.dart` — per [contracts/receive-flow-contract.md](contracts/receive-flow-contract.md) §2
+- [x] T018 [US2] Create `ReceiveTransferCubit : AppCubit<TransferView>` (snapshot→`TransferView(role: receiver)` projection via `TransferProgressProjector`; `Completer<bool>` decision bridge with `onManifest`; `accept()`/`reject()` + `_rejectedByUser`; `start(transport)`; `cancel()`; `close()` disposes the use case) in `lib/features/receive/presentation/cubit/receive_transfer_cubit.dart` (depends on T017)
+- [x] T019 [US2] Create `IncomingTransferDialog` (built from `IncomingOffer`; avatar badge + title/body + Nhận gradient / Từ chối; Cupertino/Material-appropriate; ARB copy; mono sizes) in `lib/features/receive/presentation/widgets/incoming_transfer_dialog.dart`
 
 **Checkpoint**: the accept/reject gate works end-to-end at the cubit/dialog level (US2 independently testable); reject writes nothing.
 

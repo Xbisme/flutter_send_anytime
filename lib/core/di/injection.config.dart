@@ -40,6 +40,10 @@ import 'package:safe_send/features/pairing/domain/usecases/join_session_usecase.
     as _i855;
 import 'package:safe_send/features/pairing/presentation/cubit/pairing_cubit.dart'
     as _i964;
+import 'package:safe_send/features/receive/domain/usecases/start_receive_usecase.dart'
+    as _i590;
+import 'package:safe_send/features/receive/presentation/cubit/receive_transfer_cubit.dart'
+    as _i67;
 import 'package:safe_send/features/send/domain/usecases/pick_files_usecase.dart'
     as _i36;
 import 'package:safe_send/features/send/domain/usecases/start_send_usecase.dart'
@@ -100,8 +104,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i36.PickFilesUseCase>(
       () => _i36.PickFilesUseCase(gh<_i1069.FilePickerService>()),
     );
+    gh.factory<_i590.StartReceiveUseCase>(
+      () => _i590.StartReceiveUseCase(
+        gh<_i953.TransferEngine>(),
+        gh<_i58.ReceivedFilesService>(),
+      ),
+    );
     gh.factory<_i353.SendSelectionCubit>(
       () => _i353.SendSelectionCubit(gh<_i36.PickFilesUseCase>()),
+    );
+    gh.factory<_i67.ReceiveTransferCubit>(
+      () => _i67.ReceiveTransferCubit(gh<_i590.StartReceiveUseCase>()),
     );
     gh.factory<_i259.SendTransferCubit>(
       () => _i259.SendTransferCubit(gh<_i343.StartSendUseCase>()),
