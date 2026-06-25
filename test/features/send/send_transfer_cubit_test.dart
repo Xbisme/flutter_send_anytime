@@ -10,8 +10,8 @@ import 'package:safe_send/core/domain/result.dart';
 import 'package:safe_send/core/domain/transfer/file_source.dart';
 import 'package:safe_send/core/domain/transfer/file_transfer_item.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
-import 'package:safe_send/core/services/transport/data_transport.dart';
 import 'package:safe_send/core/domain/transfer/transfer_view.dart';
+import 'package:safe_send/core/services/transport/data_transport.dart';
 import 'package:safe_send/features/send/domain/usecases/start_send_usecase.dart';
 import 'package:safe_send/features/send/presentation/cubit/send_transfer_cubit.dart';
 

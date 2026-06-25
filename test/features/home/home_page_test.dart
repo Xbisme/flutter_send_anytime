@@ -7,7 +7,7 @@ import 'package:safe_send/core/config/app_flavor.dart';
 import 'package:safe_send/core/di/injection.dart';
 import 'package:safe_send/core/presentation/tiles/quick_action_card.dart';
 import 'package:safe_send/core/router/app_router.dart';
-import 'package:safe_send/features/receive/presentation/receive_page.dart';
+import 'package:safe_send/features/receive/presentation/pages/receive_entry_page.dart';
 import 'package:safe_send/features/send/presentation/pages/send_selection_page.dart';
 
 // Widget tests render in the test-default locale (English).
@@ -76,13 +76,31 @@ void main() {
       expect(find.byType(SendSelectionPage), findsNothing);
     });
 
-    testWidgets('tapping Receive opens a nav-less Coming Soon flow', (
+    testWidgets('tapping Receive opens the nav-less receive flow', (
       tester,
     ) async {
       await _settleToHome(tester);
-      await _tapAction(tester, 'Receive files');
+      // The receive flow opens the Connect hub, which runs a periodic countdown
+      // ticker — pumpAndSettle would never settle, so pump with bounded frames.
+      final text = find.text('Receive files');
+      await tester.scrollUntilVisible(
+        text,
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      final card = find.ancestor(
+        of: text,
+        matching: find.byType(QuickActionCard),
+      );
+      await tester.ensureVisible(card);
+      await tester.pump();
+      await tester.tap(card);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400)); // push transition
+      await tester.pump(); // entry coordinator's post-frame push to Connect
+      await tester.pump(const Duration(milliseconds: 400)); // its transition
 
-      expect(find.byType(ReceivePage), findsOneWidget);
+      expect(find.byType(ReceiveEntryPage), findsOneWidget);
       expect(find.byType(NavigationBar), findsNothing);
     });
   });

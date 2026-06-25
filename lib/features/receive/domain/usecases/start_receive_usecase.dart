@@ -38,6 +38,12 @@ class StartReceiveUseCase {
     );
   }
 
+  /// Open a received file in a system viewer.
+  Future<Result<void>> open(String path) => _files.open(path);
+
+  /// Hand received files to the system share sheet.
+  Future<Result<void>> share(List<String> paths) => _files.share(paths);
+
   /// Cancel the in-flight receive (honored on both ends).
   Future<void> cancel() => _engine.cancel();
 

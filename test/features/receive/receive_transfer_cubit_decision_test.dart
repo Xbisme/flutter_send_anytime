@@ -6,7 +6,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:safe_send/core/constants/transfer_constants.dart';
 import 'package:safe_send/core/domain/cubit/app_state.dart';
+import 'package:safe_send/core/domain/failures/app_failure.dart';
 import 'package:safe_send/core/domain/result.dart';
+import 'package:safe_send/core/domain/transfer/file_transfer_item.dart';
 import 'package:safe_send/core/domain/transfer/transfer_manifest.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/core/domain/transfer/transfer_view.dart';
@@ -112,6 +114,47 @@ void main() {
     verify: (cubit) {
       expect(decisionValue, isFalse);
       expect(cubit.rejectedByUser, isTrue);
+    },
+  );
+
+  blocTest<ReceiveTransferCubit, AppState<TransferView>>(
+    'a failed snapshot with some completed files emits a partial loaded view, '
+    'not an error (FR-013a)',
+    build: () => ReceiveTransferCubit(useCase),
+    act: (cubit) async {
+      final running = cubit.start(_FakeTransport(), senderLabel: 'Người gửi');
+      await pumpEventQueue();
+      cubit.accept();
+      // File 0 verified, then the connection drops mid file 1.
+      snapshots.add(
+        const TransferSnapshot(
+          phase: TransferPhase.failed,
+          role: TransferRole.receiver,
+          progress: TransferProgress(
+            overallBytesTransferred: 100,
+            overallTotalBytes: 300,
+          ),
+          items: [
+            FileTransferItem(
+              index: 0,
+              name: 'a.jpg',
+              size: 100,
+              status: FileItemStatus.completed,
+            ),
+            FileTransferItem(index: 1, name: 'b.pdf', size: 200),
+          ],
+          failure: AppFailure.connectionLost(),
+        ),
+      );
+      await pumpEventQueue();
+      await running;
+    },
+    verify: (cubit) {
+      final state = cubit.state;
+      expect(state, isA<AppLoaded<TransferView>>());
+      final view = (state as AppLoaded<TransferView>).data;
+      expect(view.isPartial, isTrue);
+      expect(view.completedCount, 1);
     },
   );
 }

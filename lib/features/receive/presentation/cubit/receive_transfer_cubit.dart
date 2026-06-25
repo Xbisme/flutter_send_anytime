@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:injectable/injectable.dart';
 import 'package:safe_send/core/domain/cubit/app_cubit.dart';
 import 'package:safe_send/core/domain/cubit/app_state.dart';
+import 'package:safe_send/core/domain/result.dart';
 import 'package:safe_send/core/domain/transfer/incoming_offer.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/core/domain/transfer/transfer_view.dart';
@@ -84,20 +85,33 @@ class ReceiveTransferCubit extends AppCubit<TransferView> {
   /// Cancel an in-progress receive (after a confirm dialog).
   Future<void> cancel() => _startReceive.cancel();
 
+  /// Open a received file in a system viewer.
+  Future<Result<void>> openFile(String path) => _startReceive.open(path);
+
+  /// Hand all received files to the system share sheet.
+  Future<Result<void>> shareFiles(List<String> paths) =>
+      _startReceive.share(paths);
+
   void _onSnapshot(TransferSnapshot snapshot) {
     _lastEta = _projector.update(snapshot);
+    final view = TransferView.fromSnapshot(
+      snapshot,
+      speedBytesPerSec: _projector.speedBytesPerSec,
+      etaSeconds: _lastEta,
+      elapsed: _projector.elapsed,
+    );
     if (snapshot.phase == TransferPhase.failed && snapshot.failure != null) {
+      // FR-013a: if some files already arrived + verified (and this wasn't a
+      // user reject), keep them and present a partial outcome rather than a bare
+      // error. Otherwise surface the recoverable failure.
+      if (!_rejectedByUser && view.completedCount > 0) {
+        emitLoaded(view);
+        return;
+      }
       emitError(snapshot.failure!);
       return;
     }
-    emitLoaded(
-      TransferView.fromSnapshot(
-        snapshot,
-        speedBytesPerSec: _projector.speedBytesPerSec,
-        etaSeconds: _lastEta,
-        elapsed: _projector.elapsed,
-      ),
-    );
+    emitLoaded(view);
   }
 
   @override
