@@ -54,13 +54,13 @@ description: "Task list for #005 Receive Flow (Nhận)"
 
 ### Tests for User Story 3
 
-- [ ] T011 [P] [US3] Widget test for `CodeInput` (digit-only, exactly 6, leading zeros, `onCompleted` fires at 6, Connect disabled until complete) in `test/features/pairing/code_input_test.dart`
-- [ ] T012 [P] [US3] Widget test for the Connect **receiver branch** (enter code → `PairingCubit.joinWithCode`; `invalidCode`/`roomExpired`/`roomFull`/`signalingUnreachable` → distinct message + code preserved + retry) in `test/features/pairing/connect_receiver_test.dart`
+- [x] T011 [P] [US3] Widget test for `CodeInput` (digit-only, exactly 6, leading zeros, `onCompleted` fires at 6, Connect disabled until complete) in `test/features/pairing/code_input_test.dart`
+- [x] T012 [P] [US3] Widget test for the Connect **receiver branch** (enter code → `PairingCubit.joinWithCode`; `invalidCode`/`roomExpired`/`roomFull`/`signalingUnreachable` → distinct message + code preserved + retry) in `test/features/pairing/connect_receiver_test.dart`
 
 ### Implementation for User Story 3
 
-- [ ] T013 [P] [US3] Create `CodeInput` widget (6-digit mono entry, digit-only input formatters, `onChanged`/`onCompleted`, a11y label, reduce-motion safe) in `lib/features/pairing/presentation/connect/widgets/code_input.dart`
-- [ ] T014 [US3] Add the receiver branch to `_CodeTab` in `lib/features/pairing/presentation/connect/connect_page.dart`: when `request.role == TransferRole.receiver`, render `CodeInput` + a Connect `PrimaryButton` → `joinWithCode(code)`; reuse the existing connecting/connected/failure panels; ensure failure keeps the code (FR-023) — per [contracts/receive-flow-contract.md](contracts/receive-flow-contract.md) §4
+- [x] T013 [P] [US3] Create `CodeInput` widget (6-digit mono entry, digit-only input formatters, `onChanged`/`onCompleted`, a11y label, reduce-motion safe) in `lib/features/pairing/presentation/connect/widgets/code_input.dart`
+- [x] T014 [US3] Add the receiver branch to `_CodeTab` in `lib/features/pairing/presentation/connect/connect_page.dart`: when `request.role == TransferRole.receiver`, render `CodeInput` + a Connect `PrimaryButton` → `joinWithCode(code)`; reuse the existing connecting/connected/failure panels; ensure failure keeps the code (FR-023) — per [contracts/receive-flow-contract.md](contracts/receive-flow-contract.md) §4
 
 **Checkpoint**: receiver can enter a code and reach `connected` (returns `ConnectResult{transport}`) or a clear, retryable failure — testable without the rest of the flow.
 
