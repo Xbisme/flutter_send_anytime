@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:safe_send/core/di/injection.dart';
 import 'package:safe_send/core/router/deep_link_coordinator.dart';
 import 'package:safe_send/core/services/deeplink/deep_link_service.dart';
@@ -15,8 +16,11 @@ import 'package:safe_send/core/services/pairing/active_hosting_registry.dart';
 /// the router + DI are ready (FR-011). Warm start: the link stream is handled
 /// for the app's lifetime (FR-010).
 class DeepLinkListener extends StatefulWidget {
-  const DeepLinkListener({required this.child, super.key});
+  const DeepLinkListener({required this.router, required this.child, super.key});
 
+  /// The app router — navigation goes through this instance directly, since the
+  /// builder context this widget runs from sits above the `InheritedGoRouter`.
+  final GoRouter router;
   final Widget child;
 
   @override
@@ -25,8 +29,9 @@ class DeepLinkListener extends StatefulWidget {
 
 class _DeepLinkListenerState extends State<DeepLinkListener> {
   final DeepLinkService _service = getIt<DeepLinkService>();
-  final DeepLinkCoordinator _coordinator = DeepLinkCoordinator(
+  late final DeepLinkCoordinator _coordinator = DeepLinkCoordinator(
     getIt<ActiveHostingRegistry>(),
+    widget.router,
   );
   StreamSubscription<Uri>? _sub;
 
@@ -41,7 +46,15 @@ class _DeepLinkListenerState extends State<DeepLinkListener> {
   }
 
   void _handle(Uri uri) {
-    if (mounted) unawaited(_coordinator.handle(context, uri));
+    // Route only after a frame so the router has finished its first build. iOS
+    // delivers the cold-launch URL through the stream *before* the router is
+    // initialized; navigating then is silently clobbered by the initial route.
+    // scheduleFrame() guarantees the callback fires even if the app is idle.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      unawaited(_coordinator.handle(context, uri));
+    });
+    WidgetsBinding.instance.scheduleFrame();
   }
 
   @override

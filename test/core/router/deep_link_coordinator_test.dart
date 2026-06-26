@@ -13,7 +13,7 @@ import 'package:toastification/toastification.dart';
 /// Builds a minimal router whose `/start` page exposes a button that runs
 /// [coord].handle(context, uri); `home` and `receive` are stub destinations so
 /// the test can assert where the coordinator routed (and the carried extra).
-GoRouter _router(DeepLinkCoordinator coord, Uri uri) => GoRouter(
+GoRouter _router(DeepLinkCoordinator Function() coord, Uri uri) => GoRouter(
   initialLocation: '/start',
   routes: [
     GoRoute(
@@ -22,7 +22,7 @@ GoRouter _router(DeepLinkCoordinator coord, Uri uri) => GoRouter(
         body: Builder(
           builder: (context) => Center(
             child: ElevatedButton(
-              onPressed: () => coord.handle(context, uri),
+              onPressed: () => coord().handle(context, uri),
               child: const Text('go'),
             ),
           ),
@@ -64,8 +64,10 @@ void main() {
   testWidgets('a valid invite routes to Receive carrying the code (FR-012)', (
     tester,
   ) async {
-    final coord = DeepLinkCoordinator(ActiveHostingRegistryImpl());
-    await _pump(tester, _router(coord, validUri));
+    late final DeepLinkCoordinator coord;
+    final router = _router(() => coord, validUri);
+    coord = DeepLinkCoordinator(ActiveHostingRegistryImpl(), router);
+    await _pump(tester, router);
 
     await tester.tap(find.text('go'));
     await tester.pumpAndSettle();
@@ -76,8 +78,10 @@ void main() {
   testWidgets('a malformed invite lands on Home, not Receive (FR-013)', (
     tester,
   ) async {
-    final coord = DeepLinkCoordinator(ActiveHostingRegistryImpl());
-    await _pump(tester, _router(coord, Uri.parse('safesend://nope?x=1')));
+    late final DeepLinkCoordinator coord;
+    final router = _router(() => coord, Uri.parse('safesend://nope?x=1'));
+    coord = DeepLinkCoordinator(ActiveHostingRegistryImpl(), router);
+    await _pump(tester, router);
 
     await tester.tap(find.text('go'));
     await tester.pump();
@@ -93,8 +97,10 @@ void main() {
     tester,
   ) async {
     final registry = ActiveHostingRegistryImpl()..setHosting(code);
-    final coord = DeepLinkCoordinator(registry);
-    await _pump(tester, _router(coord, validUri));
+    late final DeepLinkCoordinator coord;
+    final router = _router(() => coord, validUri);
+    coord = DeepLinkCoordinator(registry, router);
+    await _pump(tester, router);
 
     await tester.tap(find.text('go'));
     await tester.pump();
@@ -108,11 +114,13 @@ void main() {
 
   testWidgets('handling a link prints neither the code nor the URL '
       '(Constitution I / FR-021)', (tester) async {
-    final coord = DeepLinkCoordinator(ActiveHostingRegistryImpl());
+    late final DeepLinkCoordinator coord;
+    final router = _router(() => coord, validUri);
+    coord = DeepLinkCoordinator(ActiveHostingRegistryImpl(), router);
     final logs = <String>[];
     await runZoned(
       () async {
-        await _pump(tester, _router(coord, validUri));
+        await _pump(tester, router);
         await tester.tap(find.text('go'));
         await tester.pump();
         await tester.pump(const Duration(milliseconds: 100));

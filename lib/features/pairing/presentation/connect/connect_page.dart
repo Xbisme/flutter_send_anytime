@@ -62,6 +62,10 @@ class _ConnectViewState extends State<_ConnectView> {
   int _tab = 0;
   Timer? _ticker;
 
+  /// Guards the one-shot terminal navigation (connected → handoff, or auto-join
+  /// failure → Home) so a trailing state can't trigger a second navigation.
+  bool _terminalHandled = false;
+
   /// How the receiver paired (#007/#008): `qr` when a QR was scanned, `shareLink`
   /// when the device arrived via an invite link, else `sixDigitCode`.
   PairingMethod _receiverMethod = PairingMethod.sixDigitCode;
@@ -170,6 +174,8 @@ class _ConnectViewState extends State<_ConnectView> {
                 state.data is PairingConnected) ||
             (state is AppError<PairingState> && _isShareLinkAutoJoin),
         listener: (_, state) {
+          if (_terminalHandled) return;
+          _terminalHandled = true;
           if (state is AppError<PairingState>) {
             _onAutoJoinFailed();
           } else {

@@ -9,11 +9,11 @@ import 'package:safe_send/l10n/generated/app_localizations.dart';
 
 /// A page that triggers `coord.handle(context, uri)` from a button — so the
 /// coordinator reads *this* route as the current location.
-Widget _trigger(DeepLinkCoordinator coord, Uri uri) => Scaffold(
+Widget _trigger(DeepLinkCoordinator Function() coord, Uri uri) => Scaffold(
   body: Builder(
     builder: (context) => Center(
       child: ElevatedButton(
-        onPressed: () => coord.handle(context, uri),
+        onPressed: () => coord().handle(context, uri),
         child: const Text('go'),
       ),
     ),
@@ -21,7 +21,7 @@ Widget _trigger(DeepLinkCoordinator coord, Uri uri) => Scaffold(
 );
 
 GoRouter _router(
-  DeepLinkCoordinator coord,
+  DeepLinkCoordinator Function() coord,
   Uri uri, {
   required String initial,
 }) => GoRouter(
@@ -59,11 +59,10 @@ void main() {
 
   testWidgets('during a transfer, confirming leaves and opens the invite '
       '(FR-014)', (tester) async {
-    final coord = DeepLinkCoordinator(ActiveHostingRegistryImpl());
-    await _pump(
-      tester,
-      _router(coord, uri, initial: AppRoutes.sendProgress),
-    );
+    late final DeepLinkCoordinator coord;
+    final router = _router(() => coord, uri, initial: AppRoutes.sendProgress);
+    coord = DeepLinkCoordinator(ActiveHostingRegistryImpl(), router);
+    await _pump(tester, router);
 
     await tester.tap(find.text('go'));
     await tester.pumpAndSettle();
@@ -78,11 +77,10 @@ void main() {
   testWidgets('during a transfer, cancelling keeps the transfer (FR-014)', (
     tester,
   ) async {
-    final coord = DeepLinkCoordinator(ActiveHostingRegistryImpl());
-    await _pump(
-      tester,
-      _router(coord, uri, initial: AppRoutes.sendProgress),
-    );
+    late final DeepLinkCoordinator coord;
+    final router = _router(() => coord, uri, initial: AppRoutes.sendProgress);
+    coord = DeepLinkCoordinator(ActiveHostingRegistryImpl(), router);
+    await _pump(tester, router);
 
     await tester.tap(find.text('go'));
     await tester.pumpAndSettle();
@@ -98,8 +96,10 @@ void main() {
   testWidgets('off a transfer screen, no confirm dialog appears (FR-014)', (
     tester,
   ) async {
-    final coord = DeepLinkCoordinator(ActiveHostingRegistryImpl());
-    await _pump(tester, _router(coord, uri, initial: '/start'));
+    late final DeepLinkCoordinator coord;
+    final router = _router(() => coord, uri, initial: '/start');
+    coord = DeepLinkCoordinator(ActiveHostingRegistryImpl(), router);
+    await _pump(tester, router);
 
     await tester.tap(find.text('go'));
     await tester.pumpAndSettle();

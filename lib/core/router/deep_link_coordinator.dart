@@ -15,9 +15,15 @@ import 'package:safe_send/core/utils/l10n_extension.dart';
 /// no feature pages (Constitution XI). It never logs the code or the URL; the
 /// payload carries the rendezvous secret (Constitution I).
 class DeepLinkCoordinator {
-  const DeepLinkCoordinator(this._hosting);
+  const DeepLinkCoordinator(this._hosting, this._router);
 
   final ActiveHostingRegistry _hosting;
+
+  /// The app router. Navigation and the "what screen am I on" check go through
+  /// this instance directly: the listener runs from `MaterialApp.router`'s
+  /// `builder`, whose context sits *above* the router's `InheritedGoRouter`, so
+  /// `GoRouter.of(context)` / `context.go` can't be resolved from there.
+  final GoRouter _router;
 
   /// Handle one incoming [uri], using [context] for navigation and toasts.
   /// The caller delivers links one at a time (cold via the initial link, warm
@@ -29,7 +35,7 @@ class DeepLinkCoordinator {
       case Failure<String>():
         // Malformed / not a Safe Send invite → toast + Home (FR-013).
         AppToast.show(context, l10n.shareLinkInvalid, type: AppToastType.error);
-        context.go(AppRoutes.home);
+        _router.go(AppRoutes.home);
       case Success<String>(:final value):
         // Self-invite: the host tapped its own live link (FR-015).
         if (value == _hosting.activeHostingCode) {
@@ -38,13 +44,13 @@ class DeepLinkCoordinator {
         }
         // Opened during an active transfer → confirm before leaving it; never
         // silently abandon a running transfer (FR-014).
-        if (_inTransfer(context)) {
-          final leave = await _confirmLeaveTransfer(context);
-          if (!leave || !context.mounted) return;
+        if (_inTransfer()) {
+          final leave = await _confirmLeaveTransfer();
+          if (!leave) return;
         }
         // Route into Receive and auto-join the delivered code (FR-012). A
         // valid-but-expired code is rejected later by the join path (FR-013).
-        context.go(
+        _router.go(
           AppRoutes.receive,
           extra: ReceiveEntryRequest(autoJoinCode: value),
         );
@@ -53,17 +59,19 @@ class DeepLinkCoordinator {
 
   /// Whether a transfer is currently on screen (the send/receive progress
   /// route) — the router is the source of truth for "what screen am I on".
-  bool _inTransfer(BuildContext context) {
-    final path = GoRouter.of(
-      context,
-    ).routerDelegate.currentConfiguration.uri.path;
+  bool _inTransfer() {
+    final path = _router.routerDelegate.currentConfiguration.uri.path;
     return path == AppRoutes.sendProgress || path == AppRoutes.receiveProgress;
   }
 
-  Future<bool> _confirmLeaveTransfer(BuildContext context) async {
-    final l10n = context.l10n;
+  Future<bool> _confirmLeaveTransfer() async {
+    // The dialog needs a context *inside* the router's navigator (the builder
+    // context that drives this coordinator has no Navigator ancestor).
+    final navContext = _router.routerDelegate.navigatorKey.currentContext;
+    if (navContext == null) return false;
+    final l10n = navContext.l10n;
     final result = await showAdaptiveDialog<bool>(
-      context: context,
+      context: navContext,
       builder: (dialogContext) => AlertDialog.adaptive(
         title: Text(l10n.shareLinkLeaveTransferTitle),
         content: Text(l10n.shareLinkLeaveTransferBody),

@@ -17,6 +17,7 @@ class SafeSendApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final effectiveRouter = router ?? appRouter;
     return ToastificationWrapper(
       child: MaterialApp.router(
         onGenerateTitle: (context) => AppLocalizations.of(context).navHome,
@@ -25,11 +26,14 @@ class SafeSendApp extends StatelessWidget {
         darkTheme: AppTheme.dark,
         // themeMode defaults to ThemeMode.system — the app follows the OS
         // theme; there is no in-app scheme picker (#001).
-        routerConfig: router ?? appRouter,
-        // Route incoming safesend:// invite links (#008). Sits under the
-        // navigator + toast overlay but inside the router.
-        builder: (context, child) =>
-            DeepLinkListener(child: child ?? const SizedBox.shrink()),
+        routerConfig: effectiveRouter,
+        // Route incoming safesend:// invite links (#008). The builder context
+        // sits above the router's InheritedGoRouter, so the listener navigates
+        // via the router instance directly (not GoRouter.of(context)).
+        builder: (context, child) => DeepLinkListener(
+          router: effectiveRouter,
+          child: child ?? const SizedBox.shrink(),
+        ),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         localeResolutionCallback: (locale, supported) {
