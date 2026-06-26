@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:safe_send/core/di/injection.dart';
 import 'package:safe_send/core/router/deep_link_coordinator.dart';
 import 'package:safe_send/core/services/deeplink/deep_link_service.dart';
+import 'package:safe_send/core/services/deeplink/handled_link_store.dart';
 import 'package:safe_send/core/services/pairing/active_hosting_registry.dart';
 
 /// Listens for `safesend://` invite links and routes them via
@@ -29,6 +30,7 @@ class DeepLinkListener extends StatefulWidget {
 
 class _DeepLinkListenerState extends State<DeepLinkListener> {
   final DeepLinkService _service = getIt<DeepLinkService>();
+  final HandledLinkStore _handledStore = HandledLinkStore();
   late final DeepLinkCoordinator _coordinator = DeepLinkCoordinator(
     getIt<ActiveHostingRegistry>(),
     widget.router,
@@ -50,8 +52,12 @@ class _DeepLinkListenerState extends State<DeepLinkListener> {
     // delivers the cold-launch URL through the stream *before* the router is
     // initialized; navigating then is silently clobbered by the initial route.
     // scheduleFrame() guarantees the callback fires even if the app is idle.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
+      // Skip a link already acted on in a prior run — iOS can redeliver the
+      // launch URL on a later cold start, which would otherwise auto-join an
+      // expired code and nag with an "expired" toast on every relaunch (#008).
+      if (!await _handledStore.claim(uri) || !mounted) return;
       unawaited(_coordinator.handle(context, uri));
     });
     WidgetsBinding.instance.scheduleFrame();
