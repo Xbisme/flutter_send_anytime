@@ -5,6 +5,7 @@ import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/core/domain/transfer/transfer_view.dart';
 import 'package:safe_send/core/presentation/buttons/app_buttons.dart';
 import 'package:safe_send/core/presentation/files/file_widgets.dart';
+import 'package:safe_send/core/presentation/scaffolding/fit_or_scroll.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
 import 'package:safe_send/core/theme/app_dimens.dart';
 import 'package:safe_send/core/utils/formatters.dart';
@@ -55,50 +56,52 @@ class _SenderComplete extends StatelessWidget {
     final l10n = context.l10n;
     final c = AppColors.of(context);
     final view = parent.view;
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.x5),
-      child: Column(
-        children: [
-          const Spacer(),
-          const _CheckBadge(),
-          const SizedBox(height: AppSpacing.x6),
-          Text(
-            l10n.sendCompleteTitle,
-            style: Theme.of(context).textTheme.headlineLarge,
-          ),
-          const SizedBox(height: AppSpacing.x3),
-          Text(
-            l10n.sendCompleteDetail(
-              view.fileCount,
-              Formatters.bytes(view.bytesTotal),
-              l10n.sendPeerReceiver,
-              Formatters.clock(view.elapsed),
+    return FitOrScroll(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.x5),
+        child: Column(
+          children: [
+            const Spacer(),
+            const _CheckBadge(),
+            const SizedBox(height: AppSpacing.x6),
+            Text(
+              l10n.sendCompleteTitle,
+              style: Theme.of(context).textTheme.headlineLarge,
             ),
-            textAlign: TextAlign.center,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: c.textSecondary),
-          ),
-          const Spacer(),
-          Row(
-            children: [
-              Expanded(
-                child: SecondaryButton(
-                  label: l10n.sendDone,
-                  onPressed: parent.onDone,
-                ),
+            const SizedBox(height: AppSpacing.x3),
+            Text(
+              l10n.sendCompleteDetail(
+                view.fileCount,
+                Formatters.bytes(view.bytesTotal),
+                l10n.sendPeerReceiver,
+                Formatters.clock(view.elapsed),
               ),
-              const SizedBox(width: AppSpacing.x3),
-              Expanded(
-                child: PrimaryButton(
-                  label: l10n.sendAgain,
-                  icon: LucideIcons.send,
-                  onPressed: parent.onSendAgain,
+              textAlign: TextAlign.center,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: c.textSecondary),
+            ),
+            const Spacer(),
+            Row(
+              children: [
+                Expanded(
+                  child: SecondaryButton(
+                    label: l10n.sendDone,
+                    onPressed: parent.onDone,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+                const SizedBox(width: AppSpacing.x3),
+                Expanded(
+                  child: PrimaryButton(
+                    label: l10n.sendAgain,
+                    icon: LucideIcons.send,
+                    onPressed: parent.onSendAgain,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

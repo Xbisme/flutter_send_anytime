@@ -12,7 +12,11 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:safe_send/core/config/app_config.dart' as _i132;
+import 'package:safe_send/core/config/signaling_endpoint_provider.dart'
+    as _i795;
 import 'package:safe_send/core/data/database/app_database.dart' as _i196;
+import 'package:safe_send/core/data/shared_preferences_settings_repository.dart'
+    as _i329;
 import 'package:safe_send/core/data/transfer_history_repository_impl.dart'
     as _i835;
 import 'package:safe_send/core/di/database_module.dart' as _i206;
@@ -20,6 +24,10 @@ import 'package:safe_send/core/domain/history/transfer_history_repository.dart'
     as _i1016;
 import 'package:safe_send/core/domain/history/usecases/record_transfer_usecase.dart'
     as _i1032;
+import 'package:safe_send/core/domain/settings/settings_repository.dart'
+    as _i656;
+import 'package:safe_send/core/services/app_info_service.dart' as _i118;
+import 'package:safe_send/core/services/app_review_service.dart' as _i966;
 import 'package:safe_send/core/services/deeplink/deep_link_service.dart'
     as _i572;
 import 'package:safe_send/core/services/deeplink/deep_link_service_impl.dart'
@@ -32,6 +40,8 @@ import 'package:safe_send/core/services/file/received_files_service.dart'
     as _i58;
 import 'package:safe_send/core/services/file/received_files_service_impl.dart'
     as _i423;
+import 'package:safe_send/core/services/media/gallery_saver_service.dart'
+    as _i206;
 import 'package:safe_send/core/services/nearby/nearby_discovery_service.dart'
     as _i306;
 import 'package:safe_send/core/services/nearby/nearby_discovery_service_impl.dart'
@@ -40,11 +50,19 @@ import 'package:safe_send/core/services/nearby/nearby_permission_service.dart'
     as _i532;
 import 'package:safe_send/core/services/nearby/nearby_permission_service_impl.dart'
     as _i834;
+import 'package:safe_send/core/services/notifications/incoming_file_notifier.dart'
+    as _i853;
 import 'package:safe_send/core/services/pairing/active_hosting_registry.dart'
     as _i639;
 import 'package:safe_send/core/services/permissions/camera_permission_service.dart'
     as _i522;
+import 'package:safe_send/core/services/permissions/notification_permission_service.dart'
+    as _i443;
+import 'package:safe_send/core/services/permissions/photo_library_permission_service.dart'
+    as _i641;
 import 'package:safe_send/core/services/signaling/signaling_client.dart' as _i0;
+import 'package:safe_send/core/services/signaling/signaling_diagnostics_service.dart'
+    as _i190;
 import 'package:safe_send/core/services/transport/data_transport.dart' as _i547;
 import 'package:safe_send/core/services/transport/transfer_engine.dart'
     as _i953;
@@ -96,6 +114,8 @@ import 'package:safe_send/features/send/presentation/cubit/send_selection_cubit.
     as _i353;
 import 'package:safe_send/features/send/presentation/cubit/send_transfer_cubit.dart'
     as _i259;
+import 'package:safe_send/features/settings/presentation/cubit/settings_cubit.dart'
+    as _i1071;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -113,6 +133,19 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i265.HomePlaceholderDataSource(),
     );
     gh.lazySingleton<_i572.DeepLinkService>(() => _i1.DeepLinkServiceImpl());
+    gh.lazySingleton<_i206.GallerySaverService>(
+      () => _i206.GalGallerySaverService(),
+    );
+    gh.lazySingleton<_i443.NotificationPermissionService>(
+      () => _i443.PermissionHandlerNotificationService(),
+    );
+    gh.lazySingleton<_i966.AppReviewService>(() => _i966.InAppReviewService());
+    gh.lazySingleton<_i641.PhotoLibraryPermissionService>(
+      () => _i641.GalPhotoLibraryPermissionService(),
+    );
+    gh.lazySingleton<_i118.AppInfoService>(
+      () => _i118.PackageInfoAppInfoService(),
+    );
     gh.lazySingleton<_i522.CameraPermissionService>(
       () => _i522.PermissionHandlerCameraService(),
     );
@@ -129,11 +162,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i532.NearbyPermissionService>(
       () => _i834.PermissionHandlerNearbyService(),
     );
+    gh.lazySingleton<_i190.SignalingDiagnosticsService>(
+      () => _i190.WebSocketSignalingDiagnostics(),
+    );
     gh.factory<_i1069.FilePickerService>(
       () => const _i661.FilePickerServiceImpl(),
     );
-    gh.factory<_i0.SignalingClient>(
-      () => _i0.SignalingClient.create(gh<_i132.AppConfig>()),
+    gh.lazySingleton<_i853.IncomingFileNotifier>(
+      () => _i853.FlnIncomingFileNotifier(),
+    );
+    gh.lazySingleton<_i656.SettingsRepository>(
+      () => _i329.SharedPreferencesSettingsRepository(gh<_i132.AppConfig>()),
     );
     gh.lazySingleton<_i1016.TransferHistoryRepository>(
       () => _i835.TransferHistoryRepositoryImpl(gh<_i196.AppDatabase>()),
@@ -181,9 +220,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i132.AppConfig>(),
       ),
     );
-    gh.factory<_i343.StartSendUseCase>(
-      () => _i343.StartSendUseCase(gh<_i953.TransferEngine>()),
-    );
     gh.factory<_i36.PickFilesUseCase>(
       () => _i36.PickFilesUseCase(gh<_i1069.FilePickerService>()),
     );
@@ -193,14 +229,53 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i58.ReceivedFilesService>(),
       ),
     );
+    gh.factory<_i560.HistoryCubit>(
+      () => _i560.HistoryCubit(gh<_i951.WatchHistoryUseCase>()),
+    );
     gh.factory<_i67.ReceiveTransferCubit>(
       () => _i67.ReceiveTransferCubit(
         gh<_i590.StartReceiveUseCase>(),
         gh<_i1032.RecordTransferUseCase>(),
+        gh<_i656.SettingsRepository>(),
+        gh<_i206.GallerySaverService>(),
+        gh<_i853.IncomingFileNotifier>(),
       ),
     );
-    gh.factory<_i560.HistoryCubit>(
-      () => _i560.HistoryCubit(gh<_i951.WatchHistoryUseCase>()),
+    gh.lazySingleton<_i795.SignalingEndpointProvider>(
+      () => _i795.DefaultSignalingEndpointProvider(
+        gh<_i132.AppConfig>(),
+        gh<_i656.SettingsRepository>(),
+      ),
+    );
+    gh.factory<_i0.SignalingClient>(
+      () => _i0.SignalingClient.create(
+        gh<_i132.AppConfig>(),
+        gh<_i795.SignalingEndpointProvider>(),
+      ),
+    );
+    gh.factory<_i511.HomeCubit>(
+      () => _i511.HomeCubit(
+        gh<_i265.HomePlaceholderDataSource>(),
+        gh<_i887.WatchRecentTransfersUseCase>(),
+      ),
+    );
+    gh.lazySingleton<_i1071.SettingsCubit>(
+      () => _i1071.SettingsCubit(
+        gh<_i656.SettingsRepository>(),
+        gh<_i641.PhotoLibraryPermissionService>(),
+        gh<_i443.NotificationPermissionService>(),
+        gh<_i795.SignalingEndpointProvider>(),
+        gh<_i190.SignalingDiagnosticsService>(),
+      ),
+    );
+    gh.factory<_i353.SendSelectionCubit>(
+      () => _i353.SendSelectionCubit(gh<_i36.PickFilesUseCase>()),
+    );
+    gh.factory<_i343.StartSendUseCase>(
+      () => _i343.StartSendUseCase(
+        gh<_i953.TransferEngine>(),
+        gh<_i656.SettingsRepository>(),
+      ),
     );
     gh.factory<_i312.PairingRepository>(
       () => _i181.PairingRepositoryImpl(
@@ -215,15 +290,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i343.StartSendUseCase>(),
         gh<_i1032.RecordTransferUseCase>(),
       ),
-    );
-    gh.factory<_i511.HomeCubit>(
-      () => _i511.HomeCubit(
-        gh<_i265.HomePlaceholderDataSource>(),
-        gh<_i887.WatchRecentTransfersUseCase>(),
-      ),
-    );
-    gh.factory<_i353.SendSelectionCubit>(
-      () => _i353.SendSelectionCubit(gh<_i36.PickFilesUseCase>()),
     );
     gh.factory<_i825.HostSessionUseCase>(
       () => _i825.HostSessionUseCase(gh<_i312.PairingRepository>()),

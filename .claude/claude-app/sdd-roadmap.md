@@ -4,7 +4,7 @@
 >
 > **Vai trò file này**: pure planning — dependency graph, scope per spec, timeline, optimal order. Current status của các spec sống ở [`project-context.md`](project-context.md). Ship history sống ở [`changelog.md`](changelog.md). Alignment decisions sống ở [`decisions/`](decisions/). **Giao diện** (screens, tokens, components, navigation IA) sống ở [`ui-design-context.md`](ui-design-context.md) — đọc trước mọi phần UI/UX của spec.
 >
-> Last updated: 2026-06-26 (Specs #001–#008 merged via PRs #1–#8; #009 Nearby Radar is next.)
+> Last updated: 2026-06-26 (Specs #001–#009 merged via PRs #1–#9; #010 Settings & Preferences is next.)
 
 ---
 
@@ -229,7 +229,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #009: Nearby Radar
 
-- **Status**: ✅ **Implemented (code)** — branch `009-nearby-radar` (2026-06-26). Fourth connection method: sender advertises the live #003 code via mDNS TXT on the Connect "Gần đây" tab; receiver browses + taps a nearby device → auto-join → existing accept/reject; reuses #003 rendezvous + #002 transport unchanged; same-Wi-Fi only (BLE deferred); core-pure `NearbyDiscoveryService`/`NearbyPermissionService` (`nsd` 5.0.1) + `NearbyDevice`; `pairingMethod=nearby`. `dart analyze lib test` 0 · `flutter test` 230 passed (19 new). **Two-device same-Wi-Fi smoke PASSED on 2 devices**; first `pod install` deferred. See [`changelog.md`](changelog.md).
+- **Status**: ✅ **Merged** (PR #9) — branch `009-nearby-radar` (2026-06-26) · **device-validated on 2 devices**. Fourth connection method: sender advertises the live #003 code via mDNS TXT on the Connect "Gần đây" tab; receiver browses + taps a nearby device → auto-join → existing accept/reject; reuses #003 rendezvous + #002 transport unchanged; same-Wi-Fi only (BLE deferred); core-pure `NearbyDiscoveryService`/`NearbyPermissionService` (`nsd` 5.0.1) + `NearbyDevice`; `pairingMethod=nearby`. `dart analyze lib test` 0 · `flutter test` 230 passed (19 new). **Two-device same-Wi-Fi smoke PASSED on 2 devices**; first `pod install` deferred. See [`changelog.md`](changelog.md).
 - **Branch**: `009-nearby-radar`
 - **Depends on**: #003, #004, #005
 - **Design**: fills the **"Gần đây" tab** of Screen 03 (Kết nối, `ssRadar` animation) + the nearby **DeviceRow** ("đang chờ ở gần bạn" + "Nhận") on Screen 04 + the Home "Thiết bị gần" quick-action. See [`ui-design-context.md`](ui-design-context.md) §Screen 03/04.
@@ -243,7 +243,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #010: Settings & Preferences
 
-- **Status**: ⬜ Not started
+- **Status**: ✅ **Implemented (code)** — branch `010-settings` (2026-06-26). Single `shared_preferences`-backed `SettingsRepository` + app-wide `SettingsCubit` driving runtime theme/language; device profile (+ additive manifest `senderName` to peers), auto-receive (foreground skip-tap) / save-to-library (`gal`) / notifications (`flutter_local_notifications`) with permission gating, signaling-endpoint override + diagnostic, About (version + in-app how-it-works/privacy + rate). `dart analyze lib test` 0 · `flutter test` 264 passed. Two-device smoke + first `pod install` deferred. See [`changelog.md`](changelog.md).
 - **Branch**: `010-settings`
 - **Depends on**: most prior specs
 - **Design**: Screen 08 **Cài đặt (settings)** tab — device-profile card + ToggleRow group (Tự động nhận / Lưu vào Thư viện / Thông báo / Giao diện tối) + version footer. See [`ui-design-context.md`](ui-design-context.md) §Screen 08.

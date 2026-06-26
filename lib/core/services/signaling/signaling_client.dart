@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:injectable/injectable.dart';
 import 'package:safe_send/core/config/app_config.dart';
+import 'package:safe_send/core/config/signaling_endpoint_provider.dart';
 import 'package:safe_send/core/constants/signaling_constants.dart';
 import 'package:safe_send/core/domain/failures/app_failure.dart';
 import 'package:safe_send/core/domain/pairing/pairing_code.dart';
@@ -19,15 +20,24 @@ import 'package:safesend_signaling/safesend_signaling.dart';
 /// attempt (`@injectable`). No file bytes ever cross it; logs phase/error only.
 @injectable
 class SignalingClient {
-  SignalingClient(this._config, {SignalingSocketOpener? opener})
-    : _open = opener ?? WebSocketSignalingSocket.connect;
+  SignalingClient(
+    this._config, {
+    SignalingSocketOpener? opener,
+    SignalingEndpointProvider? endpointProvider,
+  }) : _open = opener ?? WebSocketSignalingSocket.connect,
+       _endpointProvider = endpointProvider;
 
-  /// DI entry point: injectable builds the client from [config] only, using the
+  /// DI entry point: injectable builds the client from [config] +
+  /// [endpointProvider] (the override-aware effective endpoint, #010), using the
   /// real WebSocket opener. Tests use the default constructor with a fake opener.
   @factoryMethod
-  factory SignalingClient.create(AppConfig config) => SignalingClient(config);
+  factory SignalingClient.create(
+    AppConfig config,
+    SignalingEndpointProvider endpointProvider,
+  ) => SignalingClient(config, endpointProvider: endpointProvider);
 
   final AppConfig _config;
+  final SignalingEndpointProvider? _endpointProvider;
   final SignalingSocketOpener _open;
 
   final _stateController = StreamController<PairingState>.broadcast();
@@ -110,7 +120,8 @@ class SignalingClient {
   // --------------------------------------------------------------- helpers ---
 
   Future<AppFailure?> _connect() async {
-    final endpoint = _config.signalingEndpoint;
+    final endpoint =
+        _endpointProvider?.effective() ?? _config.signalingEndpoint;
     if (endpoint == null) {
       _emitFailed(const AppFailure.signalingUnreachable());
       return const AppFailure.signalingUnreachable();

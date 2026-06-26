@@ -348,7 +348,15 @@ class _ReceiverPanelState extends State<_ReceiverPanel> {
   /// Open the full-screen scanner; a returned code joins via the parent.
   Future<void> _openScanner() async {
     final code = await context.push<String>(AppRoutes.qrScan);
-    if (code != null && mounted) widget.onJoinViaQr(code);
+    if (!mounted) return;
+    if (code != null) {
+      widget.onJoinViaQr(code);
+    } else if (widget.openScanner) {
+      // Launched straight into the scanner from Home: cancelling the scan
+      // should return to Home, not strand the user on the Connect hub they
+      // never intentionally opened.
+      context.pop();
+    }
   }
 
   bool get _isJoining {
@@ -368,78 +376,89 @@ class _ReceiverPanelState extends State<_ReceiverPanel> {
     final state = widget.state;
     final failure = state is AppError<PairingState> ? state.failure : null;
     final canConnect = _code.length == 6 && !_isJoining;
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.x5),
-      child: Column(
-        children: [
-          const Spacer(),
-          Text(
-            l10n.receiveEnterCodeTitle,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: AppSpacing.x2),
-          Text(
-            l10n.receiveEnterCodeInstruction,
-            textAlign: TextAlign.center,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: c.textSecondary),
-          ),
-          const SizedBox(height: AppSpacing.x6),
-          CodeInput(
-            semanticLabel: l10n.receiveEnterCodeTitle,
-            onChanged: (v) => setState(() => _code = v),
-          ),
-          const SizedBox(height: AppSpacing.x4),
-          if (failure != null)
-            Text(
-              failure.pairingMessage(l10n),
-              textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(color: AppColors.danger),
-            ),
-          const Spacer(),
-          if (_isJoining)
-            const TransferSpinner(size: 28)
-          else ...[
-            PrimaryButton(
-              label: l10n.receiveConnect,
-              icon: LucideIcons.arrowRight,
-              onPressed: canConnect
-                  ? () => unawaited(
-                      context.read<PairingCubit>().joinWithCode(_code),
-                    )
-                  : null,
-            ),
-            const SizedBox(height: AppSpacing.x4),
-            Row(
-              children: [
-                Expanded(child: Divider(color: c.borderSubtle)),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.x3,
+    // Scroll-safe: the code-entry panel centers with Spacers when it fits, but
+    // scrolls instead of overflowing when the keyboard rises over the field.
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          child: IntrinsicHeight(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.x5),
+              child: Column(
+                children: [
+                  const Spacer(),
+                  Text(
+                    l10n.receiveEnterCodeTitle,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  child: Text(
-                    l10n.commonOr,
+                  const SizedBox(height: AppSpacing.x2),
+                  Text(
+                    l10n.receiveEnterCodeInstruction,
+                    textAlign: TextAlign.center,
                     style: Theme.of(
                       context,
-                    ).textTheme.bodySmall?.copyWith(color: c.textMuted),
+                    ).textTheme.bodyMedium?.copyWith(color: c.textSecondary),
                   ),
-                ),
-                Expanded(child: Divider(color: c.borderSubtle)),
-              ],
+                  const SizedBox(height: AppSpacing.x6),
+                  CodeInput(
+                    semanticLabel: l10n.receiveEnterCodeTitle,
+                    onChanged: (v) => setState(() => _code = v),
+                  ),
+                  const SizedBox(height: AppSpacing.x4),
+                  if (failure != null)
+                    Text(
+                      failure.pairingMessage(l10n),
+                      textAlign: TextAlign.center,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: AppColors.danger),
+                    ),
+                  const Spacer(),
+                  if (_isJoining)
+                    const TransferSpinner(size: 28)
+                  else ...[
+                    PrimaryButton(
+                      label: l10n.receiveConnect,
+                      icon: LucideIcons.arrowRight,
+                      onPressed: canConnect
+                          ? () => unawaited(
+                              context.read<PairingCubit>().joinWithCode(_code),
+                            )
+                          : null,
+                    ),
+                    const SizedBox(height: AppSpacing.x4),
+                    Row(
+                      children: [
+                        Expanded(child: Divider(color: c.borderSubtle)),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.x3,
+                          ),
+                          child: Text(
+                            l10n.commonOr,
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(color: c.textMuted),
+                          ),
+                        ),
+                        Expanded(child: Divider(color: c.borderSubtle)),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.x4),
+                    // Scan the sender's QR instead of typing the code (#007). Stays
+                    // available after a failure so an expired scan can be re-tried.
+                    SecondaryButton(
+                      label: l10n.receiveScanQr,
+                      icon: LucideIcons.qrCode,
+                      onPressed: () => unawaited(_openScanner()),
+                    ),
+                  ],
+                ],
+              ),
             ),
-            const SizedBox(height: AppSpacing.x4),
-            // Scan the sender's QR instead of typing the code (#007). Stays
-            // available after a failure so an expired scan can be re-tried.
-            SecondaryButton(
-              label: l10n.receiveScanQr,
-              icon: LucideIcons.qrCode,
-              onPressed: () => unawaited(_openScanner()),
-            ),
-          ],
-        ],
+          ),
+        ),
       ),
     );
   }

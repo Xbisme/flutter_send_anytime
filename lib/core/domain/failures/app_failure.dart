@@ -72,4 +72,14 @@ sealed class AppFailure with _$AppFailure {
 
   /// A generic transport/network error.
   const factory AppFailure.networkError() = AppFailureNetworkError;
+
+  // --- #010 settings failures ---
+
+  /// A required OS permission (photo library / notifications) was denied.
+  const factory AppFailure.permissionDenied() = AppFailurePermissionDenied;
+
+  /// A custom signaling-endpoint override failed scheme/flavor validation
+  /// (`wss` any flavor, `ws` dev-only) or was unparseable (FR-014).
+  const factory AppFailure.invalidSignalingEndpoint() =
+      AppFailureInvalidSignalingEndpoint;
 }

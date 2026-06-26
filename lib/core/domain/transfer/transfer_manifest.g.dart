@@ -31,6 +31,7 @@ _TransferManifest _$TransferManifestFromJson(Map<String, dynamic> json) =>
       files: (json['files'] as List<dynamic>)
           .map((e) => ManifestFileEntry.fromJson(e as Map<String, dynamic>))
           .toList(),
+      senderName: json['senderName'] as String?,
     );
 
 Map<String, dynamic> _$TransferManifestToJson(_TransferManifest instance) =>
@@ -40,4 +41,5 @@ Map<String, dynamic> _$TransferManifestToJson(_TransferManifest instance) =>
       'fileCount': instance.fileCount,
       'totalBytes': instance.totalBytes,
       'files': instance.files,
+      'senderName': instance.senderName,
     };

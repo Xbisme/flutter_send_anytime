@@ -19,6 +19,7 @@ import 'package:safe_send/features/receive/presentation/receive_progress_args.da
 
 import '../../helpers/fake_record_transfer.dart';
 import '../../helpers/pump_app.dart';
+import '../../helpers/settings_fakes.dart';
 
 class _MockStartReceive extends Mock implements StartReceiveUseCase {}
 
@@ -84,7 +85,13 @@ void main() {
     getIt
       ..unregister<ReceiveTransferCubit>()
       ..registerFactory<ReceiveTransferCubit>(
-        () => ReceiveTransferCubit(useCase, FakeRecordTransfer()),
+        () => ReceiveTransferCubit(
+          useCase,
+          FakeRecordTransfer(),
+          FakeSettingsRepository(),
+          FakeGallerySaver(),
+          FakeIncomingFileNotifier(),
+        ),
       );
   });
   tearDown(() async {

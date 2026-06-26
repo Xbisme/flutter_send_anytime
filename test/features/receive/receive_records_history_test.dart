@@ -16,6 +16,7 @@ import 'package:safe_send/core/domain/transfer_enums.dart';
 import 'package:safe_send/core/services/transport/data_transport.dart';
 import 'package:safe_send/features/receive/domain/usecases/start_receive_usecase.dart';
 import 'package:safe_send/features/receive/presentation/cubit/receive_transfer_cubit.dart';
+import '../../helpers/settings_fakes.dart';
 
 class _MockStartReceive extends Mock implements StartReceiveUseCase {}
 
@@ -116,7 +117,13 @@ void main() {
   tearDown(() => snapshots.close());
 
   test('records a completed received record after accept + done', () async {
-    final cubit = ReceiveTransferCubit(useCase, record);
+    final cubit = ReceiveTransferCubit(
+      useCase,
+      record,
+      FakeSettingsRepository(),
+      FakeGallerySaver(),
+      FakeIncomingFileNotifier(),
+    );
     unawaited(cubit.start(_FakeTransport(), senderLabel: 'Người gửi'));
     await pumpEventQueue();
     cubit.accept();
@@ -143,7 +150,13 @@ void main() {
   });
 
   test('records a partial record when some files land before a drop', () async {
-    final cubit = ReceiveTransferCubit(useCase, record);
+    final cubit = ReceiveTransferCubit(
+      useCase,
+      record,
+      FakeSettingsRepository(),
+      FakeGallerySaver(),
+      FakeIncomingFileNotifier(),
+    );
     unawaited(cubit.start(_FakeTransport(), senderLabel: 'Người gửi'));
     await pumpEventQueue();
     cubit.accept();
@@ -168,7 +181,13 @@ void main() {
   });
 
   test('records NOTHING when the user rejects (FR-001)', () async {
-    final cubit = ReceiveTransferCubit(useCase, record);
+    final cubit = ReceiveTransferCubit(
+      useCase,
+      record,
+      FakeSettingsRepository(),
+      FakeGallerySaver(),
+      FakeIncomingFileNotifier(),
+    );
     unawaited(cubit.start(_FakeTransport(), senderLabel: 'Người gửi'));
     await pumpEventQueue();
     cubit.reject();

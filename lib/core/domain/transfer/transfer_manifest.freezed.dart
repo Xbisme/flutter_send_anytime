@@ -287,7 +287,9 @@ as String?,
 /// @nodoc
 mixin _$TransferManifest {
 
- int get v; String get sessionId; int get fileCount; int get totalBytes; List<ManifestFileEntry> get files;
+ int get v; String get sessionId; int get fileCount; int get totalBytes; List<ManifestFileEntry> get files;// Sender's device name (#010, optional + backward-compatible: absent ⇒ the
+// receiver shows a generic localized label). Never logged (Principle I).
+ String? get senderName;
 /// Create a copy of TransferManifest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -300,16 +302,16 @@ $TransferManifestCopyWith<TransferManifest> get copyWith => _$TransferManifestCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransferManifest&&(identical(other.v, v) || other.v == v)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.fileCount, fileCount) || other.fileCount == fileCount)&&(identical(other.totalBytes, totalBytes) || other.totalBytes == totalBytes)&&const DeepCollectionEquality().equals(other.files, files));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransferManifest&&(identical(other.v, v) || other.v == v)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.fileCount, fileCount) || other.fileCount == fileCount)&&(identical(other.totalBytes, totalBytes) || other.totalBytes == totalBytes)&&const DeepCollectionEquality().equals(other.files, files)&&(identical(other.senderName, senderName) || other.senderName == senderName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,v,sessionId,fileCount,totalBytes,const DeepCollectionEquality().hash(files));
+int get hashCode => Object.hash(runtimeType,v,sessionId,fileCount,totalBytes,const DeepCollectionEquality().hash(files),senderName);
 
 @override
 String toString() {
-  return 'TransferManifest(v: $v, sessionId: $sessionId, fileCount: $fileCount, totalBytes: $totalBytes, files: $files)';
+  return 'TransferManifest(v: $v, sessionId: $sessionId, fileCount: $fileCount, totalBytes: $totalBytes, files: $files, senderName: $senderName)';
 }
 
 
@@ -320,7 +322,7 @@ abstract mixin class $TransferManifestCopyWith<$Res>  {
   factory $TransferManifestCopyWith(TransferManifest value, $Res Function(TransferManifest) _then) = _$TransferManifestCopyWithImpl;
 @useResult
 $Res call({
- int v, String sessionId, int fileCount, int totalBytes, List<ManifestFileEntry> files
+ int v, String sessionId, int fileCount, int totalBytes, List<ManifestFileEntry> files, String? senderName
 });
 
 
@@ -337,14 +339,15 @@ class _$TransferManifestCopyWithImpl<$Res>
 
 /// Create a copy of TransferManifest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? v = null,Object? sessionId = null,Object? fileCount = null,Object? totalBytes = null,Object? files = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? v = null,Object? sessionId = null,Object? fileCount = null,Object? totalBytes = null,Object? files = null,Object? senderName = freezed,}) {
   return _then(_self.copyWith(
 v: null == v ? _self.v : v // ignore: cast_nullable_to_non_nullable
 as int,sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as String,fileCount: null == fileCount ? _self.fileCount : fileCount // ignore: cast_nullable_to_non_nullable
 as int,totalBytes: null == totalBytes ? _self.totalBytes : totalBytes // ignore: cast_nullable_to_non_nullable
 as int,files: null == files ? _self.files : files // ignore: cast_nullable_to_non_nullable
-as List<ManifestFileEntry>,
+as List<ManifestFileEntry>,senderName: freezed == senderName ? _self.senderName : senderName // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -429,10 +432,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int v,  String sessionId,  int fileCount,  int totalBytes,  List<ManifestFileEntry> files)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int v,  String sessionId,  int fileCount,  int totalBytes,  List<ManifestFileEntry> files,  String? senderName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TransferManifest() when $default != null:
-return $default(_that.v,_that.sessionId,_that.fileCount,_that.totalBytes,_that.files);case _:
+return $default(_that.v,_that.sessionId,_that.fileCount,_that.totalBytes,_that.files,_that.senderName);case _:
   return orElse();
 
 }
@@ -450,10 +453,10 @@ return $default(_that.v,_that.sessionId,_that.fileCount,_that.totalBytes,_that.f
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int v,  String sessionId,  int fileCount,  int totalBytes,  List<ManifestFileEntry> files)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int v,  String sessionId,  int fileCount,  int totalBytes,  List<ManifestFileEntry> files,  String? senderName)  $default,) {final _that = this;
 switch (_that) {
 case _TransferManifest():
-return $default(_that.v,_that.sessionId,_that.fileCount,_that.totalBytes,_that.files);case _:
+return $default(_that.v,_that.sessionId,_that.fileCount,_that.totalBytes,_that.files,_that.senderName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -470,10 +473,10 @@ return $default(_that.v,_that.sessionId,_that.fileCount,_that.totalBytes,_that.f
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int v,  String sessionId,  int fileCount,  int totalBytes,  List<ManifestFileEntry> files)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int v,  String sessionId,  int fileCount,  int totalBytes,  List<ManifestFileEntry> files,  String? senderName)?  $default,) {final _that = this;
 switch (_that) {
 case _TransferManifest() when $default != null:
-return $default(_that.v,_that.sessionId,_that.fileCount,_that.totalBytes,_that.files);case _:
+return $default(_that.v,_that.sessionId,_that.fileCount,_that.totalBytes,_that.files,_that.senderName);case _:
   return null;
 
 }
@@ -485,7 +488,7 @@ return $default(_that.v,_that.sessionId,_that.fileCount,_that.totalBytes,_that.f
 @JsonSerializable()
 
 class _TransferManifest extends TransferManifest {
-  const _TransferManifest({required this.v, required this.sessionId, required this.fileCount, required this.totalBytes, required final  List<ManifestFileEntry> files}): _files = files,super._();
+  const _TransferManifest({required this.v, required this.sessionId, required this.fileCount, required this.totalBytes, required final  List<ManifestFileEntry> files, this.senderName}): _files = files,super._();
   factory _TransferManifest.fromJson(Map<String, dynamic> json) => _$TransferManifestFromJson(json);
 
 @override final  int v;
@@ -499,6 +502,9 @@ class _TransferManifest extends TransferManifest {
   return EqualUnmodifiableListView(_files);
 }
 
+// Sender's device name (#010, optional + backward-compatible: absent ⇒ the
+// receiver shows a generic localized label). Never logged (Principle I).
+@override final  String? senderName;
 
 /// Create a copy of TransferManifest
 /// with the given fields replaced by the non-null parameter values.
@@ -513,16 +519,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransferManifest&&(identical(other.v, v) || other.v == v)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.fileCount, fileCount) || other.fileCount == fileCount)&&(identical(other.totalBytes, totalBytes) || other.totalBytes == totalBytes)&&const DeepCollectionEquality().equals(other._files, _files));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransferManifest&&(identical(other.v, v) || other.v == v)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.fileCount, fileCount) || other.fileCount == fileCount)&&(identical(other.totalBytes, totalBytes) || other.totalBytes == totalBytes)&&const DeepCollectionEquality().equals(other._files, _files)&&(identical(other.senderName, senderName) || other.senderName == senderName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,v,sessionId,fileCount,totalBytes,const DeepCollectionEquality().hash(_files));
+int get hashCode => Object.hash(runtimeType,v,sessionId,fileCount,totalBytes,const DeepCollectionEquality().hash(_files),senderName);
 
 @override
 String toString() {
-  return 'TransferManifest(v: $v, sessionId: $sessionId, fileCount: $fileCount, totalBytes: $totalBytes, files: $files)';
+  return 'TransferManifest(v: $v, sessionId: $sessionId, fileCount: $fileCount, totalBytes: $totalBytes, files: $files, senderName: $senderName)';
 }
 
 
@@ -533,7 +539,7 @@ abstract mixin class _$TransferManifestCopyWith<$Res> implements $TransferManife
   factory _$TransferManifestCopyWith(_TransferManifest value, $Res Function(_TransferManifest) _then) = __$TransferManifestCopyWithImpl;
 @override @useResult
 $Res call({
- int v, String sessionId, int fileCount, int totalBytes, List<ManifestFileEntry> files
+ int v, String sessionId, int fileCount, int totalBytes, List<ManifestFileEntry> files, String? senderName
 });
 
 
@@ -550,14 +556,15 @@ class __$TransferManifestCopyWithImpl<$Res>
 
 /// Create a copy of TransferManifest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? v = null,Object? sessionId = null,Object? fileCount = null,Object? totalBytes = null,Object? files = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? v = null,Object? sessionId = null,Object? fileCount = null,Object? totalBytes = null,Object? files = null,Object? senderName = freezed,}) {
   return _then(_TransferManifest(
 v: null == v ? _self.v : v // ignore: cast_nullable_to_non_nullable
 as int,sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as String,fileCount: null == fileCount ? _self.fileCount : fileCount // ignore: cast_nullable_to_non_nullable
 as int,totalBytes: null == totalBytes ? _self.totalBytes : totalBytes // ignore: cast_nullable_to_non_nullable
 as int,files: null == files ? _self._files : files // ignore: cast_nullable_to_non_nullable
-as List<ManifestFileEntry>,
+as List<ManifestFileEntry>,senderName: freezed == senderName ? _self.senderName : senderName // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

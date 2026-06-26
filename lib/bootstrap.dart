@@ -5,7 +5,9 @@ import 'package:flutter/widgets.dart';
 import 'package:safe_send/app/app.dart';
 import 'package:safe_send/core/config/app_config.dart';
 import 'package:safe_send/core/di/injection.dart';
+import 'package:safe_send/core/domain/settings/settings_repository.dart';
 import 'package:safe_send/core/services/deeplink/deep_link_service.dart';
+import 'package:safe_send/core/services/notifications/incoming_file_notifier.dart';
 import 'package:safe_send/core/utils/app_logger.dart';
 
 /// Shared pre-runApp setup, parameterized by flavor [config].
@@ -35,6 +37,16 @@ Future<void> bootstrap(AppConfig config) async {
   };
 
   await configureDependencies(config);
+
+  // Load persisted preferences into memory before the first frame so theme +
+  // language render correctly with no flash, and the device name is ready for
+  // pairing/advertise (#010).
+  await getIt<SettingsRepository>().init();
+
+  // Initialize the local-notification plugin so an incoming-file notification
+  // can fire while backgrounded (#010, FR-009). The OS foregrounds the app on
+  // tap; the receive flow is already the active route.
+  await getIt<IncomingFileNotifier>().init();
 
   // Instantiate the deep-link service early so the plugin is listening for the
   // launching invite link before the first frame (#008, cold start).

@@ -50,7 +50,7 @@ void main() {
       expect(find.text('No transfers yet'), findsOneWidget);
     });
 
-    testWidgets('tapping Settings shows the settings placeholder', (
+    testWidgets('tapping Settings shows the settings screen (#010)', (
       tester,
     ) async {
       await _settleToHome(tester);
@@ -58,8 +58,10 @@ void main() {
       await tester.tap(find.text('Settings').last);
       await tester.pumpAndSettle();
 
-      expect(find.text("An's iPhone 15"), findsOneWidget);
-      expect(find.textContaining('Safe Send v1.0.0'), findsOneWidget);
+      // Device-profile card (live name from the settings repo) + toggle group.
+      // (Version line lives in the About section lower in the scroll view.)
+      expect(find.text('visible to nearby devices'), findsOneWidget);
+      expect(find.text('Auto-receive'), findsOneWidget);
     });
   });
 }

@@ -80,6 +80,13 @@
 		     iOS 14+ shows the Local Network prompt automatically on first browse/advertise. -->
 		<key>NSLocalNetworkUsageDescription</key>
 		<string>Safe Send tìm các thiết bị Safe Send ở gần trên cùng mạng Wi-Fi để chia sẻ tệp. (Safe Send finds nearby Safe Send devices on the same Wi-Fi to share files.)</string>
+		<!-- #010: save received photos/videos to the library when "Lưu vào Thư
+		     viện" is on. gal uses add-only access (NSPhotoLibraryAddUsageDescription);
+		     NSPhotoLibraryUsageDescription covers iOS < 14 / album writes. -->
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>Safe Send lưu ảnh và video bạn nhận được vào Thư viện ảnh. (Safe Send saves the photos and videos you receive to your photo library.)</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Safe Send lưu ảnh và video bạn nhận được vào Thư viện ảnh. (Safe Send saves the photos and videos you receive to your photo library.)</string>
 		<key>NSBonjourServices</key>
 		<array>
 			<string>_safesend._tcp</string>

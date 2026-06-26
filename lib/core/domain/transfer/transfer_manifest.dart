@@ -29,6 +29,9 @@ abstract class TransferManifest with _$TransferManifest {
     required int fileCount,
     required int totalBytes,
     required List<ManifestFileEntry> files,
+    // Sender's device name (#010, optional + backward-compatible: absent ⇒ the
+    // receiver shows a generic localized label). Never logged (Principle I).
+    String? senderName,
   }) = _TransferManifest;
 
   const TransferManifest._();

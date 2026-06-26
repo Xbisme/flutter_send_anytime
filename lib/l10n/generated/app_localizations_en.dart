@@ -245,6 +245,84 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsProfileSub => 'visible to nearby devices';
 
   @override
+  String get settingsProfileEditTitle => 'Rename device';
+
+  @override
+  String get settingsProfileNameHint => 'Device name';
+
+  @override
+  String get settingsProfileNameError => 'Name must be 1 to 30 characters';
+
+  @override
+  String get settingsPermissionBlocked =>
+      'Grant permission in Settings to use this';
+
+  @override
+  String get settingsSectionAppearance => 'Appearance';
+
+  @override
+  String get settingsThemeLight => 'Light';
+
+  @override
+  String get settingsThemeDark => 'Dark';
+
+  @override
+  String get settingsThemeSystem => 'System';
+
+  @override
+  String get settingsSectionLanguage => 'Language';
+
+  @override
+  String get settingsLanguageVi => 'Tiếng Việt';
+
+  @override
+  String get settingsLanguageEn => 'English';
+
+  @override
+  String get settingsLanguageSystem => 'System';
+
+  @override
+  String get settingsSectionAdvanced => 'Advanced';
+
+  @override
+  String get settingsEndpointHint => 'wss://your-server';
+
+  @override
+  String get settingsEndpointInvalid => 'Invalid server address';
+
+  @override
+  String get settingsEndpointClear => 'Restore default';
+
+  @override
+  String get settingsDiagnosticRun => 'Test connection';
+
+  @override
+  String get settingsDiagnosticReachable => 'Server reachable';
+
+  @override
+  String get settingsDiagnosticUnreachable => 'Server unreachable';
+
+  @override
+  String get settingsSectionAbout => 'About';
+
+  @override
+  String get settingsHowItWorks => 'How it works';
+
+  @override
+  String get settingsPrivacy => 'Privacy policy';
+
+  @override
+  String get settingsRate => 'Rate the app';
+
+  @override
+  String get settingsHowItWorksBody =>
+      'Safe Send sends files directly between two devices over an end-to-end encrypted WebRTC connection. The signaling server only helps the two devices find each other — it never receives, stores, or sees your file contents. When a direct connection isn\'t possible, a relay (TURN) server may be used, but the data stays encrypted and is never stored.';
+
+  @override
+  String get settingsPrivacyBody =>
+      'Safe Send has no accounts, no cloud servers, and never collects your file contents. Settings and transfer history are stored on this device only. The device name you set is shown only to devices you connect to directly.';
+
+  @override
   String get settingsAutoReceive => 'Auto-receive';
 
   @override
@@ -275,6 +353,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commonBack => 'Back';
+
+  @override
+  String get commonSave => 'Save';
+
+  @override
+  String get commonCancel => 'Cancel';
 
   @override
   String get pairingErrorInvalidCode => 'Invalid code';
