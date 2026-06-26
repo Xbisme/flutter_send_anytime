@@ -55,7 +55,7 @@ extension AppFailurePatterns on AppFailure {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( AppFailureUnexpected value)?  unexpected,TResult Function( AppFailureNotImplemented value)?  notImplemented,TResult Function( AppFailureSignalingUnreachable value)?  signalingUnreachable,TResult Function( AppFailureSignalingTimeout value)?  signalingTimeout,TResult Function( AppFailureRoomExpired value)?  roomExpired,TResult Function( AppFailureRoomFull value)?  roomFull,TResult Function( AppFailureInvalidCode value)?  invalidCode,TResult Function( AppFailureRateLimited value)?  rateLimited,TResult Function( AppFailurePeerUnreachable value)?  peerUnreachable,TResult Function( AppFailureIceFailed value)?  iceFailed,TResult Function( AppFailureConnectionLost value)?  connectionLost,TResult Function( AppFailureDataChannelClosed value)?  dataChannelClosed,TResult Function( AppFailureTransferCancelled value)?  transferCancelled,TResult Function( AppFailureTransferRejected value)?  transferRejected,TResult Function( AppFailureIntegrityCheckFailed value)?  integrityCheckFailed,TResult Function( AppFailureFileReadFailed value)?  fileReadFailed,TResult Function( AppFailureFileWriteFailed value)?  fileWriteFailed,TResult Function( AppFailureStorageFull value)?  storageFull,TResult Function( AppFailureNetworkError value)?  networkError,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( AppFailureUnexpected value)?  unexpected,TResult Function( AppFailureNotImplemented value)?  notImplemented,TResult Function( AppFailureSignalingUnreachable value)?  signalingUnreachable,TResult Function( AppFailureSignalingTimeout value)?  signalingTimeout,TResult Function( AppFailureRoomExpired value)?  roomExpired,TResult Function( AppFailureRoomFull value)?  roomFull,TResult Function( AppFailureInvalidCode value)?  invalidCode,TResult Function( AppFailureRateLimited value)?  rateLimited,TResult Function( AppFailurePeerUnreachable value)?  peerUnreachable,TResult Function( AppFailureIceFailed value)?  iceFailed,TResult Function( AppFailureConnectionLost value)?  connectionLost,TResult Function( AppFailureDataChannelClosed value)?  dataChannelClosed,TResult Function( AppFailureTransferCancelled value)?  transferCancelled,TResult Function( AppFailureTransferRejected value)?  transferRejected,TResult Function( AppFailureIntegrityCheckFailed value)?  integrityCheckFailed,TResult Function( AppFailureFileReadFailed value)?  fileReadFailed,TResult Function( AppFailureFileWriteFailed value)?  fileWriteFailed,TResult Function( AppFailureStorageFull value)?  storageFull,TResult Function( AppFailureNetworkError value)?  networkError,TResult Function( AppFailurePermissionDenied value)?  permissionDenied,TResult Function( AppFailureInvalidSignalingEndpoint value)?  invalidSignalingEndpoint,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case AppFailureUnexpected() when unexpected != null:
@@ -77,7 +77,9 @@ return integrityCheckFailed(_that);case AppFailureFileReadFailed() when fileRead
 return fileReadFailed(_that);case AppFailureFileWriteFailed() when fileWriteFailed != null:
 return fileWriteFailed(_that);case AppFailureStorageFull() when storageFull != null:
 return storageFull(_that);case AppFailureNetworkError() when networkError != null:
-return networkError(_that);case _:
+return networkError(_that);case AppFailurePermissionDenied() when permissionDenied != null:
+return permissionDenied(_that);case AppFailureInvalidSignalingEndpoint() when invalidSignalingEndpoint != null:
+return invalidSignalingEndpoint(_that);case _:
   return orElse();
 
 }
@@ -95,7 +97,7 @@ return networkError(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( AppFailureUnexpected value)  unexpected,required TResult Function( AppFailureNotImplemented value)  notImplemented,required TResult Function( AppFailureSignalingUnreachable value)  signalingUnreachable,required TResult Function( AppFailureSignalingTimeout value)  signalingTimeout,required TResult Function( AppFailureRoomExpired value)  roomExpired,required TResult Function( AppFailureRoomFull value)  roomFull,required TResult Function( AppFailureInvalidCode value)  invalidCode,required TResult Function( AppFailureRateLimited value)  rateLimited,required TResult Function( AppFailurePeerUnreachable value)  peerUnreachable,required TResult Function( AppFailureIceFailed value)  iceFailed,required TResult Function( AppFailureConnectionLost value)  connectionLost,required TResult Function( AppFailureDataChannelClosed value)  dataChannelClosed,required TResult Function( AppFailureTransferCancelled value)  transferCancelled,required TResult Function( AppFailureTransferRejected value)  transferRejected,required TResult Function( AppFailureIntegrityCheckFailed value)  integrityCheckFailed,required TResult Function( AppFailureFileReadFailed value)  fileReadFailed,required TResult Function( AppFailureFileWriteFailed value)  fileWriteFailed,required TResult Function( AppFailureStorageFull value)  storageFull,required TResult Function( AppFailureNetworkError value)  networkError,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( AppFailureUnexpected value)  unexpected,required TResult Function( AppFailureNotImplemented value)  notImplemented,required TResult Function( AppFailureSignalingUnreachable value)  signalingUnreachable,required TResult Function( AppFailureSignalingTimeout value)  signalingTimeout,required TResult Function( AppFailureRoomExpired value)  roomExpired,required TResult Function( AppFailureRoomFull value)  roomFull,required TResult Function( AppFailureInvalidCode value)  invalidCode,required TResult Function( AppFailureRateLimited value)  rateLimited,required TResult Function( AppFailurePeerUnreachable value)  peerUnreachable,required TResult Function( AppFailureIceFailed value)  iceFailed,required TResult Function( AppFailureConnectionLost value)  connectionLost,required TResult Function( AppFailureDataChannelClosed value)  dataChannelClosed,required TResult Function( AppFailureTransferCancelled value)  transferCancelled,required TResult Function( AppFailureTransferRejected value)  transferRejected,required TResult Function( AppFailureIntegrityCheckFailed value)  integrityCheckFailed,required TResult Function( AppFailureFileReadFailed value)  fileReadFailed,required TResult Function( AppFailureFileWriteFailed value)  fileWriteFailed,required TResult Function( AppFailureStorageFull value)  storageFull,required TResult Function( AppFailureNetworkError value)  networkError,required TResult Function( AppFailurePermissionDenied value)  permissionDenied,required TResult Function( AppFailureInvalidSignalingEndpoint value)  invalidSignalingEndpoint,}){
 final _that = this;
 switch (_that) {
 case AppFailureUnexpected():
@@ -117,7 +119,9 @@ return integrityCheckFailed(_that);case AppFailureFileReadFailed():
 return fileReadFailed(_that);case AppFailureFileWriteFailed():
 return fileWriteFailed(_that);case AppFailureStorageFull():
 return storageFull(_that);case AppFailureNetworkError():
-return networkError(_that);}
+return networkError(_that);case AppFailurePermissionDenied():
+return permissionDenied(_that);case AppFailureInvalidSignalingEndpoint():
+return invalidSignalingEndpoint(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -131,7 +135,7 @@ return networkError(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( AppFailureUnexpected value)?  unexpected,TResult? Function( AppFailureNotImplemented value)?  notImplemented,TResult? Function( AppFailureSignalingUnreachable value)?  signalingUnreachable,TResult? Function( AppFailureSignalingTimeout value)?  signalingTimeout,TResult? Function( AppFailureRoomExpired value)?  roomExpired,TResult? Function( AppFailureRoomFull value)?  roomFull,TResult? Function( AppFailureInvalidCode value)?  invalidCode,TResult? Function( AppFailureRateLimited value)?  rateLimited,TResult? Function( AppFailurePeerUnreachable value)?  peerUnreachable,TResult? Function( AppFailureIceFailed value)?  iceFailed,TResult? Function( AppFailureConnectionLost value)?  connectionLost,TResult? Function( AppFailureDataChannelClosed value)?  dataChannelClosed,TResult? Function( AppFailureTransferCancelled value)?  transferCancelled,TResult? Function( AppFailureTransferRejected value)?  transferRejected,TResult? Function( AppFailureIntegrityCheckFailed value)?  integrityCheckFailed,TResult? Function( AppFailureFileReadFailed value)?  fileReadFailed,TResult? Function( AppFailureFileWriteFailed value)?  fileWriteFailed,TResult? Function( AppFailureStorageFull value)?  storageFull,TResult? Function( AppFailureNetworkError value)?  networkError,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( AppFailureUnexpected value)?  unexpected,TResult? Function( AppFailureNotImplemented value)?  notImplemented,TResult? Function( AppFailureSignalingUnreachable value)?  signalingUnreachable,TResult? Function( AppFailureSignalingTimeout value)?  signalingTimeout,TResult? Function( AppFailureRoomExpired value)?  roomExpired,TResult? Function( AppFailureRoomFull value)?  roomFull,TResult? Function( AppFailureInvalidCode value)?  invalidCode,TResult? Function( AppFailureRateLimited value)?  rateLimited,TResult? Function( AppFailurePeerUnreachable value)?  peerUnreachable,TResult? Function( AppFailureIceFailed value)?  iceFailed,TResult? Function( AppFailureConnectionLost value)?  connectionLost,TResult? Function( AppFailureDataChannelClosed value)?  dataChannelClosed,TResult? Function( AppFailureTransferCancelled value)?  transferCancelled,TResult? Function( AppFailureTransferRejected value)?  transferRejected,TResult? Function( AppFailureIntegrityCheckFailed value)?  integrityCheckFailed,TResult? Function( AppFailureFileReadFailed value)?  fileReadFailed,TResult? Function( AppFailureFileWriteFailed value)?  fileWriteFailed,TResult? Function( AppFailureStorageFull value)?  storageFull,TResult? Function( AppFailureNetworkError value)?  networkError,TResult? Function( AppFailurePermissionDenied value)?  permissionDenied,TResult? Function( AppFailureInvalidSignalingEndpoint value)?  invalidSignalingEndpoint,}){
 final _that = this;
 switch (_that) {
 case AppFailureUnexpected() when unexpected != null:
@@ -153,7 +157,9 @@ return integrityCheckFailed(_that);case AppFailureFileReadFailed() when fileRead
 return fileReadFailed(_that);case AppFailureFileWriteFailed() when fileWriteFailed != null:
 return fileWriteFailed(_that);case AppFailureStorageFull() when storageFull != null:
 return storageFull(_that);case AppFailureNetworkError() when networkError != null:
-return networkError(_that);case _:
+return networkError(_that);case AppFailurePermissionDenied() when permissionDenied != null:
+return permissionDenied(_that);case AppFailureInvalidSignalingEndpoint() when invalidSignalingEndpoint != null:
+return invalidSignalingEndpoint(_that);case _:
   return null;
 
 }
@@ -170,7 +176,7 @@ return networkError(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String? message,  Object? error)?  unexpected,TResult Function()?  notImplemented,TResult Function()?  signalingUnreachable,TResult Function()?  signalingTimeout,TResult Function()?  roomExpired,TResult Function()?  roomFull,TResult Function()?  invalidCode,TResult Function()?  rateLimited,TResult Function()?  peerUnreachable,TResult Function()?  iceFailed,TResult Function()?  connectionLost,TResult Function()?  dataChannelClosed,TResult Function()?  transferCancelled,TResult Function()?  transferRejected,TResult Function( int fileIndex)?  integrityCheckFailed,TResult Function()?  fileReadFailed,TResult Function()?  fileWriteFailed,TResult Function()?  storageFull,TResult Function()?  networkError,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String? message,  Object? error)?  unexpected,TResult Function()?  notImplemented,TResult Function()?  signalingUnreachable,TResult Function()?  signalingTimeout,TResult Function()?  roomExpired,TResult Function()?  roomFull,TResult Function()?  invalidCode,TResult Function()?  rateLimited,TResult Function()?  peerUnreachable,TResult Function()?  iceFailed,TResult Function()?  connectionLost,TResult Function()?  dataChannelClosed,TResult Function()?  transferCancelled,TResult Function()?  transferRejected,TResult Function( int fileIndex)?  integrityCheckFailed,TResult Function()?  fileReadFailed,TResult Function()?  fileWriteFailed,TResult Function()?  storageFull,TResult Function()?  networkError,TResult Function()?  permissionDenied,TResult Function()?  invalidSignalingEndpoint,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case AppFailureUnexpected() when unexpected != null:
 return unexpected(_that.message,_that.error);case AppFailureNotImplemented() when notImplemented != null:
@@ -191,7 +197,9 @@ return integrityCheckFailed(_that.fileIndex);case AppFailureFileReadFailed() whe
 return fileReadFailed();case AppFailureFileWriteFailed() when fileWriteFailed != null:
 return fileWriteFailed();case AppFailureStorageFull() when storageFull != null:
 return storageFull();case AppFailureNetworkError() when networkError != null:
-return networkError();case _:
+return networkError();case AppFailurePermissionDenied() when permissionDenied != null:
+return permissionDenied();case AppFailureInvalidSignalingEndpoint() when invalidSignalingEndpoint != null:
+return invalidSignalingEndpoint();case _:
   return orElse();
 
 }
@@ -209,7 +217,7 @@ return networkError();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String? message,  Object? error)  unexpected,required TResult Function()  notImplemented,required TResult Function()  signalingUnreachable,required TResult Function()  signalingTimeout,required TResult Function()  roomExpired,required TResult Function()  roomFull,required TResult Function()  invalidCode,required TResult Function()  rateLimited,required TResult Function()  peerUnreachable,required TResult Function()  iceFailed,required TResult Function()  connectionLost,required TResult Function()  dataChannelClosed,required TResult Function()  transferCancelled,required TResult Function()  transferRejected,required TResult Function( int fileIndex)  integrityCheckFailed,required TResult Function()  fileReadFailed,required TResult Function()  fileWriteFailed,required TResult Function()  storageFull,required TResult Function()  networkError,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String? message,  Object? error)  unexpected,required TResult Function()  notImplemented,required TResult Function()  signalingUnreachable,required TResult Function()  signalingTimeout,required TResult Function()  roomExpired,required TResult Function()  roomFull,required TResult Function()  invalidCode,required TResult Function()  rateLimited,required TResult Function()  peerUnreachable,required TResult Function()  iceFailed,required TResult Function()  connectionLost,required TResult Function()  dataChannelClosed,required TResult Function()  transferCancelled,required TResult Function()  transferRejected,required TResult Function( int fileIndex)  integrityCheckFailed,required TResult Function()  fileReadFailed,required TResult Function()  fileWriteFailed,required TResult Function()  storageFull,required TResult Function()  networkError,required TResult Function()  permissionDenied,required TResult Function()  invalidSignalingEndpoint,}) {final _that = this;
 switch (_that) {
 case AppFailureUnexpected():
 return unexpected(_that.message,_that.error);case AppFailureNotImplemented():
@@ -230,7 +238,9 @@ return integrityCheckFailed(_that.fileIndex);case AppFailureFileReadFailed():
 return fileReadFailed();case AppFailureFileWriteFailed():
 return fileWriteFailed();case AppFailureStorageFull():
 return storageFull();case AppFailureNetworkError():
-return networkError();}
+return networkError();case AppFailurePermissionDenied():
+return permissionDenied();case AppFailureInvalidSignalingEndpoint():
+return invalidSignalingEndpoint();}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -244,7 +254,7 @@ return networkError();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String? message,  Object? error)?  unexpected,TResult? Function()?  notImplemented,TResult? Function()?  signalingUnreachable,TResult? Function()?  signalingTimeout,TResult? Function()?  roomExpired,TResult? Function()?  roomFull,TResult? Function()?  invalidCode,TResult? Function()?  rateLimited,TResult? Function()?  peerUnreachable,TResult? Function()?  iceFailed,TResult? Function()?  connectionLost,TResult? Function()?  dataChannelClosed,TResult? Function()?  transferCancelled,TResult? Function()?  transferRejected,TResult? Function( int fileIndex)?  integrityCheckFailed,TResult? Function()?  fileReadFailed,TResult? Function()?  fileWriteFailed,TResult? Function()?  storageFull,TResult? Function()?  networkError,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String? message,  Object? error)?  unexpected,TResult? Function()?  notImplemented,TResult? Function()?  signalingUnreachable,TResult? Function()?  signalingTimeout,TResult? Function()?  roomExpired,TResult? Function()?  roomFull,TResult? Function()?  invalidCode,TResult? Function()?  rateLimited,TResult? Function()?  peerUnreachable,TResult? Function()?  iceFailed,TResult? Function()?  connectionLost,TResult? Function()?  dataChannelClosed,TResult? Function()?  transferCancelled,TResult? Function()?  transferRejected,TResult? Function( int fileIndex)?  integrityCheckFailed,TResult? Function()?  fileReadFailed,TResult? Function()?  fileWriteFailed,TResult? Function()?  storageFull,TResult? Function()?  networkError,TResult? Function()?  permissionDenied,TResult? Function()?  invalidSignalingEndpoint,}) {final _that = this;
 switch (_that) {
 case AppFailureUnexpected() when unexpected != null:
 return unexpected(_that.message,_that.error);case AppFailureNotImplemented() when notImplemented != null:
@@ -265,7 +275,9 @@ return integrityCheckFailed(_that.fileIndex);case AppFailureFileReadFailed() whe
 return fileReadFailed();case AppFailureFileWriteFailed() when fileWriteFailed != null:
 return fileWriteFailed();case AppFailureStorageFull() when storageFull != null:
 return storageFull();case AppFailureNetworkError() when networkError != null:
-return networkError();case _:
+return networkError();case AppFailurePermissionDenied() when permissionDenied != null:
+return permissionDenied();case AppFailureInvalidSignalingEndpoint() when invalidSignalingEndpoint != null:
+return invalidSignalingEndpoint();case _:
   return null;
 
 }
@@ -942,6 +954,70 @@ int get hashCode => runtimeType.hashCode;
 @override
 String toString() {
   return 'AppFailure.networkError()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class AppFailurePermissionDenied implements AppFailure {
+  const AppFailurePermissionDenied();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppFailurePermissionDenied);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AppFailure.permissionDenied()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class AppFailureInvalidSignalingEndpoint implements AppFailure {
+  const AppFailureInvalidSignalingEndpoint();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppFailureInvalidSignalingEndpoint);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AppFailure.invalidSignalingEndpoint()';
 }
 
 

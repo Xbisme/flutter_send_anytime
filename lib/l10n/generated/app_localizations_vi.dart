@@ -243,6 +243,84 @@ class AppLocalizationsVi extends AppLocalizations {
   String get settingsProfileSub => 'hiển thị với thiết bị gần đây';
 
   @override
+  String get settingsProfileEditTitle => 'Đổi tên thiết bị';
+
+  @override
+  String get settingsProfileNameHint => 'Tên thiết bị';
+
+  @override
+  String get settingsProfileNameError => 'Tên phải từ 1 đến 30 ký tự';
+
+  @override
+  String get settingsPermissionBlocked =>
+      'Cần cấp quyền trong Cài đặt để dùng tính năng này';
+
+  @override
+  String get settingsSectionAppearance => 'Giao diện';
+
+  @override
+  String get settingsThemeLight => 'Sáng';
+
+  @override
+  String get settingsThemeDark => 'Tối';
+
+  @override
+  String get settingsThemeSystem => 'Theo hệ thống';
+
+  @override
+  String get settingsSectionLanguage => 'Ngôn ngữ';
+
+  @override
+  String get settingsLanguageVi => 'Tiếng Việt';
+
+  @override
+  String get settingsLanguageEn => 'English';
+
+  @override
+  String get settingsLanguageSystem => 'Theo hệ thống';
+
+  @override
+  String get settingsSectionAdvanced => 'Nâng cao';
+
+  @override
+  String get settingsEndpointHint => 'wss://máy-chủ-của-bạn';
+
+  @override
+  String get settingsEndpointInvalid => 'Địa chỉ máy chủ không hợp lệ';
+
+  @override
+  String get settingsEndpointClear => 'Khôi phục mặc định';
+
+  @override
+  String get settingsDiagnosticRun => 'Kiểm tra kết nối';
+
+  @override
+  String get settingsDiagnosticReachable => 'Kết nối được máy chủ';
+
+  @override
+  String get settingsDiagnosticUnreachable => 'Không kết nối được máy chủ';
+
+  @override
+  String get settingsSectionAbout => 'Giới thiệu';
+
+  @override
+  String get settingsHowItWorks => 'Cách hoạt động';
+
+  @override
+  String get settingsPrivacy => 'Chính sách bảo mật';
+
+  @override
+  String get settingsRate => 'Đánh giá ứng dụng';
+
+  @override
+  String get settingsHowItWorksBody =>
+      'Safe Send gửi tệp trực tiếp giữa hai thiết bị qua kết nối WebRTC được mã hóa đầu-cuối. Máy chủ tín hiệu chỉ giúp hai máy tìm thấy nhau — nó không bao giờ nhận, lưu hay nhìn thấy nội dung tệp của bạn. Khi không thể kết nối trực tiếp, một máy chủ chuyển tiếp (TURN) có thể được dùng, nhưng dữ liệu vẫn được mã hóa và không bao giờ bị lưu lại.';
+
+  @override
+  String get settingsPrivacyBody =>
+      'Safe Send không có tài khoản, không có máy chủ đám mây, và không thu thập nội dung tệp của bạn. Cài đặt và lịch sử truyền chỉ được lưu trên thiết bị này. Tên thiết bị bạn đặt chỉ hiển thị cho các thiết bị bạn kết nối trực tiếp.';
+
+  @override
   String get settingsAutoReceive => 'Tự động nhận';
 
   @override
@@ -273,6 +351,12 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get commonBack => 'Quay lại';
+
+  @override
+  String get commonSave => 'Lưu';
+
+  @override
+  String get commonCancel => 'Hủy';
 
   @override
   String get pairingErrorInvalidCode => 'Mã không đúng';

@@ -86,6 +86,22 @@ dependencies:
   # no BLE. The 6-digit #003 code rides in the TXT record.
   nsd: ^5.0.1
 
+  # Settings & Preferences (#010)
+  # shared_preferences: local key-value store for all user preferences (no
+  # cloud). package_info_plus: app version for the About section — pinned to 9.x
+  # because 10.x pulls win32 ^6, which conflicts with the existing share_plus
+  # 12.x → win32 ^5 pin (same Windows-only transitive clash that pinned
+  # share_plus). 9.x exposes the same PackageInfo.fromPlatform() API.
+  # in_app_review: native rate flow. gal: save received images/videos to the OS
+  # photo library (add-only access, iOS 11 / Android 21). flutter_local_-
+  # notifications 22.x: incoming-file local notification — requires AGP 8.11.1 +
+  # compileSdk 35, both already in place.
+  shared_preferences: ^2.5.5
+  package_info_plus: ^9.0.1
+  in_app_review: ^2.0.12
+  gal: ^2.3.2
+  flutter_local_notifications: ^22.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

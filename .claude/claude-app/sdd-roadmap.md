@@ -4,7 +4,7 @@
 >
 > **Vai trò file này**: pure planning — dependency graph, scope per spec, timeline, optimal order. Current status của các spec sống ở [`project-context.md`](project-context.md). Ship history sống ở [`changelog.md`](changelog.md). Alignment decisions sống ở [`decisions/`](decisions/). **Giao diện** (screens, tokens, components, navigation IA) sống ở [`ui-design-context.md`](ui-design-context.md) — đọc trước mọi phần UI/UX của spec.
 >
-> Last updated: 2026-06-26 (Specs #001–#008 merged via PRs #1–#8; #009 Nearby Radar is next.)
+> Last updated: 2026-06-26 (Specs #001–#009 merged via PRs #1–#9; **#010 Settings & Preferences implemented** on branch `010-settings`. **Three v1.0 feature specs added before Polish**: #011 Background Transfer · #012 Home Completion · #013 In-App Viewers; **Polish & Release renumbered #011 → #014**. Next: #011 Background Transfer.)
 
 ---
 
@@ -99,7 +99,23 @@ Send Flow (UI)                  Receive Flow (UI)
              signaling endpoint, auto-accept rules)
                     │
                     ▼
-            Spec #011: Polish & v1.0 Release
+            Spec #011: Background Transfer
+            (keep transfers running when backgrounded —
+             iOS Live Activity + Android foreground Service;
+             both platforms)
+                    │
+                    ▼
+            Spec #012: Home Screen Completion
+            (replace hardcoded Home content with real data;
+             build the "Xem tất cả / See all" screens)
+                    │
+                    ▼
+            Spec #013: In-App File Viewers
+            (open known types in-app — image / video / audio /
+             basic documents — from History, Complete, Home)
+                    │
+                    ▼
+            Spec #014: Polish & v1.0 Release
 ```
 
 ---
@@ -229,7 +245,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #009: Nearby Radar
 
-- **Status**: ✅ **Implemented (code)** — branch `009-nearby-radar` (2026-06-26). Fourth connection method: sender advertises the live #003 code via mDNS TXT on the Connect "Gần đây" tab; receiver browses + taps a nearby device → auto-join → existing accept/reject; reuses #003 rendezvous + #002 transport unchanged; same-Wi-Fi only (BLE deferred); core-pure `NearbyDiscoveryService`/`NearbyPermissionService` (`nsd` 5.0.1) + `NearbyDevice`; `pairingMethod=nearby`. `dart analyze lib test` 0 · `flutter test` 230 passed (19 new). **Two-device same-Wi-Fi smoke PASSED on 2 devices**; first `pod install` deferred. See [`changelog.md`](changelog.md).
+- **Status**: ✅ **Merged** (PR #9) — branch `009-nearby-radar` (2026-06-26) · **device-validated on 2 devices**. Fourth connection method: sender advertises the live #003 code via mDNS TXT on the Connect "Gần đây" tab; receiver browses + taps a nearby device → auto-join → existing accept/reject; reuses #003 rendezvous + #002 transport unchanged; same-Wi-Fi only (BLE deferred); core-pure `NearbyDiscoveryService`/`NearbyPermissionService` (`nsd` 5.0.1) + `NearbyDevice`; `pairingMethod=nearby`. `dart analyze lib test` 0 · `flutter test` 230 passed (19 new). **Two-device same-Wi-Fi smoke PASSED on 2 devices**; first `pod install` deferred. See [`changelog.md`](changelog.md).
 - **Branch**: `009-nearby-radar`
 - **Depends on**: #003, #004, #005
 - **Design**: fills the **"Gần đây" tab** of Screen 03 (Kết nối, `ssRadar` animation) + the nearby **DeviceRow** ("đang chờ ở gần bạn" + "Nhận") on Screen 04 + the Home "Thiết bị gần" quick-action. See [`ui-design-context.md`](ui-design-context.md) §Screen 03/04.
@@ -243,7 +259,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #010: Settings & Preferences
 
-- **Status**: ⬜ Not started
+- **Status**: ✅ **Implemented (code)** — branch `010-settings` (2026-06-26). Single `shared_preferences`-backed `SettingsRepository` + app-wide `SettingsCubit` driving runtime theme/language; device profile (+ additive manifest `senderName` to peers), auto-receive (foreground skip-tap) / save-to-library (`gal`) / notifications (`flutter_local_notifications`) with permission gating, signaling-endpoint override + diagnostic, About (version + in-app how-it-works/privacy + rate). `dart analyze lib test` 0 · `flutter test` 264 passed. Two-device smoke + first `pod install` deferred. See [`changelog.md`](changelog.md).
 - **Branch**: `010-settings`
 - **Depends on**: most prior specs
 - **Design**: Screen 08 **Cài đặt (settings)** tab — device-profile card + ToggleRow group (Tự động nhận / Lưu vào Thư viện / Thông báo / Giao diện tối) + version footer. See [`ui-design-context.md`](ui-design-context.md) §Screen 08.
@@ -259,10 +275,52 @@ Send Flow (UI)                  Receive Flow (UI)
 - **New packages**: `shared_preferences`, `package_info_plus`, `in_app_review`.
 - **Out of scope**: accounts, cloud.
 
-### Spec #011: Polish & v1.0 Release
+### Spec #011: Background Transfer
 
 - **Status**: ⬜ Not started
-- **Branch**: `011-polish-v1-release`
+- **Branch**: `011-background-transfer`
+- **Depends on**: #002 (engine), #004/#005 (send/receive flows)
+- **Design**: progress surfaces while the app is backgrounded — **iOS Live Activity** (Dynamic Island + lock-screen) and an **Android foreground-service notification**. Pull the latest screens from the **claude_design `SafeSend`** project (updated 2026-06-26) via `DesignSync` and distil into [`ui-design-context.md`](ui-design-context.md) before building.
+- **Scope**:
+  - Keep an in-flight transfer **running when the app is backgrounded** on both platforms (the WebRTC data channel + file streaming must survive backgrounding within OS limits).
+  - **iOS**: a **Live Activity** showing live progress (%, speed/ETA, file) on the lock screen + Dynamic Island; background execution strategy for the transfer (background tasks / audio-free keep-alive — evaluate at research; document the OS time limits).
+  - **Android**: a **foreground Service** with an ongoing progress notification so the OS won't kill the transfer; notification actions (cancel) wired to the transfer state machine.
+  - Drive both from the existing #002 transfer-state-machine stream (no parallel progress model, Constitution VIII); update on the same snapshots.
+  - Resume/handle return-to-foreground cleanly; surface a clear failure if the OS suspends the transfer.
+- **New packages**: iOS Live Activity needs a native widget extension (ActivityKit) + a bridge (e.g. `live_activities`); Android foreground service (e.g. `flutter_foreground_task`) — **verify on pub.dev at plan time** (Constitution XV).
+- **Out of scope**: push-initiated background wake (no server); transfers that survive full app termination.
+
+### Spec #012: Home Screen Completion
+
+- **Status**: ⬜ Not started
+- **Branch**: `012-home-completion`
+- **Depends on**: #006 (history data), #001 (Home shell), #013 may follow (viewers open from Home)
+- **Design**: Screen 01 **Trang chủ (home)** — hero stat card, 3 StatTiles (Ảnh/Video/File), Recent photos / videos / files grids, "Xem tất cả (See all)" per section. Pull the **updated** Home + See-all screens from claude_design via `DesignSync`.
+- **Scope**:
+  - Replace the remaining **hardcoded/mock Home content** (placeholder images, stat numbers) with **real data** from the transfer history + on-device media (define the data source at clarify — history records vs. a media index).
+  - Build the **"Xem tất cả / See all"** destination screens for each section (Recent photos, Recent videos, Recent files) — full lists with their own routes.
+  - Wire the hero stat card (Đã gửi / Đã nhận totals, "N transfers this month") to real aggregates.
+  - Empty states for a fresh install (no history yet).
+- **New packages**: possibly a media/thumbnail package if reading the device library — verify at plan.
+- **Out of scope**: editing/deleting media on the device.
+
+### Spec #013: In-App File Viewers
+
+- **Status**: ⬜ Not started
+- **Branch**: `013-in-app-viewers`
+- **Depends on**: #005/#006 (received files + history), #012 (open from Home), #003-#005 file paths
+- **Design**: tapping a known-type item (Home recent, History detail, Receive complete) opens an **in-app viewer** instead of (or before) the OS share/open sheet. Pull the viewer screens from claude_design.
+- **Scope**:
+  - **In-app preview** for fixed/known types: **image**, **video**, **audio**, and **basic documents** (PDF/text at minimum); decide the document set at clarify.
+  - Reached from History detail, the Receive-complete file list, and Home recent grids; falls back to the existing `open_filex`/share for unsupported types.
+  - Streamed/efficient loading (don't load huge media fully into memory); respect the streamed-I/O principle.
+- **New packages**: image is built-in; video (e.g. `video_player`/`chewie`), audio (e.g. `just_audio`), PDF (e.g. `pdfx`/`syncfusion_flutter_pdfviewer`) — **verify versions + native min-OS on pub.dev at plan** (Constitution XV; these are native-heavy).
+- **Out of scope**: editing files; thumbnail generation for arbitrary formats.
+
+### Spec #014: Polish & v1.0 Release
+
+- **Status**: ⬜ Not started
+- **Branch**: `014-polish-v1-release`
 - **Depends on**: All
 - **Scope**:
   - **Resilience sweep**: dropped connection / mid-transfer disconnect / app-backgrounded mid-transfer / NAT-traversal failure → TURN fallback path, all surfaced with clear copy + retry.
@@ -290,8 +348,11 @@ Send Flow (UI)                  Receive Flow (UI)
 | #008 | Share Link | 1 week | Week 8-9 |
 | #009 | Nearby Radar | 1.5 weeks | Week 9-11 |
 | #010 | Settings & Preferences | 1 week | Week 11-12 |
-| #011 | Polish & v1.0 Release | 2 weeks | Week 12-14 |
-| | **Total** | **~14 weeks** | |
+| #011 | Background Transfer (Live Activity / FG Service) | 1.5 weeks | Week 12-14 |
+| #012 | Home Screen Completion (real data + See-all) | 1 week | Week 14-15 |
+| #013 | In-App File Viewers | 1 week | Week 15-16 |
+| #014 | Polish & v1.0 Release | 2 weeks | Week 16-18 |
+| | **Total** | **~18 weeks** | |
 
 ### ⭐ MVP Checkpoint: After Spec #005
 
@@ -301,9 +362,11 @@ App can: pair two devices via a 6-digit key, send any-type files (no size limit)
 
 ## Optimal Order (1 Developer)
 
-#001 → #002 → #003 → #004 + #005 (#005 follows #004 closely; share the pairing primitives) → ⭐ MVP → #006 → #007 → #008 → #009 → #010 → #011
+#001 → #002 → #003 → #004 + #005 (#005 follows #004 closely; share the pairing primitives) → ⭐ MVP → #006 → #007 → #008 → #009 → #010 → #011 → #012 → #013 → #014
 
 The four connection methods are deliberately sequenced **6-digit (core) → QR → link → radar** by increasing platform-integration cost; each reuses the same signaling rendezvous from #003.
+
+The three v1.0 feature-completion specs (**#011 Background Transfer · #012 Home Completion · #013 In-App Viewers**) land **before** the **#014 Polish & Release** sweep. They are largely independent, but #012 (Home) and #013 (Viewers) pair naturally (Home recent grids open into the viewers), and #011 (Background) is the heaviest native lift — sequence it first while energy is high, or last if device-testing background behavior is gating.
 
 ---
 

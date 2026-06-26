@@ -7,18 +7,28 @@ import 'package:uuid/uuid.dart';
 /// A unit of work moving one or more files between two peers. Owns exactly one
 /// manifest's worth of files, transferred sequentially in order.
 class TransferSession {
-  TransferSession({required this.id, required this.sources})
+  TransferSession({required this.id, required this.sources, this.senderName})
     : assert(sources.isNotEmpty, 'a session needs at least one file');
 
-  /// Build a session from disk-backed (or other) [FileSource]s.
-  factory TransferSession.fromSources(List<FileSource> sources) =>
-      TransferSession(id: const Uuid().v4(), sources: sources);
+  /// Build a session from disk-backed (or other) [FileSource]s. [senderName] is
+  /// this device's display name (#010), carried in the manifest to the peer.
+  factory TransferSession.fromSources(
+    List<FileSource> sources, {
+    String? senderName,
+  }) => TransferSession(
+    id: const Uuid().v4(),
+    sources: sources,
+    senderName: senderName,
+  );
 
   /// Session identifier (UUID v4).
   final String id;
 
   /// The files to transfer, in order.
   final List<FileSource> sources;
+
+  /// This device's display name shown to the receiver (#010), or null.
+  final String? senderName;
 
   /// Total bytes across all files.
   int get totalBytes => sources.fold(0, (sum, s) => sum + s.size);
@@ -43,6 +53,7 @@ class TransferSession {
     sessionId: id,
     fileCount: fileCount,
     totalBytes: totalBytes,
+    senderName: senderName,
     files: [
       for (var i = 0; i < sources.length; i++)
         ManifestFileEntry(

@@ -6,6 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:safe_send/core/di/injection.dart';
 import 'package:safe_send/core/domain/cubit/app_state.dart';
 import 'package:safe_send/core/domain/pairing/pairing_state.dart';
+import 'package:safe_send/core/domain/settings/settings_repository.dart';
 import 'package:safe_send/core/presentation/buttons/app_buttons.dart';
 import 'package:safe_send/core/presentation/transfer/transfer_spinner.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
@@ -17,7 +18,6 @@ import 'package:safe_send/features/pairing/presentation/connect/nearby_advertise
 import 'package:safe_send/features/pairing/presentation/connect/widgets/code_display.dart';
 import 'package:safe_send/features/pairing/presentation/connect/widgets/connect_radar.dart';
 import 'package:safe_send/features/pairing/presentation/cubit/pairing_cubit.dart';
-import 'package:uuid/uuid.dart';
 
 /// Sender "Gần đây" tab (#009, US2). A presentation of the SAME hosting session
 /// as the 6-digit/QR tabs: it advertises the **live** code over mDNS while shown
@@ -34,9 +34,9 @@ class _NearbyAdvertisePanelState extends State<NearbyAdvertisePanel>
     with WidgetsBindingObserver {
   final NearbyAdvertiseCubit _cubit = getIt<NearbyAdvertiseCubit>();
 
-  /// A generated default device name until the editable profile lands in #010.
-  final String _displayName =
-      'Safe Send · ${const Uuid().v4().substring(0, 4).toUpperCase()}';
+  /// The user's persisted device name (#010), shown to nearby browsers. Falls
+  /// back to the generated default the settings repo seeded on first run.
+  final String _displayName = getIt<SettingsRepository>().current.deviceName;
 
   String? _advertisedCode;
 

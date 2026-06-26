@@ -12,6 +12,7 @@ import 'package:safe_send/core/domain/failures/app_failure.dart';
 import 'package:safe_send/core/domain/transfer/transfer_view.dart';
 import 'package:safe_send/core/presentation/buttons/app_buttons.dart';
 import 'package:safe_send/core/presentation/feedback/app_toast.dart';
+import 'package:safe_send/core/presentation/scaffolding/fit_or_scroll.dart';
 import 'package:safe_send/core/presentation/transfer/transfer_complete_view.dart';
 import 'package:safe_send/core/presentation/transfer/transfer_progress_view.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
@@ -163,42 +164,44 @@ class _FailureView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final c = AppColors.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.x5),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            LucideIcons.circleAlert,
-            size: 44,
-            color: AppColors.danger,
-          ),
-          const SizedBox(height: AppSpacing.x4),
-          Text(
-            l10n.receiveErrorTitle,
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: AppSpacing.x2),
-          Text(
-            failure.receiveMessage(l10n),
-            textAlign: TextAlign.center,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: c.textSecondary),
-          ),
-          const SizedBox(height: AppSpacing.x6),
-          PrimaryButton(
-            label: l10n.receiveRetry,
-            icon: LucideIcons.refreshCw,
-            // Retry restarts the receive flow (re-opens code entry, FR-023).
-            onPressed: () => context.go(AppRoutes.receive),
-          ),
-          const SizedBox(height: AppSpacing.x3),
-          SecondaryButton(
-            label: l10n.commonBack,
-            onPressed: () => context.go(AppRoutes.home),
-          ),
-        ],
+    return FitOrScroll(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.x5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              LucideIcons.circleAlert,
+              size: 44,
+              color: AppColors.danger,
+            ),
+            const SizedBox(height: AppSpacing.x4),
+            Text(
+              l10n.receiveErrorTitle,
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: AppSpacing.x2),
+            Text(
+              failure.receiveMessage(l10n),
+              textAlign: TextAlign.center,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: c.textSecondary),
+            ),
+            const SizedBox(height: AppSpacing.x6),
+            PrimaryButton(
+              label: l10n.receiveRetry,
+              icon: LucideIcons.refreshCw,
+              // Retry restarts the receive flow (re-opens code entry, FR-023).
+              onPressed: () => context.go(AppRoutes.receive),
+            ),
+            const SizedBox(height: AppSpacing.x3),
+            SecondaryButton(
+              label: l10n.commonBack,
+              onPressed: () => context.go(AppRoutes.home),
+            ),
+          ],
+        ),
       ),
     );
   }

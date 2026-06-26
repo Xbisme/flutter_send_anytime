@@ -554,6 +554,156 @@ abstract class AppLocalizations {
   /// **'hiển thị với thiết bị gần đây'**
   String get settingsProfileSub;
 
+  /// Device name edit dialog title
+  ///
+  /// In vi, this message translates to:
+  /// **'Đổi tên thiết bị'**
+  String get settingsProfileEditTitle;
+
+  /// Device name field hint
+  ///
+  /// In vi, this message translates to:
+  /// **'Tên thiết bị'**
+  String get settingsProfileNameHint;
+
+  /// Device name validation error (empty or >30 chars)
+  ///
+  /// In vi, this message translates to:
+  /// **'Tên phải từ 1 đến 30 ký tự'**
+  String get settingsProfileNameError;
+
+  /// Shown when a permission-gated toggle is denied (FR-010)
+  ///
+  /// In vi, this message translates to:
+  /// **'Cần cấp quyền trong Cài đặt để dùng tính năng này'**
+  String get settingsPermissionBlocked;
+
+  /// Appearance section header
+  ///
+  /// In vi, this message translates to:
+  /// **'Giao diện'**
+  String get settingsSectionAppearance;
+
+  /// Theme option: light
+  ///
+  /// In vi, this message translates to:
+  /// **'Sáng'**
+  String get settingsThemeLight;
+
+  /// Theme option: dark
+  ///
+  /// In vi, this message translates to:
+  /// **'Tối'**
+  String get settingsThemeDark;
+
+  /// Theme option: follow system
+  ///
+  /// In vi, this message translates to:
+  /// **'Theo hệ thống'**
+  String get settingsThemeSystem;
+
+  /// Language section header
+  ///
+  /// In vi, this message translates to:
+  /// **'Ngôn ngữ'**
+  String get settingsSectionLanguage;
+
+  /// Language option: Vietnamese
+  ///
+  /// In vi, this message translates to:
+  /// **'Tiếng Việt'**
+  String get settingsLanguageVi;
+
+  /// Language option: English
+  ///
+  /// In vi, this message translates to:
+  /// **'English'**
+  String get settingsLanguageEn;
+
+  /// Language option: follow system
+  ///
+  /// In vi, this message translates to:
+  /// **'Theo hệ thống'**
+  String get settingsLanguageSystem;
+
+  /// Advanced section header
+  ///
+  /// In vi, this message translates to:
+  /// **'Nâng cao'**
+  String get settingsSectionAdvanced;
+
+  /// Signaling endpoint field hint
+  ///
+  /// In vi, this message translates to:
+  /// **'wss://máy-chủ-của-bạn'**
+  String get settingsEndpointHint;
+
+  /// Invalid endpoint error (FR-014)
+  ///
+  /// In vi, this message translates to:
+  /// **'Địa chỉ máy chủ không hợp lệ'**
+  String get settingsEndpointInvalid;
+
+  /// Clear the endpoint override
+  ///
+  /// In vi, this message translates to:
+  /// **'Khôi phục mặc định'**
+  String get settingsEndpointClear;
+
+  /// Run the connection diagnostic
+  ///
+  /// In vi, this message translates to:
+  /// **'Kiểm tra kết nối'**
+  String get settingsDiagnosticRun;
+
+  /// Diagnostic: endpoint reachable
+  ///
+  /// In vi, this message translates to:
+  /// **'Kết nối được máy chủ'**
+  String get settingsDiagnosticReachable;
+
+  /// Diagnostic: endpoint unreachable
+  ///
+  /// In vi, this message translates to:
+  /// **'Không kết nối được máy chủ'**
+  String get settingsDiagnosticUnreachable;
+
+  /// About section header
+  ///
+  /// In vi, this message translates to:
+  /// **'Giới thiệu'**
+  String get settingsSectionAbout;
+
+  /// How-it-works nav row + page title
+  ///
+  /// In vi, this message translates to:
+  /// **'Cách hoạt động'**
+  String get settingsHowItWorks;
+
+  /// Privacy policy nav row + page title
+  ///
+  /// In vi, this message translates to:
+  /// **'Chính sách bảo mật'**
+  String get settingsPrivacy;
+
+  /// Rate app action
+  ///
+  /// In vi, this message translates to:
+  /// **'Đánh giá ứng dụng'**
+  String get settingsRate;
+
+  /// How-it-works explainer body (no server holds data)
+  ///
+  /// In vi, this message translates to:
+  /// **'Safe Send gửi tệp trực tiếp giữa hai thiết bị qua kết nối WebRTC được mã hóa đầu-cuối. Máy chủ tín hiệu chỉ giúp hai máy tìm thấy nhau — nó không bao giờ nhận, lưu hay nhìn thấy nội dung tệp của bạn. Khi không thể kết nối trực tiếp, một máy chủ chuyển tiếp (TURN) có thể được dùng, nhưng dữ liệu vẫn được mã hóa và không bao giờ bị lưu lại.'**
+  String get settingsHowItWorksBody;
+
+  /// Privacy policy body
+  ///
+  /// In vi, this message translates to:
+  /// **'Safe Send không có tài khoản, không có máy chủ đám mây, và không thu thập nội dung tệp của bạn. Cài đặt và lịch sử truyền chỉ được lưu trên thiết bị này. Tên thiết bị bạn đặt chỉ hiển thị cho các thiết bị bạn kết nối trực tiếp.'**
+  String get settingsPrivacyBody;
+
   /// Setting: auto-receive
   ///
   /// In vi, this message translates to:
@@ -613,6 +763,18 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Quay lại'**
   String get commonBack;
+
+  /// Save action label
+  ///
+  /// In vi, this message translates to:
+  /// **'Lưu'**
+  String get commonSave;
+
+  /// Cancel action label
+  ///
+  /// In vi, this message translates to:
+  /// **'Hủy'**
+  String get commonCancel;
 
   /// Pairing error: invalid/unknown code
   ///

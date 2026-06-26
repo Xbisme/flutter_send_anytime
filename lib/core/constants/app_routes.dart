@@ -31,6 +31,13 @@ abstract final class AppRoutes {
   /// only when `AppConfig.flavor.isDev`; absent from prod builds.
   static const pairingDebug = '/dev/pairing';
 
+  /// In-app "how it works" explainer (#010, US5) — the no-server-holds-data
+  /// page, pushed full-screen from the Settings About section.
+  static const settingsHowItWorks = '/settings/how-it-works';
+
+  /// In-app privacy-policy page (#010, US5), pushed from About.
+  static const settingsPrivacy = '/settings/privacy';
+
   /// Reserved deep-link scheme (no handlers wired in #001).
   static const deepLinkScheme = 'safesend';
 }

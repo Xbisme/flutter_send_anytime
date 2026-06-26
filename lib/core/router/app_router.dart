@@ -21,6 +21,8 @@ import 'package:safe_send/features/receive/presentation/receive_progress_args.da
 import 'package:safe_send/features/send/presentation/pages/send_selection_page.dart';
 import 'package:safe_send/features/send/presentation/pages/send_transfer_page.dart';
 import 'package:safe_send/features/send/presentation/send_progress_args.dart';
+import 'package:safe_send/features/settings/presentation/pages/how_it_works_page.dart';
+import 'package:safe_send/features/settings/presentation/pages/privacy_policy_page.dart';
 import 'package:safe_send/features/settings/presentation/settings_page.dart';
 import 'package:safe_send/features/splash/presentation/splash_page.dart';
 
@@ -118,6 +120,16 @@ GoRouter createAppRouter({bool includeDevRoutes = false}) {
         parentNavigatorKey: rootKey,
         builder: (_, state) =>
             HistoryDetailPage(record: state.extra! as TransferRecord),
+      ),
+      GoRoute(
+        path: AppRoutes.settingsHowItWorks,
+        parentNavigatorKey: rootKey,
+        builder: (_, _) => const HowItWorksPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.settingsPrivacy,
+        parentNavigatorKey: rootKey,
+        builder: (_, _) => const PrivacyPolicyPage(),
       ),
       if (includeDevRoutes)
         GoRoute(

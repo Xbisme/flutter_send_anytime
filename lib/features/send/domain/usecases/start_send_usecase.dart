@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:safe_send/core/domain/result.dart';
+import 'package:safe_send/core/domain/settings/settings_repository.dart';
 import 'package:safe_send/core/domain/transfer/file_source.dart';
 import 'package:safe_send/core/domain/transfer/transfer_session.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
@@ -11,9 +12,10 @@ import 'package:safe_send/core/services/transport/transfer_engine.dart';
 /// stream so the cubit observes the single source of truth (Constitution VIII).
 @injectable
 class StartSendUseCase {
-  StartSendUseCase(this._engine);
+  StartSendUseCase(this._engine, this._settings);
 
   final TransferEngine _engine;
+  final SettingsRepository _settings;
 
   /// The transfer state-machine stream.
   Stream<TransferSnapshot> get snapshots => _engine.snapshots;
@@ -24,7 +26,10 @@ class StartSendUseCase {
     required DataTransport transport,
   }) => _engine.startSendOnTransport(
     transport: transport,
-    session: TransferSession.fromSources(sources),
+    session: TransferSession.fromSources(
+      sources,
+      senderName: _settings.current.deviceName,
+    ),
   );
 
   /// Cancel the in-flight transfer (honored on both ends).
