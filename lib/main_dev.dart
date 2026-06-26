@@ -23,7 +23,7 @@ Future<void> main() => bootstrap(
     //  • Two real devices → ws://<Mac-LAN-IP>:8080 + iOS ATS cleartext exception
     //                        (deferred #003 task — non-localhost ws:// is ATS-blocked)
     signalingEndpoint: Uri.parse(
-      Platform.isIOS ? 'ws://localhost:8080' : 'ws://192.168.1.16:8080',
+      Platform.isIOS ? 'ws://192.168.1.137:8080' : 'ws://192.168.1.16:8080',
     ),
   ),
 );

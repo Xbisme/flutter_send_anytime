@@ -11,6 +11,7 @@ import 'package:safe_send/core/domain/failures/app_failure.dart';
 import 'package:safe_send/core/domain/history/transfer_history_enums.dart';
 import 'package:safe_send/core/domain/pairing/connect_handoff.dart';
 import 'package:safe_send/core/domain/pairing/connect_link.dart';
+import 'package:safe_send/core/domain/pairing/nearby_device.dart';
 import 'package:safe_send/core/domain/pairing/pairing_state.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/core/presentation/buttons/app_buttons.dart';
@@ -26,6 +27,8 @@ import 'package:safe_send/core/utils/l10n_extension.dart';
 import 'package:safe_send/features/pairing/presentation/connect/widgets/code_display.dart';
 import 'package:safe_send/features/pairing/presentation/connect/widgets/code_input.dart';
 import 'package:safe_send/features/pairing/presentation/connect/widgets/connect_radar.dart';
+import 'package:safe_send/features/pairing/presentation/connect/widgets/nearby_advertise_panel.dart';
+import 'package:safe_send/features/pairing/presentation/connect/widgets/nearby_browse_panel.dart';
 import 'package:safe_send/features/pairing/presentation/connect/widgets/qr_display.dart';
 import 'package:safe_send/features/pairing/presentation/cubit/pairing_cubit.dart';
 import 'package:safe_send/features/pairing/presentation/pairing_failure_l10n.dart';
@@ -73,6 +76,10 @@ class _ConnectViewState extends State<_ConnectView> {
   /// Sender tapped "Chia sẻ link mời" (#008, US2) — last-action-wins method hint.
   bool _sharedLink = false;
 
+  /// Receiver tapped a nearby device (#009, US1) — a join is in flight; a join
+  /// failure shows a toast and keeps the radar usable (FR-017).
+  bool _nearbyJoining = false;
+
   TransferRole get _role => widget.request.role;
 
   /// The receiver arrived via a share-link invite (#008) — auto-join, no typing.
@@ -82,6 +89,8 @@ class _ConnectViewState extends State<_ConnectView> {
   @override
   void initState() {
     super.initState();
+    // Home "Thiết bị gần" lands the receiver straight on the nearby tab (#009).
+    if (_role == TransferRole.receiver && widget.request.openNearby) _tab = 1;
     if (_role == TransferRole.sender) {
       unawaited(context.read<PairingCubit>().host());
     } else if (_isShareLinkAutoJoin) {
@@ -117,9 +126,20 @@ class _ConnectViewState extends State<_ConnectView> {
   /// the QR tab being shown wins, else a shared link, else the 6-digit code.
   PairingMethod _resolveMethod() {
     if (_role == TransferRole.receiver) return _receiverMethod;
+    if (_tab == 2) return PairingMethod.nearby; // sender "Gần đây" tab (#009).
     if (_tab == 1) return PairingMethod.qr;
     if (_sharedLink) return PairingMethod.shareLink;
     return PairingMethod.sixDigitCode;
+  }
+
+  /// Receiver tapped a discovered nearby device (#009, US1) — record the method
+  /// and join via the existing code path (no new join logic).
+  void _onJoinViaNearby(NearbyDevice device) {
+    setState(() {
+      _receiverMethod = PairingMethod.nearby;
+      _nearbyJoining = true;
+    });
+    unawaited(context.read<PairingCubit>().joinWithCode(device.code));
   }
 
   /// Share-link auto-join failed (expired/invalid code) → toast + Home, rather
@@ -158,6 +178,14 @@ class _ConnectViewState extends State<_ConnectView> {
     if (_role == TransferRole.sender && _tab == 1) {
       return const _SenderQrPanel();
     }
+    // Receiver "Gần đây" tab (#009, US1): browse + tap a nearby sender.
+    if (_role == TransferRole.receiver && _tab == 1) {
+      return NearbyBrowsePanel(onJoin: _onJoinViaNearby);
+    }
+    // Sender "Gần đây" tab (#009, US2): advertise the live hosting code.
+    if (_role == TransferRole.sender && _tab == 2) {
+      return const NearbyAdvertisePanel();
+    }
     return _ComingSoonTab(message: l10n.connectComingSoonTab);
   }
 
@@ -172,15 +200,29 @@ class _ConnectViewState extends State<_ConnectView> {
         listenWhen: (_, state) =>
             (state is AppLoaded<PairingState> &&
                 state.data is PairingConnected) ||
-            (state is AppError<PairingState> && _isShareLinkAutoJoin),
+            (state is AppError<PairingState> &&
+                (_isShareLinkAutoJoin || _nearbyJoining)),
         listener: (_, state) {
+          if (state is AppError<PairingState>) {
+            // A failed join: share-link auto-join → toast + Home (FR-013);
+            // a nearby tap → toast, stay on the radar (FR-017).
+            if (_isShareLinkAutoJoin) {
+              if (_terminalHandled) return;
+              _terminalHandled = true;
+              _onAutoJoinFailed();
+            } else if (_nearbyJoining) {
+              setState(() => _nearbyJoining = false);
+              AppToast.show(
+                context,
+                context.l10n.nearbyStaleToast,
+                type: AppToastType.error,
+              );
+            }
+            return;
+          }
           if (_terminalHandled) return;
           _terminalHandled = true;
-          if (state is AppError<PairingState>) {
-            _onAutoJoinFailed();
-          } else {
-            _onConnected();
-          }
+          _onConnected();
         },
         child: DecoratedBox(
           decoration: BoxDecoration(

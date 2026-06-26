@@ -78,6 +78,14 @@ dependencies:
   # API is identical to 7.x. Share sheet reuses share_plus (above).
   app_links: ^6.4.1
 
+  # Nearby Radar (#009) — mDNS/Bonjour service discovery: advertise + browse +
+  # resolve + TXT on iOS (NetService/Bonjour) and Android (NsdManager). nsd 5.0.1
+  # targets sdk ^3.11 / flutter >=3.41 (the exact project floor — no pinning),
+  # iOS 13 / Android API 21 (≤ our floor), native-backed (no third-party native
+  # libs); it acquires the Android MulticastLock internally. Same-network only —
+  # no BLE. The 6-digit #003 code rides in the TXT record.
+  nsd: ^5.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

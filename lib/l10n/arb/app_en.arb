@@ -201,5 +201,15 @@
   "shareLinkLeaveTransferTitle": "Leave the current transfer?",
   "shareLinkLeaveTransferBody": "A transfer is in progress. Opening a new invite link will stop it.",
   "shareLinkLeaveTransferConfirm": "Leave and open link",
-  "shareLinkLeaveTransferCancel": "Keep transferring"
+  "shareLinkLeaveTransferCancel": "Keep transferring",
+  "nearbySectionTitle": "Nearby devices",
+  "nearbyDiscoverableTitle": "Visible to nearby devices",
+  "nearbyPrivacyNote": "Your device name is broadcast to nearby devices.",
+  "nearbyEmptyTitle": "No devices yet",
+  "nearbyEmptyHint": "Make sure both devices are on the same Wi-Fi, or use a 6-digit code / QR.",
+  "nearbyPermissionRationale": "Allow finding local-network devices to connect with nearby devices.",
+  "nearbyPermissionBlocked": "Local network permission is off. Open Settings to enable it and find nearby devices.",
+  "nearbyOpenSettings": "Open Settings",
+  "nearbyStaleToast": "This device is no longer available",
+  "nearbyConnectAction": "Receive"
 }

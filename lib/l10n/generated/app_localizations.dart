@@ -1193,6 +1193,66 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Tiếp tục truyền'**
   String get shareLinkLeaveTransferCancel;
+
+  /// Heading for the nearby device list on the receiver browse surface (#009)
+  ///
+  /// In vi, this message translates to:
+  /// **'Thiết bị ở gần'**
+  String get nearbySectionTitle;
+
+  /// Sender radar discoverable-state title on the Gần đây tab (#009)
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang hiển thị với thiết bị gần'**
+  String get nearbyDiscoverableTitle;
+
+  /// Privacy note that the device name is broadcast while discovery is active (#009, FR-013)
+  ///
+  /// In vi, this message translates to:
+  /// **'Tên thiết bị của bạn được phát tới các thiết bị gần.'**
+  String get nearbyPrivacyNote;
+
+  /// Empty-state title when no nearby devices are found (#009, FR-016)
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa thấy thiết bị nào'**
+  String get nearbyEmptyTitle;
+
+  /// Empty-state guidance to join the same Wi-Fi or use another method (#009, FR-016)
+  ///
+  /// In vi, this message translates to:
+  /// **'Đảm bảo cả hai thiết bị ở cùng mạng Wi-Fi, hoặc dùng mã 6 số / QR.'**
+  String get nearbyEmptyHint;
+
+  /// Rationale shown before requesting local-network permission (#009, FR-011)
+  ///
+  /// In vi, this message translates to:
+  /// **'Cho phép tìm thiết bị trên mạng cục bộ để kết nối với thiết bị ở gần.'**
+  String get nearbyPermissionRationale;
+
+  /// Blocked-state message when local-network permission is denied (#009, FR-012)
+  ///
+  /// In vi, this message translates to:
+  /// **'Quyền mạng cục bộ đang tắt. Mở Cài đặt để bật và tìm thiết bị gần.'**
+  String get nearbyPermissionBlocked;
+
+  /// Open OS settings action on the permission-blocked state (#009)
+  ///
+  /// In vi, this message translates to:
+  /// **'Mở Cài đặt'**
+  String get nearbyOpenSettings;
+
+  /// Toast when tapping a nearby device whose advertisement is stale/unreachable (#009, FR-017)
+  ///
+  /// In vi, this message translates to:
+  /// **'Thiết bị này không còn khả dụng'**
+  String get nearbyStaleToast;
+
+  /// Action button on a nearby device row to connect/receive (#009)
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhận'**
+  String get nearbyConnectAction;
 }
 
 class _AppLocalizationsDelegate

@@ -1,9 +1,8 @@
 <!-- SPECKIT START -->
 # Safe Send — Agent Context
 
-Active feature: **#008 Share Link** ✅ IMPLEMENTED (branch `008-share-link`). #001–#007 ✅ merged into `main` (PRs #1–#7). **Next: #009 Nearby Radar.**
-Current plan: [specs/008-share-link/plan.md](specs/008-share-link/plan.md)
-Spec: [specs/008-share-link/spec.md](specs/008-share-link/spec.md)
+Active feature: **#009 Nearby Radar** ✅ IMPLEMENTED (branch `009-nearby-radar`). #001–#008 ✅ merged into `main` (PRs #1–#8). **Next: #010 Settings & Preferences.**
+Current plan: [specs/009-nearby-radar/plan.md](specs/009-nearby-radar/plan.md) · Spec: [specs/009-nearby-radar/spec.md](specs/009-nearby-radar/spec.md)
 
 ## Project meta (read these first)
 - Constitution (authoritative, 15 principles): [.specify/memory/constitution.md](.specify/memory/constitution.md)

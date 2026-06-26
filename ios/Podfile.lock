@@ -44,6 +44,8 @@ PODS:
   - mobile_scanner (7.0.0):
     - Flutter
     - FlutterMacOS
+  - nsd_ios (0.0.1):
+    - Flutter
   - open_filex (0.0.2):
     - Flutter
   - permission_handler_apple (9.4.8):
@@ -65,6 +67,7 @@ DEPENDENCIES:
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - flutter_webrtc (from `.symlinks/plugins/flutter_webrtc/ios`)
   - mobile_scanner (from `.symlinks/plugins/mobile_scanner/darwin`)
+  - nsd_ios (from `.symlinks/plugins/nsd_ios/ios`)
   - open_filex (from `.symlinks/plugins/open_filex/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - screen_brightness_ios (from `.symlinks/plugins/screen_brightness_ios/ios`)
@@ -91,6 +94,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_webrtc/ios"
   mobile_scanner:
     :path: ".symlinks/plugins/mobile_scanner/darwin"
+  nsd_ios:
+    :path: ".symlinks/plugins/nsd_ios/ios"
   open_filex:
     :path: ".symlinks/plugins/open_filex/ios"
   permission_handler_apple:
@@ -109,6 +114,7 @@ SPEC CHECKSUMS:
   flutter_native_splash: c32d145d68aeda5502d5f543ee38c192065986cf
   flutter_webrtc: 3ee86aa10e0313c38c93fdb215dd86e77014f96a
   mobile_scanner: 9157936403f5a0644ca3779a38ff8404c5434a93
+  nsd_ios: d2eedc5904efa30a0e36d42f2501a39fd7fbe73f
   open_filex: 432f3cd11432da3e39f47fcc0df2b1603854eff1
   permission_handler_apple: 92d754bbaa7361d436db2d6c3c1c2a0fdcec462e
   screen_brightness_ios: 212d950bb99c915eee971c884f4a6c87c92cd13d

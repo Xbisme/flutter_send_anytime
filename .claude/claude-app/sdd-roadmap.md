@@ -4,7 +4,7 @@
 >
 > **Vai trò file này**: pure planning — dependency graph, scope per spec, timeline, optimal order. Current status của các spec sống ở [`project-context.md`](project-context.md). Ship history sống ở [`changelog.md`](changelog.md). Alignment decisions sống ở [`decisions/`](decisions/). **Giao diện** (screens, tokens, components, navigation IA) sống ở [`ui-design-context.md`](ui-design-context.md) — đọc trước mọi phần UI/UX của spec.
 >
-> Last updated: 2026-06-26 (Specs #001–#007 merged via PRs #1–#7; #008 Share Link implemented on branch; #009 Nearby Radar is next.)
+> Last updated: 2026-06-26 (Specs #001–#008 merged via PRs #1–#8; #009 Nearby Radar is next.)
 
 ---
 
@@ -215,7 +215,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #008: Share Link
 
-- **Status**: ✅ **Implemented (code)** — branch `008-share-link` (2026-06-26). Sender share action (`safesend://` invite reusing #007 `ConnectLink`) + receiver cold/warm deep-link auto-join into Receive; core-pure `DeepLinkService`/`ActiveHostingRegistry`/`DeepLinkCoordinator`; guards for invalid/expired/self-invite/in-transfer/latest-wins; `pairingMethod=shareLink`. Custom-scheme only (no universal links/web fallback — deferred). `dart analyze` 0 · `flutter test` 211 passed. Two-device cold/warm smoke + first `pod install` deferred. See [`changelog.md`](changelog.md).
+- **Status**: ✅ **Merged** (PR #8) — branch `008-share-link` (2026-06-26). Sender share action (`safesend://` invite reusing #007 `ConnectLink`) + receiver cold/warm deep-link auto-join into Receive; core-pure `DeepLinkService`/`ActiveHostingRegistry`/`DeepLinkCoordinator`; guards for invalid/expired/self-invite/in-transfer/latest-wins; `pairingMethod=shareLink`. Custom-scheme only (no universal links/web fallback — deferred). `dart analyze` 0 · `flutter test` 211 passed. Two-device cold/warm smoke + first `pod install` deferred. See [`changelog.md`](changelog.md).
 - **Branch**: `008-share-link`
 - **Depends on**: #003, #004, #005, #007
 - **Design**: wires the **"Chia sẻ link mời"** secondary action on Screen 03 (Kết nối) + deep-link entry into Screen 04 (Nhận). See [`ui-design-context.md`](ui-design-context.md) §Screen 03.
@@ -229,7 +229,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #009: Nearby Radar
 
-- **Status**: 🟡 **Next**
+- **Status**: ✅ **Implemented (code)** — branch `009-nearby-radar` (2026-06-26). Fourth connection method: sender advertises the live #003 code via mDNS TXT on the Connect "Gần đây" tab; receiver browses + taps a nearby device → auto-join → existing accept/reject; reuses #003 rendezvous + #002 transport unchanged; same-Wi-Fi only (BLE deferred); core-pure `NearbyDiscoveryService`/`NearbyPermissionService` (`nsd` 5.0.1) + `NearbyDevice`; `pairingMethod=nearby`. `dart analyze lib test` 0 · `flutter test` 230 passed (19 new). **Two-device same-Wi-Fi smoke PASSED on 2 devices**; first `pod install` deferred. See [`changelog.md`](changelog.md).
 - **Branch**: `009-nearby-radar`
 - **Depends on**: #003, #004, #005
 - **Design**: fills the **"Gần đây" tab** of Screen 03 (Kết nối, `ssRadar` animation) + the nearby **DeviceRow** ("đang chờ ở gần bạn" + "Nhận") on Screen 04 + the Home "Thiết bị gần" quick-action. See [`ui-design-context.md`](ui-design-context.md) §Screen 03/04.
