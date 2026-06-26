@@ -15,7 +15,7 @@ description: "Task list for #009 Nearby Radar"
 
 ## ⚠️ Deferred / device-only tasks (track here per Constitution XII)
 
-- **T0DEV-1** Two-physical-device **same-Wi-Fi** smoke — advertise on device A's "Gần đây" tab, discover + tap on device B, accept → transfer + `pairingMethod=nearby`; plus stale-removal, two-senders, different-network empty-state, and the iOS Local Network / Android Nearby-devices permission prompts. Cannot run in CI; see [quickstart.md](quickstart.md) §"Manual two-device smoke".
+- **T0DEV-1** ✅ **PASSED** (validated on 2 real devices 2026-06-26) — Two-physical-device **same-Wi-Fi** smoke — advertise on device A's "Gần đây" tab, discover + tap on device B, accept → transfer + `pairingMethod=nearby`; plus stale-removal, two-senders, different-network empty-state, and the iOS Local Network / Android Nearby-devices permission prompts. Cannot run in CI; see [quickstart.md](quickstart.md) §"Manual two-device smoke".
 - **First `pod install`** after T001 adds the `nsd` pod and churns `ios/Podfile.lock` — commit the lock; folds into the next on-device build.
 - **bloc-lint CLI** still uninstalled (tracked since #001) — gate step skipped, not failed.
 

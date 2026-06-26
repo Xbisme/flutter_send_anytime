@@ -33,12 +33,16 @@ class NearbyAdvertiseCubit extends AppCubit<NearbyAdvertise> {
   final NearbyDiscoveryService _discovery;
   final NearbyPermissionService _permission;
 
+  String? _advertised;
+
   /// Request permission (FR-011) then advertise [code]. No broadcast happens
-  /// before the permission resolves (SC-005).
+  /// before the permission resolves (SC-005). Idempotent for the same code — a
+  /// re-emitted hosting state (e.g. the countdown tick) will not re-register.
   Future<void> start({
     required String code,
     required String displayName,
   }) async {
+    if (_advertised == code) return;
     emitLoading();
     final status = await _permission.ensure();
     if (status != NearbyPermissionStatus.granted) {
@@ -54,13 +58,19 @@ class NearbyAdvertiseCubit extends AppCubit<NearbyAdvertise> {
       displayName: displayName,
     );
     result.fold(
-      (_) => emitLoaded(NearbyAdvertiseActive(code)),
+      (_) {
+        _advertised = code;
+        emitLoaded(NearbyAdvertiseActive(code));
+      },
       emitError,
     );
   }
 
   /// Stop advertising (tab left / app backgrounded — FR-005).
-  Future<void> stop() => _discovery.stopAdvertise();
+  Future<void> stop() async {
+    _advertised = null;
+    await _discovery.stopAdvertise();
+  }
 
   /// Open the OS settings page from the permission-blocked state.
   Future<void> openSettings() => _permission.openSettings();

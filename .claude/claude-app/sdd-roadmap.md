@@ -229,7 +229,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #009: Nearby Radar
 
-- **Status**: ✅ **Implemented (code)** — branch `009-nearby-radar` (2026-06-26). Fourth connection method: sender advertises the live #003 code via mDNS TXT on the Connect "Gần đây" tab; receiver browses + taps a nearby device → auto-join → existing accept/reject; reuses #003 rendezvous + #002 transport unchanged; same-Wi-Fi only (BLE deferred); core-pure `NearbyDiscoveryService`/`NearbyPermissionService` (`nsd` 5.0.1) + `NearbyDevice`; `pairingMethod=nearby`. `dart analyze lib test` 0 · `flutter test` 230 passed (19 new). Two-device same-Wi-Fi smoke + first `pod install` deferred. See [`changelog.md`](changelog.md).
+- **Status**: ✅ **Implemented (code)** — branch `009-nearby-radar` (2026-06-26). Fourth connection method: sender advertises the live #003 code via mDNS TXT on the Connect "Gần đây" tab; receiver browses + taps a nearby device → auto-join → existing accept/reject; reuses #003 rendezvous + #002 transport unchanged; same-Wi-Fi only (BLE deferred); core-pure `NearbyDiscoveryService`/`NearbyPermissionService` (`nsd` 5.0.1) + `NearbyDevice`; `pairingMethod=nearby`. `dart analyze lib test` 0 · `flutter test` 230 passed (19 new). **Two-device same-Wi-Fi smoke PASSED on 2 devices**; first `pod install` deferred. See [`changelog.md`](changelog.md).
 - **Branch**: `009-nearby-radar`
 - **Depends on**: #003, #004, #005
 - **Design**: fills the **"Gần đây" tab** of Screen 03 (Kết nối, `ssRadar` animation) + the nearby **DeviceRow** ("đang chờ ở gần bạn" + "Nhận") on Screen 04 + the Home "Thiết bị gần" quick-action. See [`ui-design-context.md`](ui-design-context.md) §Screen 03/04.
