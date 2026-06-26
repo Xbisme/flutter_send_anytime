@@ -428,5 +428,21 @@
   "scanOpenSettings": "Mở Cài đặt",
   "@scanOpenSettings": { "description": "Open the OS app settings to grant camera" },
   "scanRequestPermission": "Cho phép camera",
-  "@scanRequestPermission": { "description": "Request camera permission button" }
+  "@scanRequestPermission": { "description": "Request camera permission button" },
+  "connectShareLinkMessage": "Mình muốn gửi bạn vài tệp qua Safe Send — chạm vào link để nhận:",
+  "@connectShareLinkMessage": { "description": "Invite text shared alongside the share-link (#008)" },
+  "shareLinkInvalid": "Link mời không hợp lệ",
+  "@shareLinkInvalid": { "description": "Toast when an opened invite link is malformed or not a Safe Send link" },
+  "shareLinkExpired": "Link mời đã hết hạn",
+  "@shareLinkExpired": { "description": "Toast when an opened invite link's code has expired" },
+  "shareLinkOwn": "Đây là link mời của chính bạn",
+  "@shareLinkOwn": { "description": "Toast when the host taps their own invite link" },
+  "shareLinkLeaveTransferTitle": "Rời phiên truyền hiện tại?",
+  "@shareLinkLeaveTransferTitle": { "description": "Confirm dialog title when an invite link arrives during a transfer" },
+  "shareLinkLeaveTransferBody": "Bạn đang truyền tệp. Mở link mời mới sẽ dừng phiên hiện tại.",
+  "@shareLinkLeaveTransferBody": { "description": "Confirm dialog body when an invite link arrives during a transfer" },
+  "shareLinkLeaveTransferConfirm": "Rời và mở link",
+  "@shareLinkLeaveTransferConfirm": { "description": "Confirm-and-leave action in the interrupt dialog" },
+  "shareLinkLeaveTransferCancel": "Tiếp tục truyền",
+  "@shareLinkLeaveTransferCancel": { "description": "Cancel (keep transferring) action in the interrupt dialog" }
 }

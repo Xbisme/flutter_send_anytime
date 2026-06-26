@@ -193,5 +193,13 @@
   "scanCameraBlockedTitle": "Camera permission needed",
   "scanCameraBlockedBody": "Allow Safe Send to use the camera, or choose a photo that has the QR code.",
   "scanOpenSettings": "Open Settings",
-  "scanRequestPermission": "Allow camera"
+  "scanRequestPermission": "Allow camera",
+  "connectShareLinkMessage": "I'd like to send you some files via Safe Send — tap the link to receive:",
+  "shareLinkInvalid": "Invalid invite link",
+  "shareLinkExpired": "This invite link has expired",
+  "shareLinkOwn": "This is your own invite link",
+  "shareLinkLeaveTransferTitle": "Leave the current transfer?",
+  "shareLinkLeaveTransferBody": "A transfer is in progress. Opening a new invite link will stop it.",
+  "shareLinkLeaveTransferConfirm": "Leave and open link",
+  "shareLinkLeaveTransferCancel": "Keep transferring"
 }

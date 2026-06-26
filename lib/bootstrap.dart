@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:safe_send/app/app.dart';
 import 'package:safe_send/core/config/app_config.dart';
 import 'package:safe_send/core/di/injection.dart';
+import 'package:safe_send/core/services/deeplink/deep_link_service.dart';
 import 'package:safe_send/core/utils/app_logger.dart';
 
 /// Shared pre-runApp setup, parameterized by flavor [config].
@@ -34,6 +35,10 @@ Future<void> bootstrap(AppConfig config) async {
   };
 
   await configureDependencies(config);
+
+  // Instantiate the deep-link service early so the plugin is listening for the
+  // launching invite link before the first frame (#008, cold start).
+  getIt<DeepLinkService>();
 
   runApp(const SafeSendApp());
 }

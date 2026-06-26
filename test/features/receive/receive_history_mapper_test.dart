@@ -40,4 +40,15 @@ void main() {
     expect(record.pairingMethod, PairingMethod.qr);
     expect(record.direction, TransferDirection.received);
   });
+
+  test('records pairingMethod = shareLink when paired via a link (FR-017)', () {
+    final record = ReceiveHistoryMapper.toRecord(
+      id: 'x',
+      createdAt: DateTime(2026),
+      view: view,
+      pairingMethod: PairingMethod.shareLink,
+    );
+    expect(record.pairingMethod, PairingMethod.shareLink);
+    expect(record.direction, TransferDirection.received);
+  });
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:safe_send/core/constants/app_routes.dart';
 import 'package:safe_send/core/domain/pairing/connect_handoff.dart';
+import 'package:safe_send/core/domain/pairing/receive_entry_request.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/features/receive/presentation/receive_progress_args.dart';
 
@@ -13,11 +14,14 @@ import 'package:safe_send/features/receive/presentation/receive_progress_args.da
 /// route. Features never import each other — the handoff is a core-typed
 /// navigation payload (Constitution XI).
 class ReceiveEntryPage extends StatefulWidget {
-  const ReceiveEntryPage({super.key, this.openScanner = false});
+  const ReceiveEntryPage({
+    super.key,
+    this.request = const ReceiveEntryRequest(),
+  });
 
-  /// When true (Home "Quét QR"), the Connect hub opens the scanner straight
-  /// away (#007, FR-019).
-  final bool openScanner;
+  /// Entry modifiers: open the scanner immediately (#007) and/or auto-join a
+  /// share-link-delivered code (#008).
+  final ReceiveEntryRequest request;
 
   @override
   State<ReceiveEntryPage> createState() => _ReceiveEntryPageState();
@@ -35,7 +39,8 @@ class _ReceiveEntryPageState extends State<ReceiveEntryPage> {
       AppRoutes.connect,
       extra: ConnectRequest(
         role: TransferRole.receiver,
-        openScanner: widget.openScanner,
+        openScanner: widget.request.openScanner,
+        autoJoinCode: widget.request.autoJoinCode,
       ),
     );
     if (!mounted) return;

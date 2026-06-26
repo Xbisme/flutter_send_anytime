@@ -10,9 +10,11 @@ import 'package:safe_send/core/domain/cubit/app_state.dart';
 import 'package:safe_send/core/domain/failures/app_failure.dart';
 import 'package:safe_send/core/domain/history/transfer_history_enums.dart';
 import 'package:safe_send/core/domain/pairing/connect_handoff.dart';
+import 'package:safe_send/core/domain/pairing/connect_link.dart';
 import 'package:safe_send/core/domain/pairing/pairing_state.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/core/presentation/buttons/app_buttons.dart';
+import 'package:safe_send/core/presentation/feedback/app_toast.dart';
 import 'package:safe_send/core/presentation/inputs/segmented_tabs.dart';
 import 'package:safe_send/core/presentation/scaffolding/flow_app_bar.dart';
 import 'package:safe_send/core/presentation/transfer/transfer_spinner.dart';
@@ -27,6 +29,7 @@ import 'package:safe_send/features/pairing/presentation/connect/widgets/connect_
 import 'package:safe_send/features/pairing/presentation/connect/widgets/qr_display.dart';
 import 'package:safe_send/features/pairing/presentation/cubit/pairing_cubit.dart';
 import 'package:safe_send/features/pairing/presentation/pairing_failure_l10n.dart';
+import 'package:share_plus/share_plus.dart';
 
 /// Screen 03 — Kết nối: the shared pairing hub. Functional "Mã 6 số" tab
 /// (radar + code + TTL countdown), with QR / Gần đây stubbed for #007/#009.
@@ -58,15 +61,36 @@ class _ConnectView extends StatefulWidget {
 class _ConnectViewState extends State<_ConnectView> {
   int _tab = 0;
   Timer? _ticker;
-  bool _pairedViaQr = false;
+
+  /// Guards the one-shot terminal navigation (connected → handoff, or auto-join
+  /// failure → Home) so a trailing state can't trigger a second navigation.
+  bool _terminalHandled = false;
+
+  /// How the receiver paired (#007/#008): `qr` when a QR was scanned, `shareLink`
+  /// when the device arrived via an invite link, else `sixDigitCode`.
+  PairingMethod _receiverMethod = PairingMethod.sixDigitCode;
+
+  /// Sender tapped "Chia sẻ link mời" (#008, US2) — last-action-wins method hint.
+  bool _sharedLink = false;
 
   TransferRole get _role => widget.request.role;
+
+  /// The receiver arrived via a share-link invite (#008) — auto-join, no typing.
+  bool get _isShareLinkAutoJoin =>
+      _role == TransferRole.receiver && widget.request.autoJoinCode != null;
 
   @override
   void initState() {
     super.initState();
     if (_role == TransferRole.sender) {
       unawaited(context.read<PairingCubit>().host());
+    } else if (_isShareLinkAutoJoin) {
+      // Share-link invite: join the delivered code immediately (#008, FR-012).
+      _receiverMethod = PairingMethod.shareLink;
+      final code = widget.request.autoJoinCode!;
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => unawaited(context.read<PairingCubit>().joinWithCode(code)),
+      );
     }
     // Refresh the expiry countdown once a second.
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -83,23 +107,42 @@ class _ConnectViewState extends State<_ConnectView> {
   void _onConnected() {
     final transport = context.read<PairingCubit>().takeTransport();
     if (transport == null) return;
-    // QR when the receiver scanned, or the sender had the QR tab open at connect
-    // time; otherwise the 6-digit code (#007, FR-018).
-    final viaQr = _role == TransferRole.receiver ? _pairedViaQr : _tab == 1;
     context.pop(
-      ConnectResult(
-        transport: transport,
-        method: viaQr ? PairingMethod.qr : PairingMethod.sixDigitCode,
-      ),
+      ConnectResult(transport: transport, method: _resolveMethod()),
     );
+  }
+
+  /// How this device paired, for the history record (#007/#008). The receiver
+  /// tracks its own path; the sender's method is the presentation it was using —
+  /// the QR tab being shown wins, else a shared link, else the 6-digit code.
+  PairingMethod _resolveMethod() {
+    if (_role == TransferRole.receiver) return _receiverMethod;
+    if (_tab == 1) return PairingMethod.qr;
+    if (_sharedLink) return PairingMethod.shareLink;
+    return PairingMethod.sixDigitCode;
+  }
+
+  /// Share-link auto-join failed (expired/invalid code) → toast + Home, rather
+  /// than the manual-entry inline retry (#008, FR-013).
+  void _onAutoJoinFailed() {
+    AppToast.show(
+      context,
+      context.l10n.shareLinkExpired,
+      type: AppToastType.error,
+    );
+    context.go(AppRoutes.home);
   }
 
   /// Receiver scanned a QR (#007) — remember the method, then join via the
   /// existing code path (no new join logic).
   void _onJoinViaQr(String code) {
-    setState(() => _pairedViaQr = true);
+    setState(() => _receiverMethod = PairingMethod.qr);
     unawaited(context.read<PairingCubit>().joinWithCode(code));
   }
+
+  /// Sender shared the invite link (#008, US2) — record the method (last-action
+  /// -wins) so this session is tagged `shareLink` if the peer joins via it.
+  void _onSharedLink() => setState(() => _sharedLink = true);
 
   Widget _buildTab() {
     final l10n = context.l10n;
@@ -107,6 +150,7 @@ class _ConnectViewState extends State<_ConnectView> {
       return _CodeTab(
         role: _role,
         onJoinViaQr: _onJoinViaQr,
+        onSharedLink: _onSharedLink,
         openScanner: widget.request.openScanner,
       );
     }
@@ -126,8 +170,18 @@ class _ConnectViewState extends State<_ConnectView> {
       // pops the result no matter which presentation the sender is viewing.
       body: BlocListener<PairingCubit, AppState<PairingState>>(
         listenWhen: (_, state) =>
-            state is AppLoaded<PairingState> && state.data is PairingConnected,
-        listener: (_, _) => _onConnected(),
+            (state is AppLoaded<PairingState> &&
+                state.data is PairingConnected) ||
+            (state is AppError<PairingState> && _isShareLinkAutoJoin),
+        listener: (_, state) {
+          if (_terminalHandled) return;
+          _terminalHandled = true;
+          if (state is AppError<PairingState>) {
+            _onAutoJoinFailed();
+          } else {
+            _onConnected();
+          }
+        },
         child: DecoratedBox(
           decoration: BoxDecoration(
             gradient: RadialGradient(
@@ -179,11 +233,13 @@ class _CodeTab extends StatelessWidget {
   const _CodeTab({
     required this.role,
     required this.onJoinViaQr,
+    required this.onSharedLink,
     required this.openScanner,
   });
 
   final TransferRole role;
   final void Function(String code) onJoinViaQr;
+  final VoidCallback onSharedLink;
   final bool openScanner;
 
   @override
@@ -207,6 +263,7 @@ class _CodeTab extends StatelessWidget {
             _HostingPanel(
               code: data.code.value,
               remaining: data.code.remaining,
+              onShared: onSharedLink,
             ),
           AppLoaded<PairingState>(:final data) when data is PairingFailed =>
             _FailurePanel(failure: data.failure),
@@ -347,10 +404,28 @@ class _ReceiverPanelState extends State<_ReceiverPanel> {
 }
 
 class _HostingPanel extends StatelessWidget {
-  const _HostingPanel({required this.code, required this.remaining});
+  const _HostingPanel({
+    required this.code,
+    required this.remaining,
+    required this.onShared,
+  });
 
   final String code;
   final Duration remaining;
+
+  /// Called when the user shares the invite link (#008, US2) so the session is
+  /// recorded as `shareLink`.
+  final VoidCallback onShared;
+
+  /// Build the invite link for the live code and hand it to the system share
+  /// sheet (#008, FR-001/FR-005). Reads the live code only — no new code/socket.
+  Future<void> _share(BuildContext context) async {
+    onShared();
+    final link = ConnectLink.build(code);
+    await SharePlus.instance.share(
+      ShareParams(text: '${context.l10n.connectShareLinkMessage}\n$link'),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -395,7 +470,7 @@ class _HostingPanel extends StatelessWidget {
           SecondaryButton(
             label: l10n.connectShareLink,
             icon: LucideIcons.share2,
-            onPressed: null, // stub — #008
+            onPressed: () => unawaited(_share(context)),
           ),
         ],
       ),

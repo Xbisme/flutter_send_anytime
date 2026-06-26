@@ -76,5 +76,19 @@
 		<!-- #007: camera is used only to scan a pairing QR code -->
 		<key>NSCameraUsageDescription</key>
 		<string>Safe Send dùng camera để quét mã QR kết nối với thiết bị khác. (Safe Send uses the camera to scan a QR code to connect with another device.)</string>
+		<!-- #008: register the safesend:// custom URL scheme so invite links open the app -->
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLName</key>
+				<string>app.safesend</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>safesend</string>
+				</array>
+			</dict>
+		</array>
 	</dict>
 </plist>

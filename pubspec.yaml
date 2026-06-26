@@ -71,6 +71,13 @@ dependencies:
   permission_handler: ^12.0.3
   screen_brightness: ^2.1.11
 
+  # Share Link (#008) — OS deep-link delivery (cold + warm) for safesend:// invite
+  # links. Pinned to 6.4.1: app_links 7.1.1+ requires Dart ^3.12 / Flutter >=3.44
+  # (this project is Dart 3.11 / Flutter 3.41), so 6.4.1 (sdk ^3.5, flutter
+  # >=3.24) is the newest compatible release; its getInitialLink()/uriLinkStream
+  # API is identical to 7.x. Share sheet reuses share_plus (above).
+  app_links: ^6.4.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
