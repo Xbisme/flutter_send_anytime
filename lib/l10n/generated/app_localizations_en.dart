@@ -605,4 +605,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareLinkLeaveTransferCancel => 'Keep transferring';
+
+  @override
+  String get nearbySectionTitle => 'Nearby devices';
+
+  @override
+  String get nearbyDiscoverableTitle => 'Visible to nearby devices';
+
+  @override
+  String get nearbyPrivacyNote =>
+      'Your device name is broadcast to nearby devices.';
+
+  @override
+  String get nearbyEmptyTitle => 'No devices yet';
+
+  @override
+  String get nearbyEmptyHint =>
+      'Make sure both devices are on the same Wi-Fi, or use a 6-digit code / QR.';
+
+  @override
+  String get nearbyPermissionRationale =>
+      'Allow finding local-network devices to connect with nearby devices.';
+
+  @override
+  String get nearbyPermissionBlocked =>
+      'Local network permission is off. Open Settings to enable it and find nearby devices.';
+
+  @override
+  String get nearbyOpenSettings => 'Open Settings';
+
+  @override
+  String get nearbyStaleToast => 'This device is no longer available';
+
+  @override
+  String get nearbyConnectAction => 'Receive';
 }

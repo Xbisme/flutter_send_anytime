@@ -11,6 +11,7 @@ class ConnectRequest {
   const ConnectRequest({
     required this.role,
     this.openScanner = false,
+    this.openNearby = false,
     this.autoJoinCode,
   });
 
@@ -20,6 +21,11 @@ class ConnectRequest {
   /// When true (receiver only), the Connect hub opens the QR scanner straight
   /// away — used by the Home "Quét QR" quick action (#007, FR-019).
   final bool openScanner;
+
+  /// When true (receiver only), the Connect hub opens on the "Gần đây" tab so
+  /// the radar browse surface is shown immediately — used by the Home "Thiết bị
+  /// gần" quick action (#009, FR-015).
+  final bool openNearby;
 
   /// A 6-digit code to auto-join immediately (receiver only) — set when the
   /// receiver arrived via a share-link invite (#008, FR-012). The receiver

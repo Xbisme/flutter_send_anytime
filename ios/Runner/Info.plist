@@ -76,6 +76,14 @@
 		<!-- #007: camera is used only to scan a pairing QR code -->
 		<key>NSCameraUsageDescription</key>
 		<string>Safe Send dùng camera để quét mã QR kết nối với thiết bị khác. (Safe Send uses the camera to scan a QR code to connect with another device.)</string>
+		<!-- #009: discover nearby Safe Send devices on the same Wi-Fi via Bonjour/mDNS.
+		     iOS 14+ shows the Local Network prompt automatically on first browse/advertise. -->
+		<key>NSLocalNetworkUsageDescription</key>
+		<string>Safe Send tìm các thiết bị Safe Send ở gần trên cùng mạng Wi-Fi để chia sẻ tệp. (Safe Send finds nearby Safe Send devices on the same Wi-Fi to share files.)</string>
+		<key>NSBonjourServices</key>
+		<array>
+			<string>_safesend._tcp</string>
+		</array>
 		<!-- #008: register the safesend:// custom URL scheme so invite links open the app -->
 		<key>CFBundleURLTypes</key>
 		<array>

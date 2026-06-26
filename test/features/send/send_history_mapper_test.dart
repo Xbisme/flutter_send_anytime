@@ -43,4 +43,19 @@ void main() {
     expect(record.pairingMethod, PairingMethod.qr);
     expect(record.direction, TransferDirection.sent);
   });
+
+  test(
+    'records pairingMethod = nearby when paired via radar (#009 FR-010)',
+    () {
+      final record = SendHistoryMapper.toRecord(
+        id: 'x',
+        createdAt: DateTime(2026),
+        sources: sources,
+        view: view,
+        pairingMethod: PairingMethod.nearby,
+      );
+      expect(record.pairingMethod, PairingMethod.nearby);
+      expect(record.direction, TransferDirection.sent);
+    },
+  );
 }

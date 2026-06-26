@@ -502,7 +502,11 @@ class HomeQuickActions extends StatelessWidget {
               label: l10n.homeActionNearby,
               subtitle: l10n.homeActionNearbySub,
               gradient: AppColors.gradientTeal,
-              onTap: () => context.push(AppRoutes.receive),
+              // Lands the receiver straight on the "Gần đây" radar tab (#009).
+              onTap: () => context.push(
+                AppRoutes.receive,
+                extra: const ReceiveEntryRequest(openNearby: true),
+              ),
             ),
             QuickActionCard(
               icon: LucideIcons.send,

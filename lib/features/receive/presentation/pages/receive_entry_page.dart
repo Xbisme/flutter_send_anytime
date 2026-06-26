@@ -40,6 +40,7 @@ class _ReceiveEntryPageState extends State<ReceiveEntryPage> {
       extra: ConnectRequest(
         role: TransferRole.receiver,
         openScanner: widget.request.openScanner,
+        openNearby: widget.request.openNearby,
         autoJoinCode: widget.request.autoJoinCode,
       ),
     );

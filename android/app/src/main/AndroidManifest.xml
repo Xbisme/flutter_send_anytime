@@ -1,4 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- #009 Nearby Radar: mDNS/NsdManager discovery on the same Wi-Fi (no BLE,
+         no location). NEARBY_WIFI_DEVICES is the runtime gate on Android 13+
+         (neverForLocation — we never derive location). The plugin acquires the
+         MulticastLock itself; CHANGE_WIFI_MULTICAST_STATE permits it. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+    <uses-permission
+        android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation"/>
     <application
         android:label="${appName}"
         android:name="${applicationName}"

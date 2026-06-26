@@ -26,8 +26,9 @@ class _SplashPageState extends State<SplashPage> {
       // Don't clobber a deep link that already routed away (#008): a cold-start
       // invite can call `go(receive)` while this page is still mid-transition
       // (and thus not yet disposed), so guard on the current location.
-      final here =
-          GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+      final here = GoRouter.of(
+        context,
+      ).routerDelegate.currentConfiguration.uri.path;
       if (here == AppRoutes.splash) context.go(AppRoutes.home);
     });
   }

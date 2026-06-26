@@ -32,6 +32,14 @@ import 'package:safe_send/core/services/file/received_files_service.dart'
     as _i58;
 import 'package:safe_send/core/services/file/received_files_service_impl.dart'
     as _i423;
+import 'package:safe_send/core/services/nearby/nearby_discovery_service.dart'
+    as _i306;
+import 'package:safe_send/core/services/nearby/nearby_discovery_service_impl.dart'
+    as _i568;
+import 'package:safe_send/core/services/nearby/nearby_permission_service.dart'
+    as _i532;
+import 'package:safe_send/core/services/nearby/nearby_permission_service_impl.dart'
+    as _i834;
 import 'package:safe_send/core/services/pairing/active_hosting_registry.dart'
     as _i639;
 import 'package:safe_send/core/services/permissions/camera_permission_service.dart'
@@ -68,6 +76,10 @@ import 'package:safe_send/features/pairing/domain/usecases/host_session_usecase.
     as _i825;
 import 'package:safe_send/features/pairing/domain/usecases/join_session_usecase.dart'
     as _i855;
+import 'package:safe_send/features/pairing/presentation/connect/nearby_advertise_cubit.dart'
+    as _i284;
+import 'package:safe_send/features/pairing/presentation/connect/nearby_discovery_cubit.dart'
+    as _i688;
 import 'package:safe_send/features/pairing/presentation/cubit/pairing_cubit.dart'
     as _i964;
 import 'package:safe_send/features/pairing/presentation/scan/cubit/qr_scan_cubit.dart'
@@ -107,10 +119,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i639.ActiveHostingRegistry>(
       () => _i639.ActiveHostingRegistryImpl(),
     );
+    gh.lazySingleton<_i306.NearbyDiscoveryService>(
+      () => _i568.NsdNearbyDiscoveryService(),
+    );
     gh.lazySingleton<_i58.ReceivedFilesService>(
       () => _i423.ReceivedFilesServiceImpl(),
     );
     gh.lazySingleton<_i547.PeerConnector>(() => _i603.WebRtcPeerConnector());
+    gh.lazySingleton<_i532.NearbyPermissionService>(
+      () => _i834.PermissionHandlerNearbyService(),
+    );
     gh.factory<_i1069.FilePickerService>(
       () => const _i661.FilePickerServiceImpl(),
     );
@@ -140,6 +158,18 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i887.WatchRecentTransfersUseCase>(
       () => _i887.WatchRecentTransfersUseCase(
         gh<_i1016.TransferHistoryRepository>(),
+      ),
+    );
+    gh.factory<_i284.NearbyAdvertiseCubit>(
+      () => _i284.NearbyAdvertiseCubit(
+        gh<_i306.NearbyDiscoveryService>(),
+        gh<_i532.NearbyPermissionService>(),
+      ),
+    );
+    gh.factory<_i688.NearbyDiscoveryCubit>(
+      () => _i688.NearbyDiscoveryCubit(
+        gh<_i306.NearbyDiscoveryService>(),
+        gh<_i532.NearbyPermissionService>(),
       ),
     );
     gh.factory<_i103.QrScanCubit>(

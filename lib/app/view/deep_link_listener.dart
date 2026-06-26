@@ -17,7 +17,11 @@ import 'package:safe_send/core/services/pairing/active_hosting_registry.dart';
 /// the router + DI are ready (FR-011). Warm start: the link stream is handled
 /// for the app's lifetime (FR-010).
 class DeepLinkListener extends StatefulWidget {
-  const DeepLinkListener({required this.router, required this.child, super.key});
+  const DeepLinkListener({
+    required this.router,
+    required this.child,
+    super.key,
+  });
 
   /// The app router — navigation goes through this instance directly, since the
   /// builder context this widget runs from sits above the `InheritedGoRouter`.

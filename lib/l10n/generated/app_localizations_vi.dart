@@ -600,4 +600,38 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get shareLinkLeaveTransferCancel => 'Tiếp tục truyền';
+
+  @override
+  String get nearbySectionTitle => 'Thiết bị ở gần';
+
+  @override
+  String get nearbyDiscoverableTitle => 'Đang hiển thị với thiết bị gần';
+
+  @override
+  String get nearbyPrivacyNote =>
+      'Tên thiết bị của bạn được phát tới các thiết bị gần.';
+
+  @override
+  String get nearbyEmptyTitle => 'Chưa thấy thiết bị nào';
+
+  @override
+  String get nearbyEmptyHint =>
+      'Đảm bảo cả hai thiết bị ở cùng mạng Wi-Fi, hoặc dùng mã 6 số / QR.';
+
+  @override
+  String get nearbyPermissionRationale =>
+      'Cho phép tìm thiết bị trên mạng cục bộ để kết nối với thiết bị ở gần.';
+
+  @override
+  String get nearbyPermissionBlocked =>
+      'Quyền mạng cục bộ đang tắt. Mở Cài đặt để bật và tìm thiết bị gần.';
+
+  @override
+  String get nearbyOpenSettings => 'Mở Cài đặt';
+
+  @override
+  String get nearbyStaleToast => 'Thiết bị này không còn khả dụng';
+
+  @override
+  String get nearbyConnectAction => 'Nhận';
 }
