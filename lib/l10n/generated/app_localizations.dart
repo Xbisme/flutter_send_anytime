@@ -1415,6 +1415,42 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Nhận'**
   String get nearbyConnectAction;
+
+  /// Background surface title while sending (#011)
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang gửi · {count} tệp'**
+  String bgSendingTitle(int count);
+
+  /// Background surface title while receiving (#011)
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang nhận · {count} tệp'**
+  String bgReceivingTitle(int count);
+
+  /// Background surface peer line, sending direction (#011)
+  ///
+  /// In vi, this message translates to:
+  /// **'tới {peer}'**
+  String bgToPeer(String peer);
+
+  /// Background surface peer line, receiving direction (#011)
+  ///
+  /// In vi, this message translates to:
+  /// **'từ {peer}'**
+  String bgFromPeer(String peer);
+
+  /// Background surface estimated-time-remaining label (#011)
+  ///
+  /// In vi, this message translates to:
+  /// **'còn {time}'**
+  String bgEta(String time);
+
+  /// Cancel action on the Android background-transfer notification (#011)
+  ///
+  /// In vi, this message translates to:
+  /// **'Huỷ'**
+  String get bgCancel;
 }
 
 class _AppLocalizationsDelegate

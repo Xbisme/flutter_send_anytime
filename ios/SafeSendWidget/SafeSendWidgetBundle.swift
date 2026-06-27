@@ -2,17 +2,17 @@
 //  SafeSendWidgetBundle.swift
 //  SafeSendWidget
 //
-//  Created by ase on 6/27/26.
+//  #011 Background Transfer. This extension hosts only the transfer Live
+//  Activity — the default home-screen widget + Control template that Xcode
+//  generated were removed (Safe Send ships no home widget / control).
 //
 
-import WidgetKit
 import SwiftUI
+import WidgetKit
 
 @main
 struct SafeSendWidgetBundle: WidgetBundle {
-    var body: some Widget {
-        SafeSendWidget()
-        SafeSendWidgetControl()
-        SafeSendWidgetLiveActivity()
-    }
+  var body: some Widget {
+    SafeSendWidgetLiveActivity()
+  }
 }

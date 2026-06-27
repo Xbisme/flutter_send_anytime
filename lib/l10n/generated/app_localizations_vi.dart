@@ -718,4 +718,32 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get nearbyConnectAction => 'Nhận';
+
+  @override
+  String bgSendingTitle(int count) {
+    return 'Đang gửi · $count tệp';
+  }
+
+  @override
+  String bgReceivingTitle(int count) {
+    return 'Đang nhận · $count tệp';
+  }
+
+  @override
+  String bgToPeer(String peer) {
+    return 'tới $peer';
+  }
+
+  @override
+  String bgFromPeer(String peer) {
+    return 'từ $peer';
+  }
+
+  @override
+  String bgEta(String time) {
+    return 'còn $time';
+  }
+
+  @override
+  String get bgCancel => 'Huỷ';
 }

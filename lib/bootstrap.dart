@@ -6,6 +6,7 @@ import 'package:safe_send/app/app.dart';
 import 'package:safe_send/core/config/app_config.dart';
 import 'package:safe_send/core/di/injection.dart';
 import 'package:safe_send/core/domain/settings/settings_repository.dart';
+import 'package:safe_send/core/services/background/background_transfer_coordinator.dart';
 import 'package:safe_send/core/services/deeplink/deep_link_service.dart';
 import 'package:safe_send/core/services/notifications/incoming_file_notifier.dart';
 import 'package:safe_send/core/utils/app_logger.dart';
@@ -51,6 +52,11 @@ Future<void> bootstrap(AppConfig config) async {
   // Instantiate the deep-link service early so the plugin is listening for the
   // launching invite link before the first frame (#008, cold start).
   getIt<DeepLinkService>();
+
+  // Register the background-transfer coordinator as an app-lifecycle observer so
+  // it can raise/dismiss the OS surface (iOS Live Activity / Android foreground
+  // service) when a transfer is backgrounded or returns to foreground (#011).
+  WidgetsBinding.instance.addObserver(getIt<BackgroundTransferCoordinator>());
 
   runApp(const SafeSendApp());
 }

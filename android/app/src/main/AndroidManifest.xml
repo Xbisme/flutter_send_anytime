@@ -17,10 +17,20 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29"/>
+    <!-- #011 Background Transfer: a dataSync foreground service keeps the app
+         process alive so an in-flight transfer continues while backgrounded
+         (flutter_foreground_task). FOREGROUND_SERVICE is merged by the plugin;
+         FOREGROUND_SERVICE_DATA_SYNC is the Android 14+ service-type permission. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
     <application
         android:label="${appName}"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- #011: the foreground service that hosts a backgrounded transfer. -->
+        <service
+            android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
+            android:foregroundServiceType="dataSync"
+            android:exported="false"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

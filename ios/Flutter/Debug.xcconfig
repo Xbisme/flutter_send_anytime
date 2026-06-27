@@ -3,3 +3,4 @@
 
 // Default app display name (overridden by Dev/Prod flavor xcconfigs).
 APP_DISPLAY_NAME=Safe Send
+APP_GROUP_ID=group.app.safesend.liveactivities

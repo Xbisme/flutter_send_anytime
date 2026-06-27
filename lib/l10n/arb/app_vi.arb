@@ -518,5 +518,33 @@
   "nearbyStaleToast": "Thiết bị này không còn khả dụng",
   "@nearbyStaleToast": { "description": "Toast when tapping a nearby device whose advertisement is stale/unreachable (#009, FR-017)" },
   "nearbyConnectAction": "Nhận",
-  "@nearbyConnectAction": { "description": "Action button on a nearby device row to connect/receive (#009)" }
+  "@nearbyConnectAction": { "description": "Action button on a nearby device row to connect/receive (#009)" },
+
+  "bgSendingTitle": "Đang gửi · {count} tệp",
+  "@bgSendingTitle": {
+    "description": "Background surface title while sending (#011)",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "bgReceivingTitle": "Đang nhận · {count} tệp",
+  "@bgReceivingTitle": {
+    "description": "Background surface title while receiving (#011)",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "bgToPeer": "tới {peer}",
+  "@bgToPeer": {
+    "description": "Background surface peer line, sending direction (#011)",
+    "placeholders": { "peer": { "type": "String" } }
+  },
+  "bgFromPeer": "từ {peer}",
+  "@bgFromPeer": {
+    "description": "Background surface peer line, receiving direction (#011)",
+    "placeholders": { "peer": { "type": "String" } }
+  },
+  "bgEta": "còn {time}",
+  "@bgEta": {
+    "description": "Background surface estimated-time-remaining label (#011)",
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "bgCancel": "Huỷ",
+  "@bgCancel": { "description": "Cancel action on the Android background-transfer notification (#011)" }
 }

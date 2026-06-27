@@ -2,7 +2,7 @@
 
 > **Vai trò file này**: single source of truth cho **giao diện** — screens, design tokens, components, navigation IA. Mọi spec có phần UI/UX phải bám file này. Khi implement một màn, đọc file này + pull bản design gốc từ claude_design MCP (xem "Design Source" bên dưới) để lấy chi tiết pixel.
 >
-> Last updated: 2026-06-24 (Imported from claude_design project "SafeSend")
+> Last updated: 2026-06-27 (Imported from claude_design project "SafeSend"; +OS Surfaces — Background Transfer §Spec #011 from `Transfer Activity.dc.html`)
 
 ## Design Source
 
@@ -144,6 +144,28 @@ Tiêu đề "Lịch sử" 23px extrabold + nút filter (`sliders-horizontal`). S
 Tiêu đề "Cài đặt" 23px extrabold. Card hồ sơ thiết bị (avatar gradient chữ-cái + "<tên> · hiển thị với thiết bị gần đây" + pencil edit). Nhóm **ToggleRow**: Tự động nhận (từ thiết bị tin tưởng) · Lưu vào Thư viện · Thông báo · Giao diện tối (theo hệ thống). Footer mono "Safe Send v1.0.0 · WebRTC P2P".
 
 ---
+
+## OS Surfaces — Background Transfer (distilled từ `Transfer Activity.dc.html`, pulled 2026-06-27) — *Spec #011*
+
+> Đây **không phải màn app thứ 9** — là các surface do OS render khi truyền nền (app ở background). Cả ba đều **chỉ phản chiếu** `Stream<TransferSnapshot>` của #002 (Constitution VIII — không có progress model song song): %, tốc độ, X/Y MB, ETA, số tệp, tên thiết bị, hướng (gửi/nhận). Light/Dark theo OS. Hướng **gửi** = `gradient-brand` + `arrow-up` + accent xanh lá (`#1ED66E`/`#00A847`); **nhận** = `gradient-brand-vivid` + `arrow-down` + accent xanh dương (`#4FE6FF`).
+
+### iOS · Dynamic Island (3 trạng thái)
+- **Thu gọn (compact)**: pill đen. Trái = chấm tròn 25px `gradient-brand` + `arrow-up` (icon `#053019`). Phải = vòng ring `conic-gradient` (green-400 phủ theo %, nền `white 18%`) + số % mono 9px trắng ở giữa.
+- **Tối giản (minimal)**: chỉ ring % (khi có activity khác chiếm chỗ) — vòng conic + `arrow-up` green-400 + "%" mono.
+- **Mở rộng (expanded, chạm-giữ)**: thẻ đen radius 30px. Icon badge 38px `gradient-brand` radius 11px · tiêu đề "Đang gửi · 18 tệp" 14/700 + phụ "tới Minh's iPhone" 12px `white 60%` · **% lớn mono 22px** green-400 (phải). Bar 7px `gradient-brand`. Hàng mono 11px `white 60%`: "2.4 MB/s" ↔ "153 / 240 MB · còn 0:48".
+
+### iOS · Lock Screen Live Activity (2 biến thể: gửi / nhận)
+Thẻ `rgba(0,0,0,0.55)` + blur, radius 28px, padding 14/16, đặt dưới đỉnh màn khoá. Icon badge 34px radius 10px · tiêu đề 13/700 + tên thiết bị 11px `white 65%` · % mono 19px (gửi green-400 / nhận `#4FE6FF`). Bar 6px (gradient theo hướng). Hàng mono 10px `white 60%`: tốc độ ↔ "X / Y MB · còn m:ss".
+- **Gửi**: "Đang gửi · 18 tệp" · "tới Minh's iPhone" · 64% · 2.4 MB/s · 153/240 MB · còn 0:48.
+- **Nhận**: "Đang nhận · 8 tệp" · "từ MacBook của Linh" · 38% · 3.1 MB/s · 59/156 MB · còn 0:31.
+
+### Android · Foreground Service notification (Light + Dark)
+Card radius 24px. Header: badge logomark 18px `gradient-brand` + "Safe Send · bây giờ" + `chevron-down`. Thân: icon badge tròn 44px (hướng) · tiêu đề 15/700 "Đang gửi 18 tệp" · meta mono 12px "153 / 240 MB · 2.4 MB/s · còn 0:48" · % mono 16px phải (Light `#00A847` / Dark green-400). Bar 6px `gradient-brand`. **1 nút pill duy nhất: "Huỷ"** (`#E5484D` danger, chiếm cả hàng) — wired vào cancel của state machine #002.
+
+> ℹ️ **Android render thực tế (plan #011)**: thông báo foreground-service dùng **template chuẩn của Android** (small icon + accent tint + title + text + progress bar 0–100 + action "Huỷ") — **không** vẽ được card bo góc gradient như mock (OS tự style ongoing notification). Khớp **nội dung + icon + accent + nút Huỷ**, không khớp pixel card. iOS Live Activity là SwiftUI tự vẽ nên bám mock sát.
+
+> ✅ **Quyết định #011 (2026-06-27)**: **bỏ nút "Tạm dừng" của mock** — engine #002 (+ Send/Receive #004/#005) chỉ hỗ trợ **Huỷ**, không pause/resume ("pause-not-required" từ #004). #011 render **chỉ "Huỷ"** để khớp engine và đúng scope v1.0; pause/resume để v1.1. Notification tap (thân thông báo) → mở lại màn Đang truyền (Screen 05) trong app. iOS Live Activity không có nút điều khiển (chỉ chạm-giữ để mở rộng) → không vướng.
+> **Khi OS suspend/hết-giờ-background giữa transfer**: fail **sạch** với copy rõ ràng khi quay lại foreground, **giữ các tệp đã nhận xong** (partial như #005), cho **retry**. Resume lượt dở dang = v1.1 (post-v1.0 roadmap).
 
 ## Dialogs & Toasts (distilled từ `Dialogs & Toasts.dc.html`, pulled 2026-06-25)
 

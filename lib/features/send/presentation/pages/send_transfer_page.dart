@@ -11,8 +11,10 @@ import 'package:safe_send/core/domain/cubit/app_state.dart';
 import 'package:safe_send/core/domain/failures/app_failure.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/core/domain/transfer/transfer_view.dart';
+import 'package:safe_send/core/domain/transfer_enums.dart';
 import 'package:safe_send/core/presentation/buttons/app_buttons.dart';
 import 'package:safe_send/core/presentation/scaffolding/fit_or_scroll.dart';
+import 'package:safe_send/core/presentation/transfer/background_transfer_binder.dart';
 import 'package:safe_send/core/presentation/transfer/transfer_complete_view.dart';
 import 'package:safe_send/core/presentation/transfer/transfer_progress_view.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
@@ -51,47 +53,57 @@ class _SendTransferView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: BlocConsumer<SendTransferCubit, AppState<TransferView>>(
-          listenWhen: (prev, curr) =>
-              prev.runtimeType != curr.runtimeType ||
-              (curr is AppLoaded<TransferView> &&
-                  prev is AppLoaded<TransferView> &&
-                  prev.data.phase != curr.data.phase),
-          listener: (context, state) {
-            if (state is AppError<TransferView>) {
-              unawaited(HapticFeedback.heavyImpact());
-            } else if (state is AppLoaded<TransferView>) {
-              final phase = state.data.phase;
-              if (phase == TransferPhase.done) {
-                unawaited(HapticFeedback.mediumImpact());
-              } else if (phase == TransferPhase.cancelled) {
-                context.go(AppRoutes.home);
+    final cubit = context.read<SendTransferCubit>();
+    return BackgroundTransferBinder(
+      views: cubit.stream
+          .where((s) => s is AppLoaded<TransferView>)
+          .map((s) => (s as AppLoaded<TransferView>).data),
+      onCancel: cubit.cancel,
+      direction: TransferDirection.sent,
+      progressRoute: AppRoutes.sendProgress,
+      peerName: context.l10n.sendPeerReceiver,
+      child: Scaffold(
+        body: SafeArea(
+          child: BlocConsumer<SendTransferCubit, AppState<TransferView>>(
+            listenWhen: (prev, curr) =>
+                prev.runtimeType != curr.runtimeType ||
+                (curr is AppLoaded<TransferView> &&
+                    prev is AppLoaded<TransferView> &&
+                    prev.data.phase != curr.data.phase),
+            listener: (context, state) {
+              if (state is AppError<TransferView>) {
+                unawaited(HapticFeedback.heavyImpact());
+              } else if (state is AppLoaded<TransferView>) {
+                final phase = state.data.phase;
+                if (phase == TransferPhase.done) {
+                  unawaited(HapticFeedback.mediumImpact());
+                } else if (phase == TransferPhase.cancelled) {
+                  context.go(AppRoutes.home);
+                }
               }
-            }
-          },
-          builder: (context, state) {
-            return switch (state) {
-              AppError<TransferView>(:final failure) => _FailureView(
-                failure: failure,
-              ),
-              AppLoaded<TransferView>(:final data) when data.isDone =>
-                TransferCompleteView(
-                  view: data,
-                  onDone: () => context.go(AppRoutes.home),
-                  onSendAgain: () => context.go(AppRoutes.send),
+            },
+            builder: (context, state) {
+              return switch (state) {
+                AppError<TransferView>(:final failure) => _FailureView(
+                  failure: failure,
                 ),
-              AppLoaded<TransferView>(:final data) => TransferProgressView(
-                view: data,
-                onCancel: () => context.read<SendTransferCubit>().cancel(),
-              ),
-              _ => TransferProgressView(
-                view: null,
-                onCancel: () => context.read<SendTransferCubit>().cancel(),
-              ),
-            };
-          },
+                AppLoaded<TransferView>(:final data) when data.isDone =>
+                  TransferCompleteView(
+                    view: data,
+                    onDone: () => context.go(AppRoutes.home),
+                    onSendAgain: () => context.go(AppRoutes.send),
+                  ),
+                AppLoaded<TransferView>(:final data) => TransferProgressView(
+                  view: data,
+                  onCancel: () => context.read<SendTransferCubit>().cancel(),
+                ),
+                _ => TransferProgressView(
+                  view: null,
+                  onCancel: () => context.read<SendTransferCubit>().cancel(),
+                ),
+              };
+            },
+          ),
         ),
       ),
     );
