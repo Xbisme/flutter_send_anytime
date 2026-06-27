@@ -53,9 +53,8 @@ Future<void> bootstrap(AppConfig config) async {
   // launching invite link before the first frame (#008, cold start).
   getIt<DeepLinkService>();
 
-  // Register the background-transfer coordinator as an app-lifecycle observer so
-  // it can raise/dismiss the OS surface (iOS Live Activity / Android foreground
-  // service) when a transfer is backgrounded or returns to foreground (#011).
+  // Observe app lifecycle so the background-transfer coordinator can schedule
+  // the iOS keep-app-open reminder when a transfer is backgrounded (#011).
   WidgetsBinding.instance.addObserver(getIt<BackgroundTransferCoordinator>());
 
   runApp(const SafeSendApp());

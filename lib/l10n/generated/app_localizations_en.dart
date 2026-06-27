@@ -751,4 +751,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bgCancel => 'Cancel';
+
+  @override
+  String get bgKeepOpenTitle => 'Keep the transfer going';
+
+  @override
+  String get bgKeepOpenBody =>
+      'Reopen Safe Send to keep transferring — iOS pauses it in the background.';
 }

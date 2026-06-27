@@ -546,5 +546,9 @@
     "placeholders": { "time": { "type": "String" } }
   },
   "bgCancel": "Huỷ",
-  "@bgCancel": { "description": "Cancel action on the Android background-transfer notification (#011)" }
+  "@bgCancel": { "description": "Cancel action on the Android background-transfer notification (#011)" },
+  "bgKeepOpenTitle": "Tiếp tục truyền tệp",
+  "@bgKeepOpenTitle": { "description": "Title of the iOS keep-app-open reminder notification (#011, T032)" },
+  "bgKeepOpenBody": "Mở lại Safe Send để truyền tiếp — iOS tạm dừng khi app ở nền.",
+  "@bgKeepOpenBody": { "description": "Body of the iOS keep-app-open reminder notification (#011, T032)" }
 }

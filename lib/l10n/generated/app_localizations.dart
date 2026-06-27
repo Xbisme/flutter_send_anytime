@@ -1451,6 +1451,18 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Huỷ'**
   String get bgCancel;
+
+  /// Title of the iOS keep-app-open reminder notification (#011, T032)
+  ///
+  /// In vi, this message translates to:
+  /// **'Tiếp tục truyền tệp'**
+  String get bgKeepOpenTitle;
+
+  /// Body of the iOS keep-app-open reminder notification (#011, T032)
+  ///
+  /// In vi, this message translates to:
+  /// **'Mở lại Safe Send để truyền tiếp — iOS tạm dừng khi app ở nền.'**
+  String get bgKeepOpenBody;
 }
 
 class _AppLocalizationsDelegate

@@ -110,6 +110,10 @@ dependencies:
   # with a single Cancel action (Dart 3.4+/Flutter 3.22+, minSdk 21, iOS 12+).
   live_activities: ^2.4.9
   flutter_foreground_task: ^9.2.2
+  # Scheduled local notification (iOS) reminding the user to reopen the app
+  # mid-transfer (iOS suspends a backgrounded P2P transfer). Already transitive
+  # via flutter_local_notifications; declared explicitly for the zonedSchedule.
+  timezone: ^0.11.0
 
 dev_dependencies:
   flutter_test:

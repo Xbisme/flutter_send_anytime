@@ -28,6 +28,8 @@ import 'package:safe_send/core/domain/settings/settings_repository.dart'
     as _i656;
 import 'package:safe_send/core/services/app_info_service.dart' as _i118;
 import 'package:safe_send/core/services/app_review_service.dart' as _i966;
+import 'package:safe_send/core/services/background/background_execution_service.dart'
+    as _i257;
 import 'package:safe_send/core/services/background/background_module.dart'
     as _i762;
 import 'package:safe_send/core/services/background/background_surface_controller.dart'
@@ -166,6 +168,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i423.ReceivedFilesServiceImpl(),
     );
     gh.lazySingleton<_i547.PeerConnector>(() => _i603.WebRtcPeerConnector());
+    gh.lazySingleton<_i257.BackgroundExecutionService>(
+      () => _i257.IosBackgroundExecutionService(),
+    );
     gh.lazySingleton<_i532.NearbyPermissionService>(
       () => _i834.PermissionHandlerNearbyService(),
     );
@@ -221,12 +226,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i532.NearbyPermissionService>(),
       ),
     );
-    gh.lazySingleton<_i575.BackgroundTransferCoordinator>(
-      () => _i575.BackgroundTransferCoordinator(
-        gh<_i154.BackgroundSurfaceController>(),
-      ),
-      dispose: (i) => i.dispose(),
-    );
     gh.factory<_i103.QrScanCubit>(
       () => _i103.QrScanCubit(gh<_i522.CameraPermissionService>()),
     );
@@ -247,6 +246,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i560.HistoryCubit>(
       () => _i560.HistoryCubit(gh<_i951.WatchHistoryUseCase>()),
+    );
+    gh.lazySingleton<_i575.BackgroundTransferCoordinator>(
+      () => _i575.BackgroundTransferCoordinator(
+        gh<_i154.BackgroundSurfaceController>(),
+        gh<_i853.IncomingFileNotifier>(),
+        gh<_i257.BackgroundExecutionService>(),
+      ),
+      dispose: (i) => i.dispose(),
     );
     gh.factory<_i67.ReceiveTransferCubit>(
       () => _i67.ReceiveTransferCubit(

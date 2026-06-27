@@ -6,9 +6,42 @@ import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/core/domain/transfer/transfer_view.dart';
 import 'package:safe_send/core/domain/transfer_enums.dart';
 import 'package:safe_send/core/services/background/active_transfer_handle.dart';
+import 'package:safe_send/core/services/background/background_execution_service.dart';
 import 'package:safe_send/core/services/background/background_surface_controller.dart';
 import 'package:safe_send/core/services/background/background_transfer_coordinator.dart';
 import 'package:safe_send/core/services/background/background_transfer_state.dart';
+import 'package:safe_send/core/services/notifications/incoming_file_notifier.dart';
+
+/// Records iOS background-task assertions.
+class _FakeBgTask implements BackgroundExecutionService {
+  int began = 0;
+  int ended = 0;
+  @override
+  Future<void> begin() async => began++;
+  @override
+  Future<void> end() async => ended++;
+}
+
+/// Records keep-open reminder scheduling without touching the OS.
+class _FakeReminder implements IncomingFileNotifier {
+  int scheduled = 0;
+  int cancelled = 0;
+
+  @override
+  Future<void> init({void Function()? onTap}) async {}
+  @override
+  Future<void> showIncoming({required String senderName}) async {}
+  @override
+  Future<void> scheduleKeepOpenReminder({
+    required String title,
+    required String body,
+    int afterSeconds = 5,
+  }) async => scheduled++;
+  @override
+  Future<void> cancelKeepOpenReminder() async => cancelled++;
+  @override
+  Future<bool> requestNotificationPermission() async => true;
+}
 
 /// In-memory [BackgroundSurfaceController] recording the calls the coordinator
 /// makes (no plugins / no platform).
@@ -64,6 +97,8 @@ BackgroundTransferState _state(int percent) => BackgroundTransferState(
 
 void main() {
   late _FakeController controller;
+  late _FakeReminder reminder;
+  late _FakeBgTask bgTask;
   late StreamController<TransferView> views;
   late BackgroundTransferCoordinator coordinator;
   var cancelled = 0;
@@ -77,13 +112,22 @@ void main() {
     onCancel: () => cancelled++,
     // Percent tracks the view so the throttle (percent-delta) is exercised.
     project: (view) => _state((view.overallProgress * 100).round()),
+    keepOpenTitle: 'keep',
+    keepOpenBody: 'open',
   );
 
   setUp(() {
     controller = _FakeController();
+    reminder = _FakeReminder();
+    bgTask = _FakeBgTask();
     views = StreamController<TransferView>.broadcast();
     clock = DateTime(2026);
-    coordinator = BackgroundTransferCoordinator(controller, now: () => clock);
+    coordinator = BackgroundTransferCoordinator.forTest(
+      controller,
+      reminder,
+      bgTask,
+      now: () => clock,
+    );
     cancelled = 0;
   });
 
@@ -92,22 +136,28 @@ void main() {
     await views.close();
   });
 
-  test('starts a surface only when backgrounded while transferring', () async {
+  test(
+    'starts a surface when the transfer becomes active (transferring)',
+    () async {
+      coordinator.attach(handle());
+      views.add(_view(TransferPhase.transferring));
+      await pumpEventQueue();
+      expect(controller.calls, contains('start'));
+    },
+  );
+
+  test(
+    'does not start a surface before the transfer is transferring',
+    () async {
+      coordinator.attach(handle());
+      views.add(_view(TransferPhase.connecting));
+      await pumpEventQueue();
+      expect(controller.calls, isEmpty);
+    },
+  );
+
+  test('updates the surface as progress advances', () async {
     coordinator.attach(handle());
-    views.add(_view(TransferPhase.transferring));
-    await pumpEventQueue();
-    // Still foreground → no surface yet.
-    expect(controller.calls, isEmpty);
-
-    coordinator.onAppLifecycleChanged(AppLifecycleState.paused);
-    await pumpEventQueue();
-    expect(controller.calls, contains('start'));
-  });
-
-  test('updates the surface as progress advances while showing', () async {
-    coordinator
-      ..attach(handle())
-      ..onAppLifecycleChanged(AppLifecycleState.paused);
     views.add(_view(TransferPhase.transferring, progress: 0.30));
     await pumpEventQueue();
     views.add(_view(TransferPhase.transferring, progress: 0.60));
@@ -118,9 +168,7 @@ void main() {
   test(
     'throttles repeated same-percent snapshots within the window (T036)',
     () async {
-      coordinator
-        ..attach(handle())
-        ..onAppLifecycleChanged(AppLifecycleState.paused);
+      coordinator.attach(handle());
       views.add(_view(TransferPhase.transferring, progress: 0.30));
       await pumpEventQueue();
       // Two more snapshots at the SAME percent, no time advance → throttled.
@@ -135,9 +183,7 @@ void main() {
   test(
     'pushes a same-percent snapshot once the throttle window elapses (T036)',
     () async {
-      coordinator
-        ..attach(handle())
-        ..onAppLifecycleChanged(AppLifecycleState.paused);
+      coordinator.attach(handle());
       views.add(_view(TransferPhase.transferring, progress: 0.30));
       await pumpEventQueue();
       clock = clock.add(const Duration(milliseconds: 600));
@@ -148,9 +194,7 @@ void main() {
   );
 
   test('ends + dismisses the surface on a terminal snapshot', () async {
-    coordinator
-      ..attach(handle())
-      ..onAppLifecycleChanged(AppLifecycleState.paused);
+    coordinator.attach(handle());
     views.add(_view(TransferPhase.transferring));
     await pumpEventQueue();
     views.add(_view(TransferPhase.done));
@@ -158,26 +202,23 @@ void main() {
     expect(controller.calls.last, 'end');
   });
 
-  test('ends the surface when the app returns to the foreground', () async {
-    coordinator
-      ..attach(handle())
-      ..onAppLifecycleChanged(AppLifecycleState.paused);
+  test('ends the surface on detach', () async {
+    coordinator.attach(handle());
     views.add(_view(TransferPhase.transferring));
     await pumpEventQueue();
-    coordinator.onAppLifecycleChanged(AppLifecycleState.resumed);
+    coordinator.detach();
     await pumpEventQueue();
     expect(controller.calls, contains('end'));
   });
 
   test(
-    'rapid background/foreground toggles create at most one surface (FR-018)',
+    'repeated transferring snapshots create at most one surface (FR-018)',
     () async {
       coordinator.attach(handle());
-      views.add(_view(TransferPhase.transferring));
-      await pumpEventQueue();
-      coordinator
-        ..onAppLifecycleChanged(AppLifecycleState.paused)
-        ..onAppLifecycleChanged(AppLifecycleState.paused);
+      views
+        ..add(_view(TransferPhase.transferring, progress: 0.10))
+        ..add(_view(TransferPhase.transferring, progress: 0.20))
+        ..add(_view(TransferPhase.transferring, progress: 0.30));
       await pumpEventQueue();
       expect(controller.calls.where((c) => c == 'start').length, 1);
     },
@@ -195,9 +236,7 @@ void main() {
 
   test('unsupported platform (e.g. iOS < 16.1) shows no surface', () async {
     controller.supported = false;
-    coordinator
-      ..attach(handle())
-      ..onAppLifecycleChanged(AppLifecycleState.paused);
+    coordinator.attach(handle());
     views.add(_view(TransferPhase.transferring));
     await pumpEventQueue();
     expect(controller.calls, isEmpty);
@@ -207,16 +246,65 @@ void main() {
     'a controller failure never blocks the transfer (FR-019/degradation)',
     () async {
       controller.throwOnStart = true;
-      coordinator
-        ..attach(handle())
-        ..onAppLifecycleChanged(AppLifecycleState.paused);
+      coordinator.attach(handle());
       views.add(_view(TransferPhase.transferring));
       await pumpEventQueue();
       // The throwing start was swallowed; subsequent views keep flowing.
-      views.add(_view(TransferPhase.transferring));
+      views.add(_view(TransferPhase.transferring, progress: 0.5));
       await pumpEventQueue();
       expect(controller.calls, contains('start'));
       // No exception propagated out of the coordinator.
     },
   );
+
+  test(
+    'schedules the keep-open reminder when backgrounded mid-transfer',
+    () async {
+      coordinator
+        ..attach(handle())
+        ..didChangeAppLifecycleState(AppLifecycleState.paused);
+      await pumpEventQueue();
+      expect(reminder.scheduled, 1);
+    },
+  );
+
+  test('cancels the keep-open reminder when returning to foreground', () async {
+    coordinator
+      ..attach(handle())
+      ..didChangeAppLifecycleState(AppLifecycleState.paused)
+      ..didChangeAppLifecycleState(AppLifecycleState.resumed);
+    await pumpEventQueue();
+    expect(reminder.cancelled, greaterThanOrEqualTo(1));
+  });
+
+  test('no keep-open reminder when no transfer is active', () async {
+    coordinator.didChangeAppLifecycleState(AppLifecycleState.paused);
+    await pumpEventQueue();
+    expect(reminder.scheduled, 0);
+  });
+
+  test(
+    'grabs the bg-task grace on background, releases on foreground (T032)',
+    () async {
+      coordinator
+        ..attach(handle())
+        ..didChangeAppLifecycleState(AppLifecycleState.paused);
+      await pumpEventQueue();
+      expect(bgTask.began, 1);
+      coordinator.didChangeAppLifecycleState(AppLifecycleState.resumed);
+      await pumpEventQueue();
+      expect(bgTask.ended, greaterThanOrEqualTo(1));
+    },
+  );
+
+  test('cancels the keep-open reminder on a terminal transfer', () async {
+    coordinator.attach(handle());
+    views.add(_view(TransferPhase.transferring));
+    await pumpEventQueue();
+    coordinator.didChangeAppLifecycleState(AppLifecycleState.paused);
+    await pumpEventQueue();
+    views.add(_view(TransferPhase.done));
+    await pumpEventQueue();
+    expect(reminder.cancelled, greaterThanOrEqualTo(1));
+  });
 }

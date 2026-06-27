@@ -8,8 +8,10 @@ import 'package:safe_send/core/domain/transfer/transfer_view.dart';
 import 'package:safe_send/core/domain/transfer_enums.dart';
 import 'package:safe_send/core/presentation/transfer/background_transfer_binder.dart';
 import 'package:safe_send/core/services/background/active_transfer_handle.dart';
+import 'package:safe_send/core/services/background/background_execution_service.dart';
 import 'package:safe_send/core/services/background/background_surface_controller.dart';
 import 'package:safe_send/core/services/background/background_transfer_coordinator.dart';
+import 'package:safe_send/core/services/notifications/incoming_file_notifier.dart';
 import 'package:safe_send/l10n/generated/app_localizations.dart';
 
 class _NoopController implements BackgroundSurfaceController {
@@ -25,9 +27,33 @@ class _NoopController implements BackgroundSurfaceController {
   Stream<BackgroundServiceAction> get actions => const Stream.empty();
 }
 
+class _NoopReminder implements IncomingFileNotifier {
+  @override
+  Future<void> init({void Function()? onTap}) async {}
+  @override
+  Future<void> showIncoming({required String senderName}) async {}
+  @override
+  Future<void> scheduleKeepOpenReminder({
+    required String title,
+    required String body,
+    int afterSeconds = 5,
+  }) async {}
+  @override
+  Future<void> cancelKeepOpenReminder() async {}
+  @override
+  Future<bool> requestNotificationPermission() async => true;
+}
+
+class _NoopBgTask implements BackgroundExecutionService {
+  @override
+  Future<void> begin() async {}
+  @override
+  Future<void> end() async {}
+}
+
 /// Records the seam calls without running the real surface logic.
 class _SpyCoordinator extends BackgroundTransferCoordinator {
-  _SpyCoordinator() : super(_NoopController());
+  _SpyCoordinator() : super(_NoopController(), _NoopReminder(), _NoopBgTask());
 
   int attachCount = 0;
   int detachCount = 0;

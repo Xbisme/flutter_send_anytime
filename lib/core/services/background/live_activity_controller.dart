@@ -72,7 +72,9 @@ class LiveActivityController implements BackgroundSurfaceController {
       );
       AppLogger.info('live-activity started id=${_activityId != null}');
     } on PlatformException catch (e) {
-      AppLogger.warning('live-activity start failed: ${e.code} | ${e.message}');
+      AppLogger.warning(
+        'live-activity start failed: ${e.code} | ${e.message} | ${e.details}',
+      );
       rethrow;
     }
   }

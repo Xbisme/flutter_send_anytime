@@ -8,10 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		AAAA0000000000000000EEE1 /* SafeSendWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 527366C32FEF6EFB006CDE6C /* SafeSendWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		527366C42FEF6EFB006CDE6C /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5273667B2FEF6EBD006CDE6C /* WidgetKit.framework */; };
 		527366C52FEF6EFB006CDE6C /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5273667D2FEF6EBD006CDE6C /* SwiftUI.framework */; };
+		527367222FEF84D0006CDE6C /* SafeSendWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5273671F2FEF84D0006CDE6C /* SafeSendWidgetBundle.swift */; };
+		527367232FEF84D0006CDE6C /* SafeSendWidgetLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527367202FEF84D0006CDE6C /* SafeSendWidgetLiveActivity.swift */; };
+		527367242FEF84D0006CDE6C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5273671C2FEF84D0006CDE6C /* Assets.xcassets */; };
+		527367262FEF84D0006CDE6C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 5273671E2FEF84D0006CDE6C /* README.md */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		7884E8682EC3CC0700C636F2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -49,6 +54,17 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AAAA0000000000000000EEE2 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				AAAA0000000000000000EEE1 /* SafeSendWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -68,6 +84,11 @@
 		5273667B2FEF6EBD006CDE6C /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		5273667D2FEF6EBD006CDE6C /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		527366C32FEF6EFB006CDE6C /* SafeSendWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SafeSendWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		5273671C2FEF84D0006CDE6C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5273671D2FEF84D0006CDE6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5273671E2FEF84D0006CDE6C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		5273671F2FEF84D0006CDE6C /* SafeSendWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeSendWidgetBundle.swift; sourceTree = "<group>"; };
+		527367202FEF84D0006CDE6C /* SafeSendWidgetLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeSendWidgetLiveActivity.swift; sourceTree = "<group>"; };
 		584ED2B17C752E333D45ED78 /* Pods-RunnerTests.profile-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile-dev.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile-dev.xcconfig"; sourceTree = "<group>"; };
 		689B8C1CB0A223C671B2AC39 /* Pods-RunnerTests.profile-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile-prod.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile-prod.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -98,31 +119,6 @@
 		E821307AC10B6C57ED58EC4E /* Profile-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Profile-prod.xcconfig"; path = "Flutter/Profile-prod.xcconfig"; sourceTree = "<group>"; };
 		F8DF539DD2D57EEFE91ACCCF /* Pods-Runner.profile-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-prod.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		527366D52FEF6EFC006CDE6C /* Exceptions for "SafeSendWidget" folder in "SafeSendWidgetExtension" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 527366C22FEF6EFB006CDE6C /* SafeSendWidgetExtension */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		527366C62FEF6EFB006CDE6C /* SafeSendWidget */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				527366D52FEF6EFC006CDE6C /* Exceptions for "SafeSendWidget" folder in "SafeSendWidgetExtension" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = SafeSendWidget;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		527366C02FEF6EFB006CDE6C /* Frameworks */ = {
@@ -172,6 +168,18 @@
 			path = RunnerTests;
 			sourceTree = "<group>";
 		};
+		527367212FEF84D0006CDE6C /* SafeSendWidget */ = {
+			isa = PBXGroup;
+			children = (
+				5273671C2FEF84D0006CDE6C /* Assets.xcassets */,
+				5273671D2FEF84D0006CDE6C /* Info.plist */,
+				5273671E2FEF84D0006CDE6C /* README.md */,
+				5273671F2FEF84D0006CDE6C /* SafeSendWidgetBundle.swift */,
+				527367202FEF84D0006CDE6C /* SafeSendWidgetLiveActivity.swift */,
+			);
+			path = SafeSendWidget;
+			sourceTree = "<group>";
+		};
 		9740EEB11CF90186004384FC /* Flutter */ = {
 			isa = PBXGroup;
 			children = (
@@ -194,7 +202,7 @@
 			children = (
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
-				527366C62FEF6EFB006CDE6C /* SafeSendWidget */,
+				527367212FEF84D0006CDE6C /* SafeSendWidget */,
 				97C146EF1CF9000F007C117D /* Products */,
 				331C8082294A63A400263BE5 /* RunnerTests */,
 				A32B69085A571B8B07DDBCCD /* Pods */,
@@ -287,9 +295,6 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				527366C62FEF6EFB006CDE6C /* SafeSendWidget */,
-			);
 			name = SafeSendWidgetExtension;
 			productName = SafeSendWidgetExtension;
 			productReference = 527366C32FEF6EFB006CDE6C /* SafeSendWidgetExtension.appex */;
@@ -305,9 +310,11 @@
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
+				AAAA0000000000000000EEE2 /* Embed Foundation Extensions */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				D94378BB6D94DF47560FCDDC /* [CP] Embed Pods Frameworks */,
 				D418D979E51C7C147F8B8849 /* [CP] Copy Pods Resources */,
+				AAAA0000000000000000EEE3 /* Re-sign embedded frameworks */,
 			);
 			buildRules = (
 			);
@@ -375,6 +382,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				527367242FEF84D0006CDE6C /* Assets.xcassets in Resources */,
+				527367262FEF84D0006CDE6C /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -501,6 +510,22 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		AAAA0000000000000000EEE3 /* Re-sign embedded frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Re-sign embedded frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/scripts/resign_frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -516,6 +541,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				527367222FEF84D0006CDE6C /* SafeSendWidgetBundle.swift in Sources */,
+				527367232FEF84D0006CDE6C /* SafeSendWidgetLiveActivity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

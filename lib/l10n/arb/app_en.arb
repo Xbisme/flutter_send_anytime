@@ -245,5 +245,7 @@
   "bgToPeer": "to {peer}",
   "bgFromPeer": "from {peer}",
   "bgEta": "{time} left",
-  "bgCancel": "Cancel"
+  "bgCancel": "Cancel",
+  "bgKeepOpenTitle": "Keep the transfer going",
+  "bgKeepOpenBody": "Reopen Safe Send to keep transferring — iOS pauses it in the background."
 }

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io' show Platform;
+
 import 'package:flutter/widgets.dart';
 import 'package:safe_send/core/di/injection.dart';
 import 'package:safe_send/core/domain/transfer/transfer_view.dart';
@@ -5,6 +8,8 @@ import 'package:safe_send/core/domain/transfer_enums.dart';
 import 'package:safe_send/core/presentation/transfer/background_transfer_projector.dart';
 import 'package:safe_send/core/services/background/active_transfer_handle.dart';
 import 'package:safe_send/core/services/background/background_transfer_coordinator.dart';
+import 'package:safe_send/core/services/notifications/incoming_file_notifier.dart';
+import 'package:safe_send/core/utils/app_logger.dart';
 import 'package:safe_send/core/utils/l10n_extension.dart';
 
 /// Additive seam (#011): publishes the active transfer to the
@@ -72,10 +77,23 @@ class _BackgroundTransferBinderState extends State<BackgroundTransferBinder> {
             view: view,
             locale: locale,
           ),
+          keepOpenTitle: l10n.bgKeepOpenTitle,
+          keepOpenBody: l10n.bgKeepOpenBody,
         ),
       );
     _coordinator = coordinator;
     _attached = true;
+
+    // iOS: ask for notification permission (once, in this foreground moment) so
+    // the keep-app-open reminder can fire if the user later backgrounds the
+    // transfer (#011). Fire-and-forget; a denial just means no reminder.
+    if (Platform.isIOS) {
+      unawaited(
+        getIt<IncomingFileNotifier>().requestNotificationPermission().then(
+          (granted) => AppLogger.info('notif permission granted: $granted'),
+        ),
+      );
+    }
   }
 
   @override

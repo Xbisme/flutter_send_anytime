@@ -17,6 +17,8 @@ class ActiveTransferHandle {
     required this.progressRoute,
     required this.onCancel,
     required this.project,
+    required this.keepOpenTitle,
+    required this.keepOpenBody,
   });
 
   /// The live transfer view stream (derived from the #002 snapshot stream — the
@@ -36,4 +38,9 @@ class ActiveTransferHandle {
   /// Feature-supplied projection (localized + formatted) of a view onto the
   /// surface view model. Keeps l10n out of `core/services`.
   final BackgroundTransferState Function(TransferView view) project;
+
+  /// Localized title/body for the iOS keep-app-open reminder (#011) — built by
+  /// the feature (which has l10n) so `core/services` stays l10n-free.
+  final String keepOpenTitle;
+  final String keepOpenBody;
 }

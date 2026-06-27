@@ -746,4 +746,11 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get bgCancel => 'Huỷ';
+
+  @override
+  String get bgKeepOpenTitle => 'Tiếp tục truyền tệp';
+
+  @override
+  String get bgKeepOpenBody =>
+      'Mở lại Safe Send để truyền tiếp — iOS tạm dừng khi app ở nền.';
 }
