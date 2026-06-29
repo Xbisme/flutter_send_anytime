@@ -117,8 +117,10 @@ NavigationBar
 
 > Mỗi màn có biến thể **Light + Dark**. Mã spec dưới gắn với spec roadmap sẽ build nó.
 
-### 01 · Trang chủ (`home`) — tab Home — *Spec #001 shell, #004/#005 wires actions, #006 recent data*
+### 01 · Trang chủ (`home`) — tab Home — *Spec #001 shell, #004/#005 wires actions, #006 recent data, #012 real data + See-all*
 Entry point. Cuộn dọc. Gồm: header (logomark + "Safe Send" + icon settings) · search pill "Tìm file đã gửi hoặc nhận…" · **hero card gradient-brand**: tổng Đã gửi / Đã nhận (số mono) + progress bar + "N lượt truyền tháng này" · 3 **StatTile** (Ảnh / Video / File) · lưới **Ảnh gần đây** (3 cột) · **Video gần đây** (2 cột, thumbnail + play + duration) · **File gần đây** (FileRow list) · **Lượt truyền gần đây** (card + thumbnail strip + "+N") · **Thao tác nhanh** (lưới 2×2: Quét QR / Thiết bị gần / Gửi file / Nhận file) · **card Mẹo nhỏ** (`accent-subtle`).
+
+> **#012 (implemented)**: hero/stats/recent-media giờ là **dữ liệu thật từ lịch sử #006** (chỉ file đã gửi/nhận — không đọc thư viện máy, không quyền mới). Ảnh gần đây hiển thị **thumbnail thật** (file nhận có trên đĩa) hoặc icon theo loại; video = tile play+duration (frame thật → #013). Mỗi section có **"Xem tất cả"** mở màn full-screen riêng (`AppRoutes.homeSeeAll`, lazy grid/list, tái dùng cell + FlowAppBar) cho từng nhóm Ảnh/Video/File; tap 1 item → **trang chi tiết History (#006)**. Fresh install → hero 0 + empty state mọi section. (claude_design `SafeSend` = component/token-level, không có mockup màn riêng — màn See-all theo pattern media-grid + FileRow sẵn có.)
 
 ### 02 · Gửi file (`send`) — flow — *Spec #004*
 AppBar back + "Gửi file". Banner `accent-subtle`: "N mục đã chọn" + tổng dung lượng mono + `check-check`. List **FileRow** có checkbox chọn/bỏ (tròn, tick trắng khi chọn). Footer 2 nút: **Thêm** (secondary, +icon) · **Tiếp tục** (CTA gradient, →icon).

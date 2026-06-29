@@ -88,12 +88,14 @@ import 'package:safe_send/features/history/domain/usecases/watch_history_usecase
     as _i951;
 import 'package:safe_send/features/history/presentation/cubit/history_cubit.dart'
     as _i560;
-import 'package:safe_send/features/home/data/home_placeholder_data_source.dart'
-    as _i265;
-import 'package:safe_send/features/home/domain/usecases/watch_recent_transfers_usecase.dart'
-    as _i887;
+import 'package:safe_send/features/home/domain/usecases/watch_home_dashboard_usecase.dart'
+    as _i872;
+import 'package:safe_send/features/home/domain/usecases/watch_media_items_usecase.dart'
+    as _i206;
 import 'package:safe_send/features/home/presentation/cubit/home_cubit.dart'
     as _i511;
+import 'package:safe_send/features/home/presentation/cubit/see_all_cubit.dart'
+    as _i807;
 import 'package:safe_send/features/pairing/data/pairing_repository_impl.dart'
     as _i181;
 import 'package:safe_send/features/pairing/domain/pairing_repository.dart'
@@ -138,9 +140,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => const _i671.ResendAvailabilityUseCase(),
     );
     gh.lazySingleton<_i196.AppDatabase>(() => databaseModule.appDatabase);
-    gh.lazySingleton<_i265.HomePlaceholderDataSource>(
-      () => _i265.HomePlaceholderDataSource(),
-    );
     gh.lazySingleton<_i572.DeepLinkService>(() => _i1.DeepLinkServiceImpl());
     gh.lazySingleton<_i206.GallerySaverService>(
       () => _i206.GalGallerySaverService(),
@@ -209,10 +208,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i951.WatchHistoryUseCase>(
       () => _i951.WatchHistoryUseCase(gh<_i1016.TransferHistoryRepository>()),
     );
-    gh.factory<_i887.WatchRecentTransfersUseCase>(
-      () => _i887.WatchRecentTransfersUseCase(
+    gh.factory<_i872.WatchHomeDashboardUseCase>(
+      () => _i872.WatchHomeDashboardUseCase(
         gh<_i1016.TransferHistoryRepository>(),
       ),
+    );
+    gh.factory<_i206.WatchMediaItemsUseCase>(
+      () =>
+          _i206.WatchMediaItemsUseCase(gh<_i1016.TransferHistoryRepository>()),
     );
     gh.factory<_i284.NearbyAdvertiseCubit>(
       () => _i284.NearbyAdvertiseCubit(
@@ -228,6 +231,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i103.QrScanCubit>(
       () => _i103.QrScanCubit(gh<_i522.CameraPermissionService>()),
+    );
+    gh.factory<_i807.SeeAllCubit>(
+      () => _i807.SeeAllCubit(gh<_i206.WatchMediaItemsUseCase>()),
+    );
+    gh.factory<_i511.HomeCubit>(
+      () => _i511.HomeCubit(gh<_i872.WatchHomeDashboardUseCase>()),
     );
     gh.factory<_i953.TransferEngine>(
       () => _i953.TransferEngine(
@@ -274,12 +283,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i0.SignalingClient.create(
         gh<_i132.AppConfig>(),
         gh<_i795.SignalingEndpointProvider>(),
-      ),
-    );
-    gh.factory<_i511.HomeCubit>(
-      () => _i511.HomeCubit(
-        gh<_i265.HomePlaceholderDataSource>(),
-        gh<_i887.WatchRecentTransfersUseCase>(),
       ),
     );
     gh.lazySingleton<_i1071.SettingsCubit>(

@@ -56,6 +56,27 @@ class AppLocalizationsVi extends AppLocalizations {
   String get homeSeeAll => 'Xem tất cả';
 
   @override
+  String get homeNoImages => 'Chưa có ảnh nào.';
+
+  @override
+  String get homeNoVideos => 'Chưa có video nào.';
+
+  @override
+  String get homeNoFiles => 'Chưa có tệp nào.';
+
+  @override
+  String get homeSeeAllPhotos => 'Tất cả ảnh';
+
+  @override
+  String get homeSeeAllVideos => 'Tất cả video';
+
+  @override
+  String get homeSeeAllFiles => 'Tất cả tệp';
+
+  @override
+  String get homeFileUnavailable => 'Không tìm thấy tệp trên thiết bị.';
+
+  @override
   String get homeQuickActions => 'Thao tác nhanh';
 
   @override

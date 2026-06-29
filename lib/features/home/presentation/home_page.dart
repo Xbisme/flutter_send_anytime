@@ -11,6 +11,7 @@ import 'package:safe_send/core/domain/cubit/app_state.dart';
 import 'package:safe_send/core/presentation/inputs/search_pill.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
 import 'package:safe_send/core/theme/app_dimens.dart';
+import 'package:safe_send/core/utils/file_category.dart';
 import 'package:safe_send/core/utils/l10n_extension.dart';
 import 'package:safe_send/features/home/domain/models/home_dashboard.dart';
 import 'package:safe_send/features/home/presentation/cubit/home_cubit.dart';
@@ -45,9 +46,10 @@ class _HomeView extends StatelessWidget {
           builder: (context, state) {
             return switch (state) {
               AppLoaded<HomeDashboard>(:final data) => _Loaded(data: data),
+              // On a stream error fall back to an empty dashboard rather than a
+              // dead screen — the history store is local and rarely fails.
               AppError<HomeDashboard>() => const _Loaded(
-                data: null,
-                errored: true,
+                data: HomeDashboard.empty,
               ),
               _ => const Center(child: CircularProgressIndicator()),
             };
@@ -59,10 +61,12 @@ class _HomeView extends StatelessWidget {
 }
 
 class _Loaded extends StatelessWidget {
-  const _Loaded({required this.data, this.errored = false});
+  const _Loaded({required this.data});
 
-  final HomeDashboard? data;
-  final bool errored;
+  final HomeDashboard data;
+
+  void _seeAll(BuildContext context, MediaCategory category) =>
+      context.push(AppRoutes.homeSeeAll, extra: category);
 
   @override
   Widget build(BuildContext context) {
@@ -80,20 +84,27 @@ class _Loaded extends StatelessWidget {
         const SizedBox(height: AppSpacing.x5 + 2),
         SearchPill(hintText: l10n.homeSearchHint),
         const SizedBox(height: AppSpacing.x5 + 2),
-        if (d != null) ...[
-          HomeHeroCard(summary: d.summary),
-          const SizedBox(height: AppSpacing.x5 + 2),
-          HomeStatsRow(stats: d.stats),
-          const SizedBox(height: AppSpacing.x5 + 2),
-          HomeRecentImages(images: d.recentImages),
-          const SizedBox(height: AppSpacing.x5 + 2),
-          HomeRecentVideos(videos: d.recentVideos),
-          const SizedBox(height: AppSpacing.x5 + 2),
-          HomeRecentFiles(files: d.recentFiles),
-          const SizedBox(height: AppSpacing.x5 + 2),
-          HomeRecentTransfers(transfers: d.recentTransfers),
-          const SizedBox(height: AppSpacing.x5 + 2),
-        ],
+        HomeHeroCard(summary: d.summary),
+        const SizedBox(height: AppSpacing.x5 + 2),
+        HomeStatsRow(stats: d.stats),
+        const SizedBox(height: AppSpacing.x5 + 2),
+        HomeRecentImages(
+          images: d.recentImages,
+          onSeeAll: () => _seeAll(context, MediaCategory.photos),
+        ),
+        const SizedBox(height: AppSpacing.x5 + 2),
+        HomeRecentVideos(
+          videos: d.recentVideos,
+          onSeeAll: () => _seeAll(context, MediaCategory.videos),
+        ),
+        const SizedBox(height: AppSpacing.x5 + 2),
+        HomeRecentFiles(
+          files: d.recentFiles,
+          onSeeAll: () => _seeAll(context, MediaCategory.files),
+        ),
+        const SizedBox(height: AppSpacing.x5 + 2),
+        HomeRecentTransfers(transfers: d.recentTransfers),
+        const SizedBox(height: AppSpacing.x5 + 2),
         const HomeQuickActions(),
         const SizedBox(height: AppSpacing.x5 + 2),
         const HomeTipCard(),

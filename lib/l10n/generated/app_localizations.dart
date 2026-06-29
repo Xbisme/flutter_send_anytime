@@ -188,6 +188,48 @@ abstract class AppLocalizations {
   /// **'Xem tất cả'**
   String get homeSeeAll;
 
+  /// Home recent-images empty state
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có ảnh nào.'**
+  String get homeNoImages;
+
+  /// Home recent-videos empty state
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có video nào.'**
+  String get homeNoVideos;
+
+  /// Home recent-files empty state
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có tệp nào.'**
+  String get homeNoFiles;
+
+  /// See-all screen title: all photos
+  ///
+  /// In vi, this message translates to:
+  /// **'Tất cả ảnh'**
+  String get homeSeeAllPhotos;
+
+  /// See-all screen title: all videos
+  ///
+  /// In vi, this message translates to:
+  /// **'Tất cả video'**
+  String get homeSeeAllVideos;
+
+  /// See-all screen title: all files
+  ///
+  /// In vi, this message translates to:
+  /// **'Tất cả tệp'**
+  String get homeSeeAllFiles;
+
+  /// Message when a transferred file is no longer on disk
+  ///
+  /// In vi, this message translates to:
+  /// **'Không tìm thấy tệp trên thiết bị.'**
+  String get homeFileUnavailable;
+
   /// Section title: quick actions
   ///
   /// In vi, this message translates to:

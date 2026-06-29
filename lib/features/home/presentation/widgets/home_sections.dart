@@ -4,19 +4,21 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:safe_send/core/constants/app_routes.dart';
 import 'package:safe_send/core/domain/pairing/receive_entry_request.dart';
 import 'package:safe_send/core/domain/transfer_enums.dart';
-import 'package:safe_send/core/presentation/files/file_widgets.dart';
 import 'package:safe_send/core/presentation/tiles/quick_action_card.dart';
 import 'package:safe_send/core/presentation/tiles/stat_tile.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
 import 'package:safe_send/core/theme/app_dimens.dart';
 import 'package:safe_send/core/theme/app_typography.dart';
+import 'package:safe_send/core/utils/file_category.dart';
 import 'package:safe_send/core/utils/formatters.dart';
 import 'package:safe_send/core/utils/l10n_extension.dart';
 import 'package:safe_send/features/home/domain/models/home_dashboard.dart';
+import 'package:safe_send/features/home/presentation/widgets/media_grid_item.dart';
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader(this.title);
+  const _SectionHeader(this.title, {this.onSeeAll});
   final String title;
+  final VoidCallback? onSeeAll;
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +29,39 @@ class _SectionHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title, style: Theme.of(context).textTheme.titleMedium),
-          Text(
-            context.l10n.homeSeeAll,
-            style: Theme.of(
-              context,
-            ).textTheme.labelLarge?.copyWith(color: c.accent),
-          ),
+          if (onSeeAll != null)
+            Semantics(
+              button: true,
+              child: InkWell(
+                onTap: onSeeAll,
+                child: Text(
+                  context.l10n.homeSeeAll,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelLarge?.copyWith(color: c.accent),
+                ),
+              ),
+            ),
         ],
+      ),
+    );
+  }
+}
+
+class _SectionEmpty extends StatelessWidget {
+  const _SectionEmpty(this.message);
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = AppColors.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.x2),
+      child: Text(
+        message,
+        style: Theme.of(
+          context,
+        ).textTheme.bodyMedium?.copyWith(color: c.textMuted),
       ),
     );
   }
@@ -151,26 +179,15 @@ class HomeStatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    String label(StatKind k) => switch (k) {
-      StatKind.photos => l10n.homeStatPhotos,
-      StatKind.videos => l10n.homeStatVideos,
-      StatKind.files => l10n.homeStatFiles,
-    };
-    IconData icon(StatKind k) => switch (k) {
-      StatKind.photos => LucideIcons.image,
-      StatKind.videos => LucideIcons.video,
-      StatKind.files => LucideIcons.file,
-    };
     return Row(
       children: [
         for (final s in stats) ...[
           Expanded(
             child: StatTile(
-              icon: icon(s.kind),
+              icon: categoryIcon(s.category),
               count: Formatters.count(s.count),
-              label: label(s.kind),
-              tint: s.tint,
+              label: categoryLabel(context, s.category),
+              tint: categoryTint(s.category),
             ),
           ),
           if (s != stats.last) const SizedBox(width: AppSpacing.x3 - 1),
@@ -180,181 +197,116 @@ class HomeStatsRow extends StatelessWidget {
   }
 }
 
-/// Recent images grid (3 columns).
+/// Lucide icon for a media category (shared by stats + empty fallbacks).
+IconData categoryIcon(MediaCategory category) => switch (category) {
+  MediaCategory.photos => LucideIcons.image,
+  MediaCategory.videos => LucideIcons.video,
+  MediaCategory.files => LucideIcons.file,
+};
+
+/// Design-token tint for a media category (Constitution VI — no hardcoded hex
+/// at call sites).
+Color categoryTint(MediaCategory category) => switch (category) {
+  MediaCategory.photos => AppColors.info,
+  MediaCategory.videos => AppColors.teal500,
+  MediaCategory.files => AppColors.warning,
+};
+
+/// Localized label for a media category.
+String categoryLabel(BuildContext context, MediaCategory category) {
+  final l10n = context.l10n;
+  return switch (category) {
+    MediaCategory.photos => l10n.homeStatPhotos,
+    MediaCategory.videos => l10n.homeStatVideos,
+    MediaCategory.files => l10n.homeStatFiles,
+  };
+}
+
+/// Recent images grid (3 columns), real data + thumbnails (#012).
 class HomeRecentImages extends StatelessWidget {
-  const HomeRecentImages({required this.images, super.key});
-  final List<MediaThumb> images;
+  const HomeRecentImages({required this.images, this.onSeeAll, super.key});
+  final List<MediaItem> images;
+  final VoidCallback? onSeeAll;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(context.l10n.homeRecentImages),
-        GridView.count(
-          crossAxisCount: 3,
-          mainAxisSpacing: AppSpacing.x2,
-          crossAxisSpacing: AppSpacing.x2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            for (final im in images)
-              _MediaCell(name: im.name, gradient: im.gradient),
-          ],
+        _SectionHeader(
+          context.l10n.homeRecentImages,
+          onSeeAll: images.isEmpty ? null : onSeeAll,
         ),
+        if (images.isEmpty)
+          _SectionEmpty(context.l10n.homeNoImages)
+        else
+          GridView.count(
+            crossAxisCount: 3,
+            mainAxisSpacing: AppSpacing.x2,
+            crossAxisSpacing: AppSpacing.x2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [for (final im in images) MediaPhotoCell(item: im)],
+          ),
       ],
     );
   }
 }
 
-class _MediaCell extends StatelessWidget {
-  const _MediaCell({required this.name, required this.gradient});
-  final String name;
-  final Gradient gradient;
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(14),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          DecoratedBox(decoration: BoxDecoration(gradient: gradient)),
-          const DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.center,
-                colors: [Color(0x80000000), Color(0x00000000)],
-              ),
-            ),
-          ),
-          Positioned(
-            left: AppSpacing.x2,
-            right: AppSpacing.x2,
-            bottom: AppSpacing.x1 + 3,
-            child: Text(
-              name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Recent videos grid (2 columns).
+/// Recent videos grid (2 columns), real data (#012).
 class HomeRecentVideos extends StatelessWidget {
-  const HomeRecentVideos({required this.videos, super.key});
-  final List<VideoThumb> videos;
+  const HomeRecentVideos({required this.videos, this.onSeeAll, super.key});
+  final List<MediaItem> videos;
+  final VoidCallback? onSeeAll;
 
   @override
   Widget build(BuildContext context) {
-    final c = AppColors.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(context.l10n.homeRecentVideos),
-        GridView.count(
-          crossAxisCount: 2,
-          mainAxisSpacing: AppSpacing.x3 - 1,
-          crossAxisSpacing: AppSpacing.x3 - 1,
-          childAspectRatio: 1.55,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            for (final v in videos)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(14),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          DecoratedBox(
-                            decoration: BoxDecoration(gradient: v.gradient),
-                          ),
-                          const Center(
-                            child: Icon(
-                              LucideIcons.play,
-                              color: Colors.white,
-                              size: 26,
-                            ),
-                          ),
-                          Positioned(
-                            right: 6,
-                            bottom: 6,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.6),
-                                borderRadius: BorderRadius.circular(7),
-                              ),
-                              child: Text(
-                                v.durationLabel,
-                                style: AppTypography.mono(
-                                  size: 10,
-                                  color: Colors.white,
-                                  weight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    v.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  Text(
-                    v.sizeLabel,
-                    style: AppTypography.mono(
-                      size: 11,
-                      color: c.textMuted,
-                      weight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-          ],
+        _SectionHeader(
+          context.l10n.homeRecentVideos,
+          onSeeAll: videos.isEmpty ? null : onSeeAll,
         ),
+        if (videos.isEmpty)
+          _SectionEmpty(context.l10n.homeNoVideos)
+        else
+          GridView.count(
+            crossAxisCount: 2,
+            mainAxisSpacing: AppSpacing.x3 - 1,
+            crossAxisSpacing: AppSpacing.x3 - 1,
+            childAspectRatio: 1.55,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [for (final v in videos) MediaVideoCell(item: v)],
+          ),
       ],
     );
   }
 }
 
-/// Recent files list.
+/// Recent files list, real data (#012).
 class HomeRecentFiles extends StatelessWidget {
-  const HomeRecentFiles({required this.files, super.key});
-  final List<FileItemModel> files;
+  const HomeRecentFiles({required this.files, this.onSeeAll, super.key});
+  final List<MediaItem> files;
+  final VoidCallback? onSeeAll;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(context.l10n.homeRecentFiles),
-        for (final f in files) ...[
-          FileRow(name: f.name, ext: f.ext, meta: f.meta),
-          if (f != files.last) const SizedBox(height: AppSpacing.x2 + 2),
-        ],
+        _SectionHeader(
+          context.l10n.homeRecentFiles,
+          onSeeAll: files.isEmpty ? null : onSeeAll,
+        ),
+        if (files.isEmpty)
+          _SectionEmpty(context.l10n.homeNoFiles)
+        else
+          for (final f in files) ...[
+            MediaFileRow(item: f),
+            if (f != files.last) const SizedBox(height: AppSpacing.x2 + 2),
+          ],
       ],
     );
   }

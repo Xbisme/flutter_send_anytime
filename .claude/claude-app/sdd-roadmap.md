@@ -4,7 +4,7 @@
 >
 > **Vai trò file này**: pure planning — dependency graph, scope per spec, timeline, optimal order. Current status của các spec sống ở [`project-context.md`](project-context.md). Ship history sống ở [`changelog.md`](changelog.md). Alignment decisions sống ở [`decisions/`](decisions/). **Giao diện** (screens, tokens, components, navigation IA) sống ở [`ui-design-context.md`](ui-design-context.md) — đọc trước mọi phần UI/UX của spec.
 >
-> Last updated: 2026-06-27 (Specs #001–#010 merged via PRs #1–#10 · #010 device-validated on 2 devices + first `pod install` OK. **Three v1.0 feature specs added before Polish**: #011 Background Transfer · #012 Home Completion · #013 In-App Viewers; **Polish & Release renumbered #011 → #014**. Next: #011 Background Transfer.)
+> Last updated: 2026-06-29 (Specs #001–#011 merged via PRs #1–#11; **#012 Home Completion implemented (Dart)**. **One v1.0 feature spec remains before Polish**: #013 In-App Viewers; **Polish & Release = #014**. Next: #013 In-App Viewers — or merge #012 first.)
 
 ---
 
@@ -277,7 +277,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #011: Background Transfer
 
-- **Status**: ✅ **Implemented (Dart core)** — branch `011-background-transfer` (2026-06-27). OS background surfaces driven from the #002 snapshot stream: iOS Live Activity + Android `dataSync` foreground-service notification (immediate Huỷ); core-pure coordinator + per-platform controllers (`live_activities` 2.4.9 / `flutter_foreground_task` 9.2.2) via an additive binder seam; no engine/protocol edits. `dart analyze lib test` 0 · `flutter test` 281 passed (14 new). Deferred: two-device smoke + first `pod install` + iOS Widget-Extension target (T040/T041), iOS bg-task grace (T032), surface throttle (T036). See [`changelog.md`](changelog.md).
+- **Status**: ✅ **Merged** (PR #11) — branch `011-background-transfer` (2026-06-27, merged 2026-06-29). OS background surfaces driven from the #002 snapshot stream: iOS Live Activity + Android `dataSync` foreground-service notification (immediate Huỷ); core-pure coordinator + per-platform controllers (`live_activities` 2.4.9 / `flutter_foreground_task` 9.2.2) via an additive binder seam; no engine/protocol edits. iOS Widget Extension + per-flavor App Group + `pod install` validated (build OK); iOS `beginBackgroundTask` grace landed (T032). `dart analyze lib test` 0 · `flutter test` 285 passed (18 new). Deferred (non-blocking): two-device on-device smoke (T040). See [`changelog.md`](changelog.md).
 - **Was**: ⬜ Not started
 - **Branch**: `011-background-transfer`
 - **Depends on**: #002 (engine), #004/#005 (send/receive flows)
@@ -293,7 +293,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #012: Home Screen Completion
 
-- **Status**: ⬜ Not started
+- **Status**: ✅ **Implemented (Dart)** — branch `012-home-completion` (2026-06-29). Home placeholder replaced with real data from the #006 history store **only** (no media library / new permission — FR-016): reactive `HomeCubit` + pure `HomeDashboardBuilder` drive the hero/stats/recent-media; real `Image.file` photo thumbnails (icon fallback), video tiles (frame → #013); new parametrized `AppRoutes.homeSeeAll` See-all screen; item tap → History detail (#006). Additive + feature-local; no new packages / engine / schema edits. `dart analyze lib test` 0 · `flutter test` 318 passed (33 new). Deferred: on-device UI pass (no two-device smoke — local feature). See [`changelog.md`](changelog.md).
 - **Branch**: `012-home-completion`
 - **Depends on**: #006 (history data), #001 (Home shell), #013 may follow (viewers open from Home)
 - **Design**: Screen 01 **Trang chủ (home)** — hero stat card, 3 StatTiles (Ảnh/Video/File), Recent photos / videos / files grids, "Xem tất cả (See all)" per section. Pull the **updated** Home + See-all screens from claude_design via `DesignSync`.
