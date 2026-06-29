@@ -779,4 +779,44 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get bgKeepOpenBody =>
       'Reopen Safe Send to keep transferring — iOS pauses it in the background.';
+
+  @override
+  String get viewerFileUnavailable => 'File unavailable';
+
+  @override
+  String get viewerOpenExternally => 'Open in another app';
+
+  @override
+  String get viewerActionShare => 'Share';
+
+  @override
+  String get viewerBack => 'Back';
+
+  @override
+  String get viewerErrorGeneric => 'Couldn\'t open this file';
+
+  @override
+  String get viewerImageError => 'Couldn\'t display image';
+
+  @override
+  String get viewerMediaError => 'Couldn\'t play this file';
+
+  @override
+  String get viewerDocumentError => 'Couldn\'t open document';
+
+  @override
+  String get viewerPlay => 'Play';
+
+  @override
+  String get viewerPause => 'Pause';
+
+  @override
+  String get viewerSeek => 'Seek to position';
+
+  @override
+  String get viewerAudioOnly => 'Audio file';
+
+  @override
+  String get viewerTextTruncated =>
+      'Showing part of the file — open in another app to view all.';
 }

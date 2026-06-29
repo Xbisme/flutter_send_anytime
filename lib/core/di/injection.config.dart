@@ -50,6 +50,13 @@ import 'package:safe_send/core/services/file/received_files_service_impl.dart'
     as _i423;
 import 'package:safe_send/core/services/media/gallery_saver_service.dart'
     as _i206;
+import 'package:safe_send/core/services/media/media_controller.dart' as _i839;
+import 'package:safe_send/core/services/media/video_player_media_controller.dart'
+    as _i404;
+import 'package:safe_send/core/services/media/video_thumbnail_service.dart'
+    as _i1049;
+import 'package:safe_send/core/services/media/video_thumbnail_service_impl.dart'
+    as _i1058;
 import 'package:safe_send/core/services/nearby/nearby_discovery_service.dart'
     as _i306;
 import 'package:safe_send/core/services/nearby/nearby_discovery_service_impl.dart'
@@ -126,6 +133,10 @@ import 'package:safe_send/features/send/presentation/cubit/send_transfer_cubit.d
     as _i259;
 import 'package:safe_send/features/settings/presentation/cubit/settings_cubit.dart'
     as _i1071;
+import 'package:safe_send/features/viewers/presentation/cubit/media_player_cubit.dart'
+    as _i165;
+import 'package:safe_send/features/viewers/presentation/cubit/text_viewer_cubit.dart'
+    as _i662;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -139,6 +150,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i671.ResendAvailabilityUseCase>(
       () => const _i671.ResendAvailabilityUseCase(),
     );
+    gh.factory<_i662.TextViewerCubit>(() => _i662.TextViewerCubit());
     gh.lazySingleton<_i196.AppDatabase>(() => databaseModule.appDatabase);
     gh.lazySingleton<_i572.DeepLinkService>(() => _i1.DeepLinkServiceImpl());
     gh.lazySingleton<_i206.GallerySaverService>(
@@ -162,6 +174,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i306.NearbyDiscoveryService>(
       () => _i568.NsdNearbyDiscoveryService(),
+    );
+    gh.lazySingleton<_i1049.VideoThumbnailService>(
+      () => _i1058.VideoThumbnailServiceImpl(),
+    );
+    gh.lazySingleton<_i839.MediaControllerFactory>(
+      () => _i404.VideoPlayerMediaControllerFactory(),
     );
     gh.lazySingleton<_i58.ReceivedFilesService>(
       () => _i423.ReceivedFilesServiceImpl(),
@@ -237,6 +255,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i511.HomeCubit>(
       () => _i511.HomeCubit(gh<_i872.WatchHomeDashboardUseCase>()),
+    );
+    gh.factory<_i165.MediaPlayerCubit>(
+      () => _i165.MediaPlayerCubit(gh<_i839.MediaControllerFactory>()),
     );
     gh.factory<_i953.TransferEngine>(
       () => _i953.TransferEngine(

@@ -261,5 +261,19 @@
   "bgEta": "{time} left",
   "bgCancel": "Cancel",
   "bgKeepOpenTitle": "Keep the transfer going",
-  "bgKeepOpenBody": "Reopen Safe Send to keep transferring — iOS pauses it in the background."
+  "bgKeepOpenBody": "Reopen Safe Send to keep transferring — iOS pauses it in the background.",
+
+  "viewerFileUnavailable": "File unavailable",
+  "viewerOpenExternally": "Open in another app",
+  "viewerActionShare": "Share",
+  "viewerBack": "Back",
+  "viewerErrorGeneric": "Couldn't open this file",
+  "viewerImageError": "Couldn't display image",
+  "viewerMediaError": "Couldn't play this file",
+  "viewerDocumentError": "Couldn't open document",
+  "viewerPlay": "Play",
+  "viewerPause": "Pause",
+  "viewerSeek": "Seek to position",
+  "viewerAudioOnly": "Audio file",
+  "viewerTextTruncated": "Showing part of the file — open in another app to view all."
 }

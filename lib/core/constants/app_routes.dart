@@ -42,6 +42,11 @@ abstract final class AppRoutes {
   /// In-app privacy-policy page (#010, US5), pushed from About.
   static const settingsPrivacy = '/settings/privacy';
 
+  /// Full-screen in-app file viewer (#013). Pushed on the root navigator
+  /// (hides the bottom nav) with a core-typed `ViewerRequest` as the go_router
+  /// `extra`; the page switches on `ViewerKind` to the right viewer.
+  static const fileViewer = '/viewer';
+
   /// Reserved deep-link scheme (no handlers wired in #001).
   static const deepLinkScheme = 'safesend';
 }

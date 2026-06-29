@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +18,7 @@ import 'package:safe_send/core/presentation/scaffolding/fit_or_scroll.dart';
 import 'package:safe_send/core/presentation/transfer/background_transfer_binder.dart';
 import 'package:safe_send/core/presentation/transfer/transfer_complete_view.dart';
 import 'package:safe_send/core/presentation/transfer/transfer_progress_view.dart';
+import 'package:safe_send/core/presentation/viewers/file_open_coordinator.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
 import 'package:safe_send/core/theme/app_dimens.dart';
 import 'package:safe_send/core/utils/l10n_extension.dart';
@@ -136,17 +138,16 @@ class _ReceiveTransferViewState extends State<_ReceiveTransferView> {
     );
   }
 
-  Future<void> _open(BuildContext context, String path) async {
-    final l10n = context.l10n;
-    final result = await context.read<ReceiveTransferCubit>().openFile(path);
-    if (!context.mounted) return;
-    result.fold(
-      (_) {},
-      (_) => AppToast.show(
-        context,
-        l10n.receiveOpenFailed,
-        type: AppToastType.error,
-      ),
+  /// Open a just-received file: in-app viewer for a supported type, else OS
+  /// open/share fallback (#013, FR-001). Received files are always on disk.
+  Future<void> _open(BuildContext context, String path) {
+    final name = path.split(Platform.pathSeparator).last;
+    return FileOpenCoordinator.openTransferredFile(
+      context,
+      name: name,
+      path: path,
+      mimeType: null,
+      isReceived: true,
     );
   }
 

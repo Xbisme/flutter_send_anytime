@@ -9,7 +9,9 @@ enum MediaCategory { photos, videos, files }
 /// file extension is matched against fixed lists; anything not image/video is
 /// `files`.
 abstract final class FileCategory {
-  static const _imageExt = <String>{
+  /// Image extensions (lower-case, no dot). Public so the #013 viewer-kind
+  /// resolver can reuse the same set (single source of truth).
+  static const imageExts = <String>{
     'jpg',
     'jpeg',
     'png',
@@ -20,7 +22,9 @@ abstract final class FileCategory {
     'bmp',
     'tiff',
   };
-  static const _videoExt = <String>{
+
+  /// Video extensions (lower-case, no dot). Public — see [imageExts].
+  static const videoExts = <String>{
     'mp4',
     'mov',
     'm4v',
@@ -39,8 +43,8 @@ abstract final class FileCategory {
       return MediaCategory.files;
     }
     final ext = file.ext.toLowerCase(); // ext: upper-case, no dot
-    if (_imageExt.contains(ext)) return MediaCategory.photos;
-    if (_videoExt.contains(ext)) return MediaCategory.videos;
+    if (imageExts.contains(ext)) return MediaCategory.photos;
+    if (videoExts.contains(ext)) return MediaCategory.videos;
     return MediaCategory.files;
   }
 }

@@ -774,4 +774,44 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get bgKeepOpenBody =>
       'Mở lại Safe Send để truyền tiếp — iOS tạm dừng khi app ở nền.';
+
+  @override
+  String get viewerFileUnavailable => 'Tệp không khả dụng';
+
+  @override
+  String get viewerOpenExternally => 'Mở bằng ứng dụng khác';
+
+  @override
+  String get viewerActionShare => 'Chia sẻ';
+
+  @override
+  String get viewerBack => 'Quay lại';
+
+  @override
+  String get viewerErrorGeneric => 'Không thể mở tệp này';
+
+  @override
+  String get viewerImageError => 'Không thể hiển thị ảnh';
+
+  @override
+  String get viewerMediaError => 'Không thể phát tệp này';
+
+  @override
+  String get viewerDocumentError => 'Không thể mở tài liệu';
+
+  @override
+  String get viewerPlay => 'Phát';
+
+  @override
+  String get viewerPause => 'Tạm dừng';
+
+  @override
+  String get viewerSeek => 'Tua đến vị trí';
+
+  @override
+  String get viewerAudioOnly => 'Tệp âm thanh';
+
+  @override
+  String get viewerTextTruncated =>
+      'Đã hiển thị một phần — mở bằng ứng dụng khác để xem đầy đủ.';
 }

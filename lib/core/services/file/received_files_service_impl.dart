@@ -7,6 +7,7 @@ import 'package:safe_send/core/domain/failures/app_failure.dart';
 import 'package:safe_send/core/domain/result.dart';
 import 'package:safe_send/core/services/file/received_files_service.dart';
 import 'package:safe_send/core/utils/app_logger.dart';
+import 'package:safe_send/core/utils/received_file_path.dart';
 import 'package:share_plus/share_plus.dart';
 
 /// Default [ReceivedFilesService]: app documents dir + system share/open. No
@@ -34,7 +35,9 @@ class ReceivedFilesServiceImpl implements ReceivedFilesService {
   Future<Result<void>> share(List<String> paths) async {
     try {
       await SharePlus.instance.share(
-        ShareParams(files: paths.map(XFile.new).toList()),
+        ShareParams(
+          files: paths.map(ReceivedFilePath.resolve).map(XFile.new).toList(),
+        ),
       );
       return const Result.success(null);
     } on Object catch (error) {
@@ -46,7 +49,7 @@ class ReceivedFilesServiceImpl implements ReceivedFilesService {
   @override
   Future<Result<void>> open(String path) async {
     try {
-      final result = await OpenFilex.open(path);
+      final result = await OpenFilex.open(ReceivedFilePath.resolve(path));
       if (result.type == ResultType.done) return const Result.success(null);
       AppLogger.error('open failed (${result.type})');
       return const Result.failure(AppFailure.unexpected(message: 'open'));

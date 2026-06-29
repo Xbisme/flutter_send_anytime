@@ -9,9 +9,9 @@ import 'package:safe_send/core/di/injection.dart';
 import 'package:safe_send/core/domain/history/transfer_record.dart';
 import 'package:safe_send/core/domain/transfer_enums.dart';
 import 'package:safe_send/core/presentation/buttons/app_buttons.dart';
-import 'package:safe_send/core/presentation/feedback/app_toast.dart';
 import 'package:safe_send/core/presentation/files/file_widgets.dart';
 import 'package:safe_send/core/presentation/scaffolding/flow_app_bar.dart';
+import 'package:safe_send/core/presentation/viewers/file_open_coordinator.dart';
 import 'package:safe_send/core/services/file/received_files_service.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
 import 'package:safe_send/core/theme/app_dimens.dart';
@@ -31,26 +31,17 @@ class HistoryDetailPage extends StatelessWidget {
 
   final TransferRecord record;
 
-  Future<void> _openFile(BuildContext context, String? path) async {
-    final l10n = context.l10n;
-    if (path == null) {
-      AppToast.show(
+  /// Open a received file: in-app viewer for a supported type, else OS
+  /// open/share, else "unavailable" (#013, FR-001). Only wired on the received
+  /// side (the open button is hidden for sent records).
+  Future<void> _openFile(BuildContext context, RecordedFile file) =>
+      FileOpenCoordinator.openTransferredFile(
         context,
-        l10n.historyFileUnavailable,
-        type: AppToastType.error,
+        name: file.name,
+        path: file.path,
+        mimeType: file.mimeType,
+        isReceived: true,
       );
-      return;
-    }
-    final result = await getIt<ReceivedFilesService>().open(path);
-    if (!context.mounted) return;
-    result.fold((_) {}, (_) {
-      AppToast.show(
-        context,
-        l10n.historyFileUnavailable,
-        type: AppToastType.error,
-      );
-    });
-  }
 
   Future<void> _share(BuildContext context) async {
     final paths = record.includedFiles
@@ -151,7 +142,7 @@ class HistoryDetailPage extends StatelessWidget {
                                 icon: const Icon(LucideIcons.externalLink),
                                 iconSize: 18,
                                 tooltip: l10n.historyActionOpen,
-                                onPressed: () => _openFile(context, file.path),
+                                onPressed: () => _openFile(context, file),
                               )
                             : null,
                       ),

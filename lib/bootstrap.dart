@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:safe_send/app/app.dart';
 import 'package:safe_send/core/config/app_config.dart';
 import 'package:safe_send/core/di/injection.dart';
@@ -10,6 +11,7 @@ import 'package:safe_send/core/services/background/background_transfer_coordinat
 import 'package:safe_send/core/services/deeplink/deep_link_service.dart';
 import 'package:safe_send/core/services/notifications/incoming_file_notifier.dart';
 import 'package:safe_send/core/utils/app_logger.dart';
+import 'package:safe_send/core/utils/received_file_path.dart';
 
 /// Shared pre-runApp setup, parameterized by flavor [config].
 Future<void> bootstrap(AppConfig config) async {
@@ -38,6 +40,16 @@ Future<void> bootstrap(AppConfig config) async {
   };
 
   await configureDependencies(config);
+
+  // Cache the current app documents directory so stored received-file paths can
+  // be healed against it (iOS rebuilds change the data-container UUID, staling
+  // absolute paths even though the files migrate — see ReceivedFilePath).
+  try {
+    ReceivedFilePath.documentsBase =
+        (await getApplicationDocumentsDirectory()).path;
+  } on Object catch (error) {
+    AppLogger.warning('documents base unavailable (${error.runtimeType})');
+  }
 
   // Load persisted preferences into memory before the first frame so theme +
   // language render correctly with no flash, and the device name is ready for

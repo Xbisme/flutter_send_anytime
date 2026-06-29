@@ -9,6 +9,7 @@ import 'package:safe_send/core/domain/pairing/connect_handoff.dart';
 import 'package:safe_send/core/domain/pairing/receive_entry_request.dart';
 import 'package:safe_send/core/domain/transfer/file_source.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
+import 'package:safe_send/core/domain/viewer/viewer_request.dart';
 import 'package:safe_send/core/utils/file_category.dart';
 import 'package:safe_send/features/history/presentation/history_detail_page.dart';
 import 'package:safe_send/features/history/presentation/history_page.dart';
@@ -27,6 +28,7 @@ import 'package:safe_send/features/settings/presentation/pages/how_it_works_page
 import 'package:safe_send/features/settings/presentation/pages/privacy_policy_page.dart';
 import 'package:safe_send/features/settings/presentation/settings_page.dart';
 import 'package:safe_send/features/splash/presentation/splash_page.dart';
+import 'package:safe_send/features/viewers/presentation/pages/file_viewer_page.dart';
 
 /// Builds a fresh app router. Three tabs live inside a [StatefulShellRoute];
 /// Send/Receive are top-level routes outside the shell so the bottom nav is
@@ -138,6 +140,12 @@ GoRouter createAppRouter({bool includeDevRoutes = false}) {
         path: AppRoutes.settingsPrivacy,
         parentNavigatorKey: rootKey,
         builder: (_, _) => const PrivacyPolicyPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.fileViewer,
+        parentNavigatorKey: rootKey,
+        builder: (_, state) =>
+            FileViewerPage(request: state.extra! as ViewerRequest),
       ),
       if (includeDevRoutes)
         GoRoute(
