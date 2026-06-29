@@ -1,36 +1,36 @@
+import 'dart:async';
+
 import 'package:injectable/injectable.dart';
 import 'package:safe_send/core/domain/cubit/app_cubit.dart';
-import 'package:safe_send/features/home/data/home_history_data_source.dart';
-import 'package:safe_send/features/home/data/home_placeholder_data_source.dart';
+import 'package:safe_send/core/domain/failures/app_failure.dart';
 import 'package:safe_send/features/home/domain/models/home_dashboard.dart';
-import 'package:safe_send/features/home/domain/usecases/watch_recent_transfers_usecase.dart';
+import 'package:safe_send/features/home/domain/usecases/watch_home_dashboard_usecase.dart';
 
-/// Loads the Home dashboard into the 4-state cubit. The hero/stat/media
-/// sections are still placeholder (#001); the **recent transfers** section is
-/// now backfilled from real history (#006, FR-026) via the shared store, with
-/// no change to the [HomeDashboard] contract (the #001 FR-008 seam).
+/// Loads the Home dashboard into the 4-state cubit, reactively (#012, FR-011):
+/// it subscribes to the real history-backed dashboard stream and re-emits
+/// `loaded` on every change (a new transfer, a deleted record, clear-all), with
+/// no parallel data model (the #006 store is the single source of truth).
 @injectable
 class HomeCubit extends AppCubit<HomeDashboard> {
-  HomeCubit(this._dataSource, this._watchRecent);
+  HomeCubit(this._watchDashboard);
 
-  final HomePlaceholderDataSource _dataSource;
-  final WatchRecentTransfersUseCase _watchRecent;
+  final WatchHomeDashboardUseCase _watchDashboard;
+  StreamSubscription<HomeDashboard>? _subscription;
 
-  /// Load the dashboard, merging real recent transfers over the placeholder.
+  /// Begin streaming the dashboard. Safe to call once on page mount.
   Future<void> load() async {
     emitLoading();
-    final result = await _dataSource.load();
-    await result.fold(
-      (dashboard) async {
-        final records = await _watchRecent().first;
-        emitLoaded(
-          HomeHistoryMapper.withRecent(
-            dashboard,
-            HomeHistoryMapper.recent(records),
-          ),
-        );
-      },
-      (failure) async => emitError(failure),
+    await _subscription?.cancel();
+    _subscription = _watchDashboard().listen(
+      emitLoaded,
+      onError: (Object error, StackTrace _) =>
+          emitError(AppFailure.unexpected(error: error)),
     );
+  }
+
+  @override
+  Future<void> close() async {
+    await _subscription?.cancel();
+    return super.close();
   }
 }

@@ -1,77 +1,96 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:safe_send/core/domain/cubit/app_state.dart';
-import 'package:safe_send/core/domain/history/transfer_history_enums.dart';
-import 'package:safe_send/core/domain/history/transfer_record.dart';
-import 'package:safe_send/core/domain/transfer_enums.dart';
-import 'package:safe_send/features/home/data/home_placeholder_data_source.dart';
 import 'package:safe_send/features/home/domain/models/home_dashboard.dart';
-import 'package:safe_send/features/home/domain/usecases/watch_recent_transfers_usecase.dart';
+import 'package:safe_send/features/home/domain/usecases/watch_home_dashboard_usecase.dart';
 import 'package:safe_send/features/home/presentation/cubit/home_cubit.dart';
 
-class _MockWatchRecent extends Mock implements WatchRecentTransfersUseCase {}
+class _MockWatch extends Mock implements WatchHomeDashboardUseCase {}
 
-TransferRecord _record(String id) => TransferRecord(
-  id: id,
-  direction: TransferDirection.sent,
-  status: TransferRecordStatus.completed,
-  pairingMethod: PairingMethod.sixDigitCode,
-  fileCount: 1,
-  totalBytes: 100,
-  createdAt: DateTime(2026, 6, 25),
-  files: const [RecordedFile(name: 'a.pdf', size: 100)],
+HomeDashboard _dash(int monthly) => HomeDashboard(
+  summary: TransferSummary(
+    sentBytes: 0,
+    receivedBytes: 0,
+    monthlyTransferCount: monthly,
+    progressFraction: 0,
+  ),
+  stats: HomeDashboard.empty.stats,
+  recentImages: const [],
+  recentVideos: const [],
+  recentFiles: const [],
+  recentTransfers: const [],
 );
 
 void main() {
-  late _MockWatchRecent watchRecent;
+  late _MockWatch watch;
 
-  setUp(() {
-    watchRecent = _MockWatchRecent();
-    when(
-      () => watchRecent(limit: any(named: 'limit')),
-    ).thenAnswer((_) => Stream.value([_record('a')]));
-  });
+  setUp(() => watch = _MockWatch());
 
-  HomeCubit build() => HomeCubit(HomePlaceholderDataSource(), watchRecent);
+  HomeCubit build() => HomeCubit(watch);
 
   group('HomeCubit', () {
     test('initial state is AppInitial', () {
+      when(() => watch()).thenAnswer((_) => const Stream.empty());
       expect(build().state, isA<AppInitial<HomeDashboard>>());
     });
 
     blocTest<HomeCubit, AppState<HomeDashboard>>(
-      'emits [loading, loaded] with the dashboard on load()',
-      build: build,
+      'emits [loading, loaded] on the first dashboard snapshot',
+      build: () {
+        when(() => watch()).thenAnswer((_) => Stream.value(_dash(3)));
+        return build();
+      },
       act: (cubit) => cubit.load(),
       expect: () => [
         isA<AppLoading<HomeDashboard>>(),
-        isA<AppLoaded<HomeDashboard>>(),
+        isA<AppLoaded<HomeDashboard>>().having(
+          (s) => s.data.summary.monthlyTransferCount,
+          'monthly',
+          3,
+        ),
       ],
     );
 
     test(
-      'recent transfers are backfilled from real history (FR-026)',
+      'each snapshot drives a fresh loaded state (live update, FR-011)',
       () async {
+        final controller = StreamController<HomeDashboard>();
+        when(() => watch()).thenAnswer((_) => controller.stream);
         final cubit = build();
         await cubit.load();
-        final data = (cubit.state as AppLoaded<HomeDashboard>).data;
-        expect(data.stats, hasLength(3)); // placeholder sections preserved
-        expect(data.recentTransfers, hasLength(1));
-        expect(data.recentTransfers.first.record?.id, 'a');
+        controller
+          ..add(_dash(1))
+          ..add(_dash(2));
+        await Future<void>.delayed(Duration.zero);
+        expect(cubit.state, isA<AppLoaded<HomeDashboard>>());
+        expect(
+          (cubit.state as AppLoaded<HomeDashboard>)
+              .data
+              .summary
+              .monthlyTransferCount,
+          2,
+        );
+        await controller.close();
         await cubit.close();
       },
     );
 
-    test('empty history yields an empty recent section (FR-027)', () async {
-      when(
-        () => watchRecent(limit: any(named: 'limit')),
-      ).thenAnswer((_) => Stream.value(const []));
-      final cubit = build();
-      await cubit.load();
-      final data = (cubit.state as AppLoaded<HomeDashboard>).data;
-      expect(data.recentTransfers, isEmpty);
-      await cubit.close();
-    });
+    blocTest<HomeCubit, AppState<HomeDashboard>>(
+      'emits error when the dashboard stream errors',
+      build: () {
+        when(
+          () => watch(),
+        ).thenAnswer((_) => Stream.error(Exception('boom')));
+        return build();
+      },
+      act: (cubit) => cubit.load(),
+      expect: () => [
+        isA<AppLoading<HomeDashboard>>(),
+        isA<AppError<HomeDashboard>>(),
+      ],
+    );
   });
 }

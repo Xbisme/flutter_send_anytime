@@ -9,9 +9,11 @@ import 'package:safe_send/core/domain/pairing/connect_handoff.dart';
 import 'package:safe_send/core/domain/pairing/receive_entry_request.dart';
 import 'package:safe_send/core/domain/transfer/file_source.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
+import 'package:safe_send/core/utils/file_category.dart';
 import 'package:safe_send/features/history/presentation/history_detail_page.dart';
 import 'package:safe_send/features/history/presentation/history_page.dart';
 import 'package:safe_send/features/home/presentation/home_page.dart';
+import 'package:safe_send/features/home/presentation/see_all/see_all_page.dart';
 import 'package:safe_send/features/pairing/presentation/connect/connect_page.dart';
 import 'package:safe_send/features/pairing/presentation/debug/pairing_debug_page.dart';
 import 'package:safe_send/features/pairing/presentation/scan/qr_scan_page.dart';
@@ -120,6 +122,12 @@ GoRouter createAppRouter({bool includeDevRoutes = false}) {
         parentNavigatorKey: rootKey,
         builder: (_, state) =>
             HistoryDetailPage(record: state.extra! as TransferRecord),
+      ),
+      GoRoute(
+        path: AppRoutes.homeSeeAll,
+        parentNavigatorKey: rootKey,
+        builder: (_, state) =>
+            SeeAllPage(category: state.extra! as MediaCategory),
       ),
       GoRoute(
         path: AppRoutes.settingsHowItWorks,

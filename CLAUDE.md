@@ -1,8 +1,8 @@
 <!-- SPECKIT START -->
 # Safe Send — Agent Context
 
-Active feature: **#011 Background Transfer** (next). #001–#010 ✅ merged into `main` (PRs #1–#10); #010 device-validated on 2 devices + first `pod install` OK. **Next: #011 Background Transfer** (3 v1.0 specs added before Polish — #011 Background · #012 Home Completion · #013 In-App Viewers; Polish & Release renumbered → #014).
-Current plan: [specs/011-background-transfer/plan.md](specs/011-background-transfer/plan.md) · Spec: [specs/011-background-transfer/spec.md](specs/011-background-transfer/spec.md)
+Active feature: **#012 Home Completion** (planning). #001–#011 ✅ merged into `main` (PRs #1–#11); #011 Dart core + iOS native validated, 2-device smoke deferred. **Next: #012 Home Completion** (remaining v1.0 feature specs before Polish — #012 Home Completion · #013 In-App Viewers; Polish & Release = #014).
+Current plan: [specs/012-home-completion/plan.md](specs/012-home-completion/plan.md) · Spec: [specs/012-home-completion/spec.md](specs/012-home-completion/spec.md)
 
 ## Project meta (read these first)
 - Constitution (authoritative, 15 principles): [.specify/memory/constitution.md](.specify/memory/constitution.md)

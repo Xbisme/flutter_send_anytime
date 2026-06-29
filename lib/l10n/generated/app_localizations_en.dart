@@ -56,6 +56,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeSeeAll => 'See all';
 
   @override
+  String get homeNoImages => 'No photos yet.';
+
+  @override
+  String get homeNoVideos => 'No videos yet.';
+
+  @override
+  String get homeNoFiles => 'No files yet.';
+
+  @override
+  String get homeSeeAllPhotos => 'All photos';
+
+  @override
+  String get homeSeeAllVideos => 'All videos';
+
+  @override
+  String get homeSeeAllFiles => 'All files';
+
+  @override
+  String get homeFileUnavailable => 'File not found on this device.';
+
+  @override
   String get homeQuickActions => 'Quick actions';
 
   @override

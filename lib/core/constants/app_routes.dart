@@ -8,6 +8,10 @@ abstract final class AppRoutes {
   /// `TransferRecord` as the go_router `extra`.
   static const historyDetail = '/history/detail';
 
+  /// Full-screen "Xem tất cả" list for one Home media category (#012). Pushed
+  /// with a core-typed `MediaCategory` as the go_router `extra`.
+  static const homeSeeAll = '/home/see-all';
+
   static const settings = '/settings';
   static const send = '/send';
   static const receive = '/receive';
