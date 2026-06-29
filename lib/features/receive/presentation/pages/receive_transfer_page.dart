@@ -10,9 +10,11 @@ import 'package:safe_send/core/di/injection.dart';
 import 'package:safe_send/core/domain/cubit/app_state.dart';
 import 'package:safe_send/core/domain/failures/app_failure.dart';
 import 'package:safe_send/core/domain/transfer/transfer_view.dart';
+import 'package:safe_send/core/domain/transfer_enums.dart';
 import 'package:safe_send/core/presentation/buttons/app_buttons.dart';
 import 'package:safe_send/core/presentation/feedback/app_toast.dart';
 import 'package:safe_send/core/presentation/scaffolding/fit_or_scroll.dart';
+import 'package:safe_send/core/presentation/transfer/background_transfer_binder.dart';
 import 'package:safe_send/core/presentation/transfer/transfer_complete_view.dart';
 import 'package:safe_send/core/presentation/transfer/transfer_progress_view.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
@@ -93,32 +95,42 @@ class _ReceiveTransferViewState extends State<_ReceiveTransferView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: BlocConsumer<ReceiveTransferCubit, AppState<TransferView>>(
-          listener: _onState,
-          builder: (context, state) {
-            final cancel = context.read<ReceiveTransferCubit>().cancel;
-            return switch (state) {
-              AppError<TransferView>(:final failure) => _FailureView(
-                failure: failure,
-              ),
-              // Terminal full or partial (FR-013a) → the completion summary.
-              AppLoaded<TransferView>(:final data)
-                  when data.isDone || data.isPartial =>
-                TransferCompleteView(
-                  view: data,
-                  onDone: () => context.go(AppRoutes.home),
-                  onOpen: (path) => _open(context, path),
-                  onShare: (paths) => _share(context, paths),
+    final cubit = context.read<ReceiveTransferCubit>();
+    return BackgroundTransferBinder(
+      views: cubit.stream
+          .where((s) => s is AppLoaded<TransferView>)
+          .map((s) => (s as AppLoaded<TransferView>).data),
+      onCancel: cubit.cancel,
+      direction: TransferDirection.received,
+      progressRoute: AppRoutes.receiveProgress,
+      peerName: context.l10n.receivePeerSender,
+      child: Scaffold(
+        body: SafeArea(
+          child: BlocConsumer<ReceiveTransferCubit, AppState<TransferView>>(
+            listener: _onState,
+            builder: (context, state) {
+              final cancel = context.read<ReceiveTransferCubit>().cancel;
+              return switch (state) {
+                AppError<TransferView>(:final failure) => _FailureView(
+                  failure: failure,
                 ),
-              AppLoaded<TransferView>(:final data) => TransferProgressView(
-                view: data,
-                onCancel: cancel,
-              ),
-              _ => TransferProgressView(view: null, onCancel: cancel),
-            };
-          },
+                // Terminal full or partial (FR-013a) → the completion summary.
+                AppLoaded<TransferView>(:final data)
+                    when data.isDone || data.isPartial =>
+                  TransferCompleteView(
+                    view: data,
+                    onDone: () => context.go(AppRoutes.home),
+                    onOpen: (path) => _open(context, path),
+                    onShare: (paths) => _share(context, paths),
+                  ),
+                AppLoaded<TransferView>(:final data) => TransferProgressView(
+                  view: data,
+                  onCancel: cancel,
+                ),
+                _ => TransferProgressView(view: null, onCancel: cancel),
+              };
+            },
+          ),
         ),
       ),
     );

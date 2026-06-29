@@ -238,5 +238,14 @@
   "nearbyPermissionBlocked": "Local network permission is off. Open Settings to enable it and find nearby devices.",
   "nearbyOpenSettings": "Open Settings",
   "nearbyStaleToast": "This device is no longer available",
-  "nearbyConnectAction": "Receive"
+  "nearbyConnectAction": "Receive",
+
+  "bgSendingTitle": "Sending · {count} files",
+  "bgReceivingTitle": "Receiving · {count} files",
+  "bgToPeer": "to {peer}",
+  "bgFromPeer": "from {peer}",
+  "bgEta": "{time} left",
+  "bgCancel": "Cancel",
+  "bgKeepOpenTitle": "Keep the transfer going",
+  "bgKeepOpenBody": "Reopen Safe Send to keep transferring — iOS pauses it in the background."
 }

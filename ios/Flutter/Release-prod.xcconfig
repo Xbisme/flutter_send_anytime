@@ -4,3 +4,4 @@
 
 APP_DISPLAY_NAME=Safe Send
 PRODUCT_BUNDLE_IDENTIFIER=app.safesend
+APP_GROUP_ID=group.app.safesend.liveactivities

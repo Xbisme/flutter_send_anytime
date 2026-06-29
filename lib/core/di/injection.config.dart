@@ -28,6 +28,14 @@ import 'package:safe_send/core/domain/settings/settings_repository.dart'
     as _i656;
 import 'package:safe_send/core/services/app_info_service.dart' as _i118;
 import 'package:safe_send/core/services/app_review_service.dart' as _i966;
+import 'package:safe_send/core/services/background/background_execution_service.dart'
+    as _i257;
+import 'package:safe_send/core/services/background/background_module.dart'
+    as _i762;
+import 'package:safe_send/core/services/background/background_surface_controller.dart'
+    as _i154;
+import 'package:safe_send/core/services/background/background_transfer_coordinator.dart'
+    as _i575;
 import 'package:safe_send/core/services/deeplink/deep_link_service.dart'
     as _i572;
 import 'package:safe_send/core/services/deeplink/deep_link_service_impl.dart'
@@ -125,6 +133,7 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final databaseModule = _$DatabaseModule();
+    final backgroundModule = _$BackgroundModule();
     gh.factory<_i671.ResendAvailabilityUseCase>(
       () => const _i671.ResendAvailabilityUseCase(),
     );
@@ -159,6 +168,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i423.ReceivedFilesServiceImpl(),
     );
     gh.lazySingleton<_i547.PeerConnector>(() => _i603.WebRtcPeerConnector());
+    gh.lazySingleton<_i257.BackgroundExecutionService>(
+      () => _i257.IosBackgroundExecutionService(),
+    );
     gh.lazySingleton<_i532.NearbyPermissionService>(
       () => _i834.PermissionHandlerNearbyService(),
     );
@@ -170,6 +182,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i853.IncomingFileNotifier>(
       () => _i853.FlnIncomingFileNotifier(),
+    );
+    gh.lazySingleton<_i154.BackgroundSurfaceController>(
+      () => backgroundModule.surfaceController(gh<_i132.AppConfig>()),
     );
     gh.lazySingleton<_i656.SettingsRepository>(
       () => _i329.SharedPreferencesSettingsRepository(gh<_i132.AppConfig>()),
@@ -231,6 +246,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i560.HistoryCubit>(
       () => _i560.HistoryCubit(gh<_i951.WatchHistoryUseCase>()),
+    );
+    gh.lazySingleton<_i575.BackgroundTransferCoordinator>(
+      () => _i575.BackgroundTransferCoordinator(
+        gh<_i154.BackgroundSurfaceController>(),
+        gh<_i853.IncomingFileNotifier>(),
+        gh<_i257.BackgroundExecutionService>(),
+      ),
+      dispose: (i) => i.dispose(),
     );
     gh.factory<_i67.ReceiveTransferCubit>(
       () => _i67.ReceiveTransferCubit(
@@ -305,3 +328,5 @@ extension GetItInjectableX on _i174.GetIt {
 }
 
 class _$DatabaseModule extends _i206.DatabaseModule {}
+
+class _$BackgroundModule extends _i762.BackgroundModule {}

@@ -1415,6 +1415,54 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Nhận'**
   String get nearbyConnectAction;
+
+  /// Background surface title while sending (#011)
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang gửi · {count} tệp'**
+  String bgSendingTitle(int count);
+
+  /// Background surface title while receiving (#011)
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang nhận · {count} tệp'**
+  String bgReceivingTitle(int count);
+
+  /// Background surface peer line, sending direction (#011)
+  ///
+  /// In vi, this message translates to:
+  /// **'tới {peer}'**
+  String bgToPeer(String peer);
+
+  /// Background surface peer line, receiving direction (#011)
+  ///
+  /// In vi, this message translates to:
+  /// **'từ {peer}'**
+  String bgFromPeer(String peer);
+
+  /// Background surface estimated-time-remaining label (#011)
+  ///
+  /// In vi, this message translates to:
+  /// **'còn {time}'**
+  String bgEta(String time);
+
+  /// Cancel action on the Android background-transfer notification (#011)
+  ///
+  /// In vi, this message translates to:
+  /// **'Huỷ'**
+  String get bgCancel;
+
+  /// Title of the iOS keep-app-open reminder notification (#011, T032)
+  ///
+  /// In vi, this message translates to:
+  /// **'Tiếp tục truyền tệp'**
+  String get bgKeepOpenTitle;
+
+  /// Body of the iOS keep-app-open reminder notification (#011, T032)
+  ///
+  /// In vi, this message translates to:
+  /// **'Mở lại Safe Send để truyền tiếp — iOS tạm dừng khi app ở nền.'**
+  String get bgKeepOpenBody;
 }
 
 class _AppLocalizationsDelegate

@@ -9,7 +9,10 @@
             "request": "launch",
             "type": "dart",
             "program": "lib/main_dev.dart",
-            "args": ["--flavor", "dev"]
+            "args": ["--flavor", "dev"],
+            // Ensure `pod` (CocoaPods) is on PATH when VS Code's GUI process has
+            // a stripped PATH — pod lives in /usr/local/bin, gem bins in ~/.gem.
+            "env": { "PATH": "/opt/homebrew/bin:/usr/local/bin:${env:HOME}/.gem/bin:${env:PATH}" }
         },
         {
             "name": "Safe Send (dev · profile)",
@@ -17,14 +20,16 @@
             "type": "dart",
             "program": "lib/main_dev.dart",
             "flutterMode": "profile",
-            "args": ["--flavor", "dev"]
+            "args": ["--flavor", "dev"],
+            "env": { "PATH": "/opt/homebrew/bin:/usr/local/bin:${env:HOME}/.gem/bin:${env:PATH}" }
         },
         {
             "name": "Safe Send (prod)",
             "request": "launch",
             "type": "dart",
             "program": "lib/main_prod.dart",
-            "args": ["--flavor", "prod"]
+            "args": ["--flavor", "prod"],
+            "env": { "PATH": "/opt/homebrew/bin:/usr/local/bin:${env:HOME}/.gem/bin:${env:PATH}" }
         },
         {
             "name": "Safe Send (prod · release)",
@@ -32,7 +37,8 @@
             "type": "dart",
             "program": "lib/main_prod.dart",
             "flutterMode": "release",
-            "args": ["--flavor", "prod"]
+            "args": ["--flavor", "prod"],
+            "env": { "PATH": "/opt/homebrew/bin:/usr/local/bin:${env:HOME}/.gem/bin:${env:PATH}" }
         }
     ]
 }

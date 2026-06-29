@@ -43,4 +43,12 @@ class AppConfig {
   /// `ws://` (localhost/LAN), prod uses `wss://`. Null until set by the flavor
   /// entry point; the signaling client treats null as misconfiguration.
   final Uri? signalingEndpoint;
+
+  /// App Group shared with the iOS Live Activity widget extension (#011), split
+  /// per flavor so a dev and a prod build on the same device never share the
+  /// transfer-activity container. MUST match the group the native widget reads
+  /// (derived there from the flavor-specific bundle id).
+  String get liveActivityAppGroupId => flavor.isDev
+      ? 'group.app.safesend.dev.liveactivities'
+      : 'group.app.safesend.liveactivities';
 }

@@ -723,4 +723,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nearbyConnectAction => 'Receive';
+
+  @override
+  String bgSendingTitle(int count) {
+    return 'Sending · $count files';
+  }
+
+  @override
+  String bgReceivingTitle(int count) {
+    return 'Receiving · $count files';
+  }
+
+  @override
+  String bgToPeer(String peer) {
+    return 'to $peer';
+  }
+
+  @override
+  String bgFromPeer(String peer) {
+    return 'from $peer';
+  }
+
+  @override
+  String bgEta(String time) {
+    return '$time left';
+  }
+
+  @override
+  String get bgCancel => 'Cancel';
+
+  @override
+  String get bgKeepOpenTitle => 'Keep the transfer going';
+
+  @override
+  String get bgKeepOpenBody =>
+      'Reopen Safe Send to keep transferring — iOS pauses it in the background.';
 }

@@ -102,6 +102,19 @@ dependencies:
   gal: ^2.3.2
   flutter_local_notifications: ^22.0.1
 
+  # #011 Background Transfer. live_activities 2.4.9: iOS Live Activity /
+  # Dynamic Island bridge (sdk ^3.11.0 / flutter >=3.41.0 — exact project floor;
+  # requires a native Widget Extension target in Swift, iOS 16.1+). flutter_-
+  # foreground_task 9.2.2: Android foreground service (type dataSync) keeping the
+  # process alive during a backgrounded transfer + ongoing progress notification
+  # with a single Cancel action (Dart 3.4+/Flutter 3.22+, minSdk 21, iOS 12+).
+  live_activities: ^2.4.9
+  flutter_foreground_task: ^9.2.2
+  # Scheduled local notification (iOS) reminding the user to reopen the app
+  # mid-transfer (iOS suspends a backgrounded P2P transfer). Already transitive
+  # via flutter_local_notifications; declared explicitly for the zonedSchedule.
+  timezone: ^0.11.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

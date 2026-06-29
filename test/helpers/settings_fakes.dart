@@ -94,6 +94,19 @@ class FakeIncomingFileNotifier implements IncomingFileNotifier {
 
   @override
   Future<void> showIncoming({required String senderName}) async => shown++;
+
+  @override
+  Future<void> scheduleKeepOpenReminder({
+    required String title,
+    required String body,
+    int afterSeconds = 5,
+  }) async {}
+
+  @override
+  Future<void> cancelKeepOpenReminder() async {}
+
+  @override
+  Future<bool> requestNotificationPermission() async => true;
 }
 
 /// Always-grant photo-library permission.

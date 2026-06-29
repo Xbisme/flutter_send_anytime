@@ -4,7 +4,7 @@
 >
 > **Vai trò file này**: pure planning — dependency graph, scope per spec, timeline, optimal order. Current status của các spec sống ở [`project-context.md`](project-context.md). Ship history sống ở [`changelog.md`](changelog.md). Alignment decisions sống ở [`decisions/`](decisions/). **Giao diện** (screens, tokens, components, navigation IA) sống ở [`ui-design-context.md`](ui-design-context.md) — đọc trước mọi phần UI/UX của spec.
 >
-> Last updated: 2026-06-26 (Specs #001–#009 merged via PRs #1–#9; **#010 Settings & Preferences implemented** on branch `010-settings`. **Three v1.0 feature specs added before Polish**: #011 Background Transfer · #012 Home Completion · #013 In-App Viewers; **Polish & Release renumbered #011 → #014**. Next: #011 Background Transfer.)
+> Last updated: 2026-06-27 (Specs #001–#010 merged via PRs #1–#10 · #010 device-validated on 2 devices + first `pod install` OK. **Three v1.0 feature specs added before Polish**: #011 Background Transfer · #012 Home Completion · #013 In-App Viewers; **Polish & Release renumbered #011 → #014**. Next: #011 Background Transfer.)
 
 ---
 
@@ -259,7 +259,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #010: Settings & Preferences
 
-- **Status**: ✅ **Implemented (code)** — branch `010-settings` (2026-06-26). Single `shared_preferences`-backed `SettingsRepository` + app-wide `SettingsCubit` driving runtime theme/language; device profile (+ additive manifest `senderName` to peers), auto-receive (foreground skip-tap) / save-to-library (`gal`) / notifications (`flutter_local_notifications`) with permission gating, signaling-endpoint override + diagnostic, About (version + in-app how-it-works/privacy + rate). `dart analyze lib test` 0 · `flutter test` 264 passed. Two-device smoke + first `pod install` deferred. See [`changelog.md`](changelog.md).
+- **Status**: ✅ **Merged** (PR #10) — branch `010-settings` (2026-06-26) · **device-validated on 2 devices + first `pod install` OK**. Single `shared_preferences`-backed `SettingsRepository` + app-wide `SettingsCubit` driving runtime theme/language; device profile (+ additive manifest `senderName` to peers), auto-receive (foreground skip-tap) / save-to-library (`gal`) / notifications (`flutter_local_notifications`) with permission gating, signaling-endpoint override + diagnostic, About (version + in-app how-it-works/privacy + rate). `dart analyze lib test` 0 · `flutter test` 264 passed. **Two-device smoke PASSED on 2 devices + first `pod install` ran (build OK)**; only bloc-lint CLI remains deferred. See [`changelog.md`](changelog.md).
 - **Branch**: `010-settings`
 - **Depends on**: most prior specs
 - **Design**: Screen 08 **Cài đặt (settings)** tab — device-profile card + ToggleRow group (Tự động nhận / Lưu vào Thư viện / Thông báo / Giao diện tối) + version footer. See [`ui-design-context.md`](ui-design-context.md) §Screen 08.
@@ -277,7 +277,8 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #011: Background Transfer
 
-- **Status**: ⬜ Not started
+- **Status**: ✅ **Implemented (Dart core)** — branch `011-background-transfer` (2026-06-27). OS background surfaces driven from the #002 snapshot stream: iOS Live Activity + Android `dataSync` foreground-service notification (immediate Huỷ); core-pure coordinator + per-platform controllers (`live_activities` 2.4.9 / `flutter_foreground_task` 9.2.2) via an additive binder seam; no engine/protocol edits. `dart analyze lib test` 0 · `flutter test` 281 passed (14 new). Deferred: two-device smoke + first `pod install` + iOS Widget-Extension target (T040/T041), iOS bg-task grace (T032), surface throttle (T036). See [`changelog.md`](changelog.md).
+- **Was**: ⬜ Not started
 - **Branch**: `011-background-transfer`
 - **Depends on**: #002 (engine), #004/#005 (send/receive flows)
 - **Design**: progress surfaces while the app is backgrounded — **iOS Live Activity** (Dynamic Island + lock-screen) and an **Android foreground-service notification**. Pull the latest screens from the **claude_design `SafeSend`** project (updated 2026-06-26) via `DesignSync` and distil into [`ui-design-context.md`](ui-design-context.md) before building.
