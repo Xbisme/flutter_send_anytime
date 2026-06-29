@@ -4,7 +4,7 @@
 >
 > **Vai trò file này**: pure planning — dependency graph, scope per spec, timeline, optimal order. Current status của các spec sống ở [`project-context.md`](project-context.md). Ship history sống ở [`changelog.md`](changelog.md). Alignment decisions sống ở [`decisions/`](decisions/). **Giao diện** (screens, tokens, components, navigation IA) sống ở [`ui-design-context.md`](ui-design-context.md) — đọc trước mọi phần UI/UX của spec.
 >
-> Last updated: 2026-06-29 (Specs #001–#012 merged via PRs #1–#12; **#012 Home Completion merged**. **One v1.0 feature spec remains before Polish**: #013 In-App Viewers; **Polish & Release = #014**. Next: #013 In-App Viewers.)
+> Last updated: 2026-06-29 (Specs #001–#013 merged via PRs #1–#13; **#013 In-App Viewers merged**. **All v1.0 feature specs done** — only the **#014 Polish & Release** sweep remains. Next: #014 Polish & v1.0 Release.)
 
 ---
 
@@ -307,20 +307,20 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #013: In-App File Viewers
 
-- **Status**: 🟡 **Next**
+- **Status**: ✅ **Merged** (PR #13, merge commit `e452bc4`) — branch `013-in-app-viewers` (2026-06-29). Tapping a **received** known-type file (History detail, Receive-complete list, Home recent / See-all grids) opens an in-app viewer; a core viewer-kind resolver splits the #012 `FileCategory` `files` bucket into audio/PDF/text/code → routes image→`InteractiveViewer`, video/audio→one shared media player, PDF→PDFium doc viewer, text/code→`SelectableText` (≈1 MB cap, truncated-with-notice). Unsupported types + **sent** files fall back to existing `open_filex`/`share_plus` (no dead end). Real video thumbnails replace the #012 placeholder in Home/See-all media grids (on-disk LRU cache, path+mtime key, lazy, bounded memory). All on-device (works in airplane mode), reuses on-disk paths (no re-copy), additive — **no engine/signaling/transport/protocol/DB-schema edits**. `dart analyze lib test` 0 · `flutter test` **357 passed** (39 new). Native: first `pod install` since #007 (`pdfrx`/`video_player`/thumbnail pods); 2 device-run DI fixes folded in. Deferred (device): on-device viewer pass on 2 devices. See [`changelog.md`](changelog.md).
 - **Branch**: `013-in-app-viewers`
 - **Depends on**: #005/#006 (received files + history), #012 (open from Home), #003-#005 file paths
 - **Design**: tapping a known-type item (Home recent, History detail, Receive complete) opens an **in-app viewer** instead of (or before) the OS share/open sheet. Pull the viewer screens from claude_design.
 - **Scope**:
-  - **In-app preview** for fixed/known types: **image**, **video**, **audio**, and **basic documents** (PDF/text at minimum); decide the document set at clarify.
+  - **In-app preview** for fixed/known types: **image**, **video**, **audio**, and **basic documents** (PDF + text/code; Office docx/xlsx/pptx out of scope → OS open/share — confirmed at clarify).
   - Reached from History detail, the Receive-complete file list, and Home recent grids; falls back to the existing `open_filex`/share for unsupported types.
   - Streamed/efficient loading (don't load huge media fully into memory); respect the streamed-I/O principle.
-- **New packages**: image is built-in; video (e.g. `video_player`/`chewie`), audio (e.g. `just_audio`), PDF (e.g. `pdfx`/`syncfusion_flutter_pdfviewer`) — **verify versions + native min-OS on pub.dev at plan** (Constitution XV; these are native-heavy).
-- **Out of scope**: editing files; thumbnail generation for arbitrary formats.
+- **New packages**: `video_player` ^2.11.1 (shared video+audio player), `pdfrx` ^2.4.4 (PDFium PDF viewer; flutter `>=3.41.0` exact floor), `video_thumbnail_plus` ^0.0.2 (first-frame thumbnails — fork of the abandoned `video_thumbnail`). Image + text viewers use Flutter built-ins (no package).
+- **Out of scope**: editing files; thumbnail generation for arbitrary formats; in-app Office rendering; streaming remote/URL media.
 
 ### Spec #014: Polish & v1.0 Release
 
-- **Status**: ⬜ Not started
+- **Status**: 🟡 **Next**
 - **Branch**: `014-polish-v1-release`
 - **Depends on**: All
 - **Scope**:
