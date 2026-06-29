@@ -3,6 +3,10 @@
 > Append-only ship history. One entry per spec as it lands. Newest at top.
 > Format: `### YYYY-MM-DD — Spec #NNN <Name> ✅ <verb>` + 1–4 bullets.
 
+### 2026-06-29 — Spec #012 Home Screen Completion ✅ MERGED (PR #12)
+
+- **Merged to `main`** (PR #12, merge commit `f899caf`). On top of the IMPLEMENTED snapshot below: no further code changes — the branch passed all gates (`dart analyze` 0 · `flutter test` 318 passed · `dart format` clean) and merged as-is. Doc hygiene (project-context / sdd-roadmap / this changelog) flipped to Merged. **Remaining (deferred, non-blocking)**: on-device manual UI pass (T031 — local feature, no two-device smoke). **Next: #013 In-App Viewers.**
+
 ### 2026-06-29 — Spec #012 Home Screen Completion ✅ IMPLEMENTED
 
 - **Home now shows real data** (the #001/#006 placeholder is gone): the hero card (bytes sent/received, "N transfers this month", progress fraction), the 3 StatTiles (Ảnh/Video/File counts), and the Ảnh/Video/File gần đây sections are all derived from the **transfer-history store (#006) only** — no on-device media library, no new permission (FR-016, decided at clarify). `HomeCubit` is now **reactive** (subscribes to the history-backed dashboard stream → live-updates on any new/deleted transfer, FR-011); a pure `HomeDashboardBuilder` (injected `now`) maps records → the dashboard. Counting rules: completed fully + partial→kept-files count; failed/cancelled excluded; both directions; per-file stat counts; per-record monthly count (local calendar month).

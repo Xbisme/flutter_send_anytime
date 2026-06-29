@@ -4,7 +4,7 @@
 >
 > **Vai trò file này**: pure planning — dependency graph, scope per spec, timeline, optimal order. Current status của các spec sống ở [`project-context.md`](project-context.md). Ship history sống ở [`changelog.md`](changelog.md). Alignment decisions sống ở [`decisions/`](decisions/). **Giao diện** (screens, tokens, components, navigation IA) sống ở [`ui-design-context.md`](ui-design-context.md) — đọc trước mọi phần UI/UX của spec.
 >
-> Last updated: 2026-06-29 (Specs #001–#011 merged via PRs #1–#11; **#012 Home Completion implemented (Dart)**. **One v1.0 feature spec remains before Polish**: #013 In-App Viewers; **Polish & Release = #014**. Next: #013 In-App Viewers — or merge #012 first.)
+> Last updated: 2026-06-29 (Specs #001–#012 merged via PRs #1–#12; **#012 Home Completion merged**. **One v1.0 feature spec remains before Polish**: #013 In-App Viewers; **Polish & Release = #014**. Next: #013 In-App Viewers.)
 
 ---
 
@@ -293,7 +293,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #012: Home Screen Completion
 
-- **Status**: ✅ **Implemented (Dart)** — branch `012-home-completion` (2026-06-29). Home placeholder replaced with real data from the #006 history store **only** (no media library / new permission — FR-016): reactive `HomeCubit` + pure `HomeDashboardBuilder` drive the hero/stats/recent-media; real `Image.file` photo thumbnails (icon fallback), video tiles (frame → #013); new parametrized `AppRoutes.homeSeeAll` See-all screen; item tap → History detail (#006). Additive + feature-local; no new packages / engine / schema edits. `dart analyze lib test` 0 · `flutter test` 318 passed (33 new). Deferred: on-device UI pass (no two-device smoke — local feature). See [`changelog.md`](changelog.md).
+- **Status**: ✅ **Merged** (PR #12, merge commit `f899caf`) — branch `012-home-completion` (2026-06-29). Home placeholder replaced with real data from the #006 history store **only** (no media library / new permission — FR-016): reactive `HomeCubit` + pure `HomeDashboardBuilder` drive the hero/stats/recent-media; real `Image.file` photo thumbnails (icon fallback), video tiles (frame → #013); new parametrized `AppRoutes.homeSeeAll` See-all screen; item tap → History detail (#006). Additive + feature-local; no new packages / engine / schema edits. `dart analyze lib test` 0 · `flutter test` 318 passed (33 new). Deferred: on-device UI pass (no two-device smoke — local feature). See [`changelog.md`](changelog.md).
 - **Branch**: `012-home-completion`
 - **Depends on**: #006 (history data), #001 (Home shell), #013 may follow (viewers open from Home)
 - **Design**: Screen 01 **Trang chủ (home)** — hero stat card, 3 StatTiles (Ảnh/Video/File), Recent photos / videos / files grids, "Xem tất cả (See all)" per section. Pull the **updated** Home + See-all screens from claude_design via `DesignSync`.
@@ -307,7 +307,7 @@ Send Flow (UI)                  Receive Flow (UI)
 
 ### Spec #013: In-App File Viewers
 
-- **Status**: ⬜ Not started
+- **Status**: 🟡 **Next**
 - **Branch**: `013-in-app-viewers`
 - **Depends on**: #005/#006 (received files + history), #012 (open from Home), #003-#005 file paths
 - **Design**: tapping a known-type item (Home recent, History detail, Receive complete) opens an **in-app viewer** instead of (or before) the OS share/open sheet. Pull the viewer screens from claude_design.

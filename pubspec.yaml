@@ -115,6 +115,20 @@ dependencies:
   # via flutter_local_notifications; declared explicitly for the zonedSchedule.
   timezone: ^0.11.0
 
+  # #013 In-App File Viewers (versions verified pub.dev vs Dart 3.11/Flutter
+  # 3.41.7 floor — Constitution XV; see specs/013-in-app-viewers/research.md).
+  # video_player 2.11.1 (flutter.dev): one shared video+audio player (AVPlayer/
+  # ExoPlayer, iOS13/API24). pdfrx 2.4.4: on-device PDFium PDF viewer (flutter
+  # >=3.41.0 — exact floor; texture-rendered, streamed). video_thumbnail_plus
+  # 0.0.2: first-frame thumbnails (maintained fork — the original
+  # video_thumbnail 0.5.6 caps sdk <3.0.0 and won't resolve on Dart 3.11).
+  # Image + text viewers use Flutter built-ins (InteractiveViewer /
+  # SelectableText) — no package (YAGNI). Open/share fallback reuses open_filex
+  # + share_plus (above).
+  video_player: ^2.11.1
+  pdfrx: ^2.4.4
+  video_thumbnail_plus: ^0.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

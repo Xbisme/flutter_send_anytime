@@ -1,8 +1,8 @@
 <!-- SPECKIT START -->
 # Safe Send — Agent Context
 
-Active feature: **#012 Home Completion** (planning). #001–#011 ✅ merged into `main` (PRs #1–#11); #011 Dart core + iOS native validated, 2-device smoke deferred. **Next: #012 Home Completion** (remaining v1.0 feature specs before Polish — #012 Home Completion · #013 In-App Viewers; Polish & Release = #014).
-Current plan: [specs/012-home-completion/plan.md](specs/012-home-completion/plan.md) · Spec: [specs/012-home-completion/spec.md](specs/012-home-completion/spec.md)
+Active feature: **#013 In-App Viewers** (next — not started). #001–#012 ✅ merged into `main` (PRs #1–#12); #012 Home Completion merged (PR #12, `f899caf`), on-device UI pass deferred. **Next: #013 In-App Viewers** (last v1.0 feature spec before Polish; Polish & Release = #014).
+Current plan: [specs/013-in-app-viewers/plan.md](specs/013-in-app-viewers/plan.md) · Spec: [specs/013-in-app-viewers/spec.md](specs/013-in-app-viewers/spec.md)
 
 ## Project meta (read these first)
 - Constitution (authoritative, 15 principles): [.specify/memory/constitution.md](.specify/memory/constitution.md)

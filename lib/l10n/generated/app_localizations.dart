@@ -1505,6 +1505,84 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Mở lại Safe Send để truyền tiếp — iOS tạm dừng khi app ở nền.'**
   String get bgKeepOpenBody;
+
+  /// Shown when a tapped file no longer exists on disk (#013, FR-014)
+  ///
+  /// In vi, this message translates to:
+  /// **'Tệp không khả dụng'**
+  String get viewerFileUnavailable;
+
+  /// Action/label to hand off to the OS open sheet (#013)
+  ///
+  /// In vi, this message translates to:
+  /// **'Mở bằng ứng dụng khác'**
+  String get viewerOpenExternally;
+
+  /// Share action in a viewer's top bar (#013, FR-011)
+  ///
+  /// In vi, this message translates to:
+  /// **'Chia sẻ'**
+  String get viewerActionShare;
+
+  /// Back affordance label in a viewer (#013, FR-011)
+  ///
+  /// In vi, this message translates to:
+  /// **'Quay lại'**
+  String get viewerBack;
+
+  /// Generic viewer error state (#013, FR-015)
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể mở tệp này'**
+  String get viewerErrorGeneric;
+
+  /// Image viewer decode/error state (#013, FR-015)
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể hiển thị ảnh'**
+  String get viewerImageError;
+
+  /// Media player error state (#013, FR-015)
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể phát tệp này'**
+  String get viewerMediaError;
+
+  /// PDF/text viewer error state (#013, FR-015)
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể mở tài liệu'**
+  String get viewerDocumentError;
+
+  /// Play control a11y label (#013, US2)
+  ///
+  /// In vi, this message translates to:
+  /// **'Phát'**
+  String get viewerPlay;
+
+  /// Pause control a11y label (#013, US2)
+  ///
+  /// In vi, this message translates to:
+  /// **'Tạm dừng'**
+  String get viewerPause;
+
+  /// Scrubber/seek a11y label (#013, US2)
+  ///
+  /// In vi, this message translates to:
+  /// **'Tua đến vị trí'**
+  String get viewerSeek;
+
+  /// Audio-only player layout caption (#013, FR-007)
+  ///
+  /// In vi, this message translates to:
+  /// **'Tệp âm thanh'**
+  String get viewerAudioOnly;
+
+  /// Notice when a large text file is shown truncated (#013, FR-010a)
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã hiển thị một phần — mở bằng ứng dụng khác để xem đầy đủ.'**
+  String get viewerTextTruncated;
 }
 
 class _AppLocalizationsDelegate

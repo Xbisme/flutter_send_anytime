@@ -1,18 +1,35 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:safe_send/core/constants/app_routes.dart';
+import 'package:safe_send/core/domain/transfer_enums.dart';
 import 'package:safe_send/core/presentation/files/file_widgets.dart';
 import 'package:safe_send/core/presentation/media/media_thumbnail.dart';
+import 'package:safe_send/core/presentation/viewers/file_open_coordinator.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
 import 'package:safe_send/core/theme/app_dimens.dart';
 import 'package:safe_send/core/theme/app_typography.dart';
 import 'package:safe_send/features/home/domain/models/home_dashboard.dart';
 
-/// Tap a media item → its History detail page (#006, FR-007). Reused by Home
-/// and the See-all screens.
-void openMediaItem(BuildContext context, MediaItem item) =>
-    context.push(AppRoutes.historyDetail, extra: item.record);
+/// Tap a media item → its in-app viewer when the file is received + on disk +
+/// a supported type (#013, FR-001); otherwise → its History detail page (the
+/// #012/FR-007 behaviour, e.g. a sent item or a no-longer-present file).
+void openMediaItem(BuildContext context, MediaItem item) {
+  final isReceived = item.record.direction == TransferDirection.received;
+  final request = FileOpenCoordinator.viewableRequestFor(
+    name: item.name,
+    path: item.localPath,
+    mimeType: null,
+    isReceived: isReceived,
+  );
+  if (request != null) {
+    unawaited(context.push(AppRoutes.fileViewer, extra: request));
+  } else {
+    unawaited(context.push(AppRoutes.historyDetail, extra: item.record));
+  }
+}
 
 /// Square photo cell: real thumbnail (or icon fallback) + name overlay (#012).
 class MediaPhotoCell extends StatelessWidget {
