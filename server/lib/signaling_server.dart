@@ -6,6 +6,7 @@ import 'package:safesend_signaling/safesend_signaling.dart';
 import 'package:server/peer_connection.dart';
 import 'package:server/rate_limiter.dart';
 import 'package:server/room_manager.dart';
+import 'package:server/turn_credential_service.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
@@ -24,7 +25,12 @@ class SignalingServer {
     Duration ttl = SignalingProtocol.defaultTtl,
     this.rateLimit = const RateLimitConfig(),
     Random? random,
-  }) : _rooms = RoomManager(ttl: ttl, random: random);
+    TurnCredentialService? turnCredentials,
+  }) : _rooms = RoomManager(
+         ttl: ttl,
+         random: random,
+         turnCredentials: turnCredentials,
+       );
 
   final RoomManager _rooms;
 
@@ -77,6 +83,7 @@ class SignalingServer {
       case InvalidCodeFrame():
       case PeerLeftFrame():
       case RateLimitedFrame():
+      case TurnCredentialsFrame():
         break;
     }
   }

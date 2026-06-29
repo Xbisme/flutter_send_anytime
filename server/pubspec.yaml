@@ -7,6 +7,9 @@ environment:
   sdk: ^3.11.0
 
 dependencies:
+  # #014: HMAC-SHA1 for coturn `use-auth-secret` ephemeral TURN credentials.
+  # Matches the app's crypto 3.0.7 (Constitution XV).
+  crypto: ^3.0.7
   safesend_signaling:
     path: ../packages/safesend_signaling
   shelf: ^1.4.2

@@ -328,7 +328,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i181.PairingRepositoryImpl(
         gh<_i0.SignalingClient>(),
         gh<_i547.PeerConnector>(),
-        gh<_i132.AppConfig>(),
         gh<_i639.ActiveHostingRegistry>(),
       ),
     );

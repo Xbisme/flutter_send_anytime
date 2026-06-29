@@ -2,7 +2,7 @@
 # Safe Send — Agent Context
 
 Active feature: **#014 Polish & v1.0 Release** (next — not started). #001–#013 ✅ merged into `main` (PRs #1–#13); #013 In-App Viewers merged (PR #13, `e452bc4`), on-device viewer pass deferred. **Next: #014 Polish & v1.0 Release** (final spec — resilience/a11y/perf/security/build sweep).
-Current plan: [specs/013-in-app-viewers/plan.md](specs/013-in-app-viewers/plan.md) · Spec: [specs/013-in-app-viewers/spec.md](specs/013-in-app-viewers/spec.md)
+Current plan: [specs/014-polish-v1-release/plan.md](specs/014-polish-v1-release/plan.md) · Spec: [specs/014-polish-v1-release/spec.md](specs/014-polish-v1-release/spec.md)
 
 ## Project meta (read these first)
 - Constitution (authoritative, 15 principles): [.specify/memory/constitution.md](.specify/memory/constitution.md)

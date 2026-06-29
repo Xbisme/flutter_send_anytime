@@ -72,9 +72,30 @@ sealed class SignalingFrame {
         final retry = decoded['retryAfterSeconds'];
         if (retry is! int) return null;
         return RateLimitedFrame(retryAfterSeconds: retry);
+      case SignalingProtocol.typeTurnCredentials:
+        return _decodeTurnCredentials(decoded);
       default:
         return null;
     }
+  }
+
+  static SignalingFrame? _decodeTurnCredentials(Map<String, Object?> json) {
+    final urls = json['urls'];
+    final username = json['username'];
+    final credential = json['credential'];
+    final ttl = json['ttlSeconds'];
+    if (urls is! List || urls.isEmpty || urls.any((u) => u is! String)) {
+      return null;
+    }
+    if (username is! String || credential is! String || ttl is! int) {
+      return null;
+    }
+    return TurnCredentialsFrame(
+      urls: urls.cast<String>(),
+      username: username,
+      credential: credential,
+      ttlSeconds: ttl,
+    );
   }
 
   static SignalingFrame? _decodeRelay(Map<String, Object?> json) {
@@ -289,5 +310,46 @@ final class RateLimitedFrame extends SignalingFrame {
     'v': SignalingProtocol.version,
     'type': type,
     'retryAfterSeconds': retryAfterSeconds,
+  };
+}
+
+/// Server → client: ephemeral TURN relay credentials for this session (#014).
+///
+/// Carries ICE-server configuration only (relay [urls] + a short-lived
+/// [username]/[credential] pair, coturn `use-auth-secret` convention) — this is
+/// connection-setup metadata, permitted by Constitution VIII; it MUST NOT carry
+/// any file/peer data. The values are session-scoped and MUST NEVER be logged
+/// (Constitution I).
+final class TurnCredentialsFrame extends SignalingFrame {
+  const TurnCredentialsFrame({
+    required this.urls,
+    required this.username,
+    required this.credential,
+    required this.ttlSeconds,
+  });
+
+  /// coturn `turn:`/`turns:` relay endpoints for this flavor.
+  final List<String> urls;
+
+  /// TURN username (the credential's Unix expiry timestamp).
+  final String username;
+
+  /// TURN credential (`base64(HMAC-SHA1(secret, username))`).
+  final String credential;
+
+  /// Lifetime hint in seconds; the client must (re)connect before expiry.
+  final int ttlSeconds;
+
+  @override
+  String get type => SignalingProtocol.typeTurnCredentials;
+
+  @override
+  Map<String, Object?> toJson() => {
+    'v': SignalingProtocol.version,
+    'type': type,
+    'urls': urls,
+    'username': username,
+    'credential': credential,
+    'ttlSeconds': ttlSeconds,
   };
 }

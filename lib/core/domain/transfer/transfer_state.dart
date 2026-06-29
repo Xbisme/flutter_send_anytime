@@ -66,6 +66,10 @@ abstract class TransferSnapshot with _$TransferSnapshot {
     required TransferProgress progress,
     @Default(<FileTransferItem>[]) List<FileTransferItem> items,
     AppFailure? failure,
+    // True when ICE selected a TURN-relayed candidate pair (#014). Additive;
+    // drives the "relayed · encrypted" indicator (FR-004a) and never alters the
+    // state machine. Defaults false (direct).
+    @Default(false) bool relayInUse,
   }) = _TransferSnapshot;
 
   const TransferSnapshot._();

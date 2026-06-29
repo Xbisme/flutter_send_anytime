@@ -283,7 +283,10 @@ as int,
 /// @nodoc
 mixin _$TransferSnapshot {
 
- TransferPhase get phase; TransferRole get role; TransferProgress get progress; List<FileTransferItem> get items; AppFailure? get failure;
+ TransferPhase get phase; TransferRole get role; TransferProgress get progress; List<FileTransferItem> get items; AppFailure? get failure;// True when ICE selected a TURN-relayed candidate pair (#014). Additive;
+// drives the "relayed · encrypted" indicator (FR-004a) and never alters the
+// state machine. Defaults false (direct).
+ bool get relayInUse;
 /// Create a copy of TransferSnapshot
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -294,16 +297,16 @@ $TransferSnapshotCopyWith<TransferSnapshot> get copyWith => _$TransferSnapshotCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransferSnapshot&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.role, role) || other.role == role)&&(identical(other.progress, progress) || other.progress == progress)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransferSnapshot&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.role, role) || other.role == role)&&(identical(other.progress, progress) || other.progress == progress)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.relayInUse, relayInUse) || other.relayInUse == relayInUse));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,phase,role,progress,const DeepCollectionEquality().hash(items),failure);
+int get hashCode => Object.hash(runtimeType,phase,role,progress,const DeepCollectionEquality().hash(items),failure,relayInUse);
 
 @override
 String toString() {
-  return 'TransferSnapshot(phase: $phase, role: $role, progress: $progress, items: $items, failure: $failure)';
+  return 'TransferSnapshot(phase: $phase, role: $role, progress: $progress, items: $items, failure: $failure, relayInUse: $relayInUse)';
 }
 
 
@@ -314,7 +317,7 @@ abstract mixin class $TransferSnapshotCopyWith<$Res>  {
   factory $TransferSnapshotCopyWith(TransferSnapshot value, $Res Function(TransferSnapshot) _then) = _$TransferSnapshotCopyWithImpl;
 @useResult
 $Res call({
- TransferPhase phase, TransferRole role, TransferProgress progress, List<FileTransferItem> items, AppFailure? failure
+ TransferPhase phase, TransferRole role, TransferProgress progress, List<FileTransferItem> items, AppFailure? failure, bool relayInUse
 });
 
 
@@ -331,14 +334,15 @@ class _$TransferSnapshotCopyWithImpl<$Res>
 
 /// Create a copy of TransferSnapshot
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? phase = null,Object? role = null,Object? progress = null,Object? items = null,Object? failure = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? phase = null,Object? role = null,Object? progress = null,Object? items = null,Object? failure = freezed,Object? relayInUse = null,}) {
   return _then(_self.copyWith(
 phase: null == phase ? _self.phase : phase // ignore: cast_nullable_to_non_nullable
 as TransferPhase,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as TransferRole,progress: null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
 as TransferProgress,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<FileTransferItem>,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
-as AppFailure?,
+as AppFailure?,relayInUse: null == relayInUse ? _self.relayInUse : relayInUse // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 /// Create a copy of TransferSnapshot
@@ -444,10 +448,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( TransferPhase phase,  TransferRole role,  TransferProgress progress,  List<FileTransferItem> items,  AppFailure? failure)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( TransferPhase phase,  TransferRole role,  TransferProgress progress,  List<FileTransferItem> items,  AppFailure? failure,  bool relayInUse)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TransferSnapshot() when $default != null:
-return $default(_that.phase,_that.role,_that.progress,_that.items,_that.failure);case _:
+return $default(_that.phase,_that.role,_that.progress,_that.items,_that.failure,_that.relayInUse);case _:
   return orElse();
 
 }
@@ -465,10 +469,10 @@ return $default(_that.phase,_that.role,_that.progress,_that.items,_that.failure)
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( TransferPhase phase,  TransferRole role,  TransferProgress progress,  List<FileTransferItem> items,  AppFailure? failure)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( TransferPhase phase,  TransferRole role,  TransferProgress progress,  List<FileTransferItem> items,  AppFailure? failure,  bool relayInUse)  $default,) {final _that = this;
 switch (_that) {
 case _TransferSnapshot():
-return $default(_that.phase,_that.role,_that.progress,_that.items,_that.failure);case _:
+return $default(_that.phase,_that.role,_that.progress,_that.items,_that.failure,_that.relayInUse);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -485,10 +489,10 @@ return $default(_that.phase,_that.role,_that.progress,_that.items,_that.failure)
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( TransferPhase phase,  TransferRole role,  TransferProgress progress,  List<FileTransferItem> items,  AppFailure? failure)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( TransferPhase phase,  TransferRole role,  TransferProgress progress,  List<FileTransferItem> items,  AppFailure? failure,  bool relayInUse)?  $default,) {final _that = this;
 switch (_that) {
 case _TransferSnapshot() when $default != null:
-return $default(_that.phase,_that.role,_that.progress,_that.items,_that.failure);case _:
+return $default(_that.phase,_that.role,_that.progress,_that.items,_that.failure,_that.relayInUse);case _:
   return null;
 
 }
@@ -500,7 +504,7 @@ return $default(_that.phase,_that.role,_that.progress,_that.items,_that.failure)
 
 
 class _TransferSnapshot extends TransferSnapshot {
-  const _TransferSnapshot({required this.phase, required this.role, required this.progress, final  List<FileTransferItem> items = const <FileTransferItem>[], this.failure}): _items = items,super._();
+  const _TransferSnapshot({required this.phase, required this.role, required this.progress, final  List<FileTransferItem> items = const <FileTransferItem>[], this.failure, this.relayInUse = false}): _items = items,super._();
   
 
 @override final  TransferPhase phase;
@@ -514,6 +518,10 @@ class _TransferSnapshot extends TransferSnapshot {
 }
 
 @override final  AppFailure? failure;
+// True when ICE selected a TURN-relayed candidate pair (#014). Additive;
+// drives the "relayed · encrypted" indicator (FR-004a) and never alters the
+// state machine. Defaults false (direct).
+@override@JsonKey() final  bool relayInUse;
 
 /// Create a copy of TransferSnapshot
 /// with the given fields replaced by the non-null parameter values.
@@ -525,16 +533,16 @@ _$TransferSnapshotCopyWith<_TransferSnapshot> get copyWith => __$TransferSnapsho
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransferSnapshot&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.role, role) || other.role == role)&&(identical(other.progress, progress) || other.progress == progress)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransferSnapshot&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.role, role) || other.role == role)&&(identical(other.progress, progress) || other.progress == progress)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.relayInUse, relayInUse) || other.relayInUse == relayInUse));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,phase,role,progress,const DeepCollectionEquality().hash(_items),failure);
+int get hashCode => Object.hash(runtimeType,phase,role,progress,const DeepCollectionEquality().hash(_items),failure,relayInUse);
 
 @override
 String toString() {
-  return 'TransferSnapshot(phase: $phase, role: $role, progress: $progress, items: $items, failure: $failure)';
+  return 'TransferSnapshot(phase: $phase, role: $role, progress: $progress, items: $items, failure: $failure, relayInUse: $relayInUse)';
 }
 
 
@@ -545,7 +553,7 @@ abstract mixin class _$TransferSnapshotCopyWith<$Res> implements $TransferSnapsh
   factory _$TransferSnapshotCopyWith(_TransferSnapshot value, $Res Function(_TransferSnapshot) _then) = __$TransferSnapshotCopyWithImpl;
 @override @useResult
 $Res call({
- TransferPhase phase, TransferRole role, TransferProgress progress, List<FileTransferItem> items, AppFailure? failure
+ TransferPhase phase, TransferRole role, TransferProgress progress, List<FileTransferItem> items, AppFailure? failure, bool relayInUse
 });
 
 
@@ -562,14 +570,15 @@ class __$TransferSnapshotCopyWithImpl<$Res>
 
 /// Create a copy of TransferSnapshot
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? phase = null,Object? role = null,Object? progress = null,Object? items = null,Object? failure = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? phase = null,Object? role = null,Object? progress = null,Object? items = null,Object? failure = freezed,Object? relayInUse = null,}) {
   return _then(_TransferSnapshot(
 phase: null == phase ? _self.phase : phase // ignore: cast_nullable_to_non_nullable
 as TransferPhase,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as TransferRole,progress: null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
 as TransferProgress,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
 as List<FileTransferItem>,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
-as AppFailure?,
+as AppFailure?,relayInUse: null == relayInUse ? _self.relayInUse : relayInUse // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

@@ -65,7 +65,38 @@ cd server && dart test          # room lifecycle, TTL, rate limiting, full wire 
 
 ## TURN (deferred)
 
-A TURN relay (encrypted-only fallback for hard NATs) is **not** part of this
-service. It is a documented, configurable hook on `AppConfig.iceServers` and is
-stood up in #011. When used, TURN relays only end-to-end-encrypted traffic and
-never persists it (Constitution I).
+## TURN relay (#014)
+
+The encrypted-only fallback for hard NATs is now **stood up** (it replaces the
+old documented-empty hook). It runs as a self-hosted **coturn** daemon next to
+this signaling relay; relayed traffic stays DTLS-encrypted end-to-end and is
+**never persisted or logged** (Constitution I). TURN is used only when a direct
+P2P path fails.
+
+### Credentials are ephemeral (no secret in the client)
+
+coturn runs with `use-auth-secret`. This relay shares the same secret and, on
+each pairing, mints a short-lived credential —
+`username = <unix-expiry>`, `credential = base64(HMAC-SHA1(secret, username))` —
+and delivers it to both peers over the signaling channel as a
+`turn-credentials` frame. The secret lives only in the relay's environment and
+**never reaches the client or any log**.
+
+### Run it
+
+1. Edit [`turnserver.conf`](turnserver.conf): set `external-ip`, a long random
+   `static-auth-secret`, and (for `turns:`) TLS `cert`/`pkey`.
+2. Start coturn: `turnserver -c turnserver.conf`.
+3. Start this relay with the matching env so it issues credentials:
+   ```sh
+   TURN_URLS="turn:<host>:3478?transport=udp,turns:<host>:5349?transport=tcp" \
+   TURN_SECRET="<same as static-auth-secret>" \
+   TURN_TTL_SECONDS=600 \
+   dart run bin/server.dart --port 8080
+   ```
+   When `TURN_URLS`/`TURN_SECRET` are unset, the relay stays STUN-only and
+   clients fall back to their static per-flavor ICE config (backward compatible).
+
+> **Managed alternative**: a hosted TURN (Cloudflare/Metered/Twilio) is a
+> drop-in — point the client's per-flavor `iceServers` at it instead. The client
+> is provider-agnostic; only the credential source changes.

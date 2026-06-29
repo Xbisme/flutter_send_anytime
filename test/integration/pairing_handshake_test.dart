@@ -88,7 +88,6 @@ void main() {
   PairingRepositoryImpl repo() => PairingRepositoryImpl(
     SignalingClient(config),
     FakeHandshakeConnector(),
-    config,
     ActiveHostingRegistryImpl(),
   );
 

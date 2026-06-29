@@ -30,6 +30,7 @@ abstract class TransferView with _$TransferView {
     @Default(false) bool awaitingDecision,
     IncomingOffer? incomingOffer,
     AppFailure? failure,
+    @Default(false) bool relayInUse,
   }) = _TransferView;
 
   const TransferView._();
@@ -65,6 +66,7 @@ abstract class TransferView with _$TransferView {
       awaitingDecision: awaitingDecision,
       incomingOffer: incomingOffer,
       failure: snapshot.failure,
+      relayInUse: snapshot.relayInUse,
     );
   }
 

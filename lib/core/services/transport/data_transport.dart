@@ -32,6 +32,15 @@ abstract interface class DataTransport {
   Future<void> close();
 }
 
+/// Optional capability (#014): a transport that can report whether ICE selected
+/// a TURN-relayed path. Implemented by the real WebRTC transport only; the
+/// engine treats any transport that is not [RelayAware] as direct (relay =
+/// false), so loopback + test fakes need no change.
+abstract interface class RelayAware {
+  /// Whether the negotiated connection runs over a TURN relay.
+  bool get isRelay;
+}
+
 /// Establishes a [DataTransport] between two peers. The engine depends on this
 /// seam so it can run over real WebRTC in the app and over loopback in tests.
 // ignore: one_member_abstracts

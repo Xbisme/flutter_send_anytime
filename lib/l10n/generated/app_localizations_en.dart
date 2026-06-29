@@ -407,6 +407,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pairingErrorGeneric => 'Something went wrong, please try again';
 
   @override
+  String get pairingErrorRelayUnavailable =>
+      'Couldn\'t connect over the current network. Try again or switch networks.';
+
+  @override
+  String get transferRelayIndicator => 'Relayed · encrypted';
+
+  @override
   String get sendTitle => 'Send files';
 
   @override

@@ -145,6 +145,8 @@
   "pairingErrorTimeout": "Connection timed out",
   "pairingErrorConnectionLost": "Lost connection to the other device",
   "pairingErrorGeneric": "Something went wrong, please try again",
+  "pairingErrorRelayUnavailable": "Couldn't connect over the current network. Try again or switch networks.",
+  "transferRelayIndicator": "Relayed · encrypted",
 
   "sendTitle": "Send files",
   "sendSelectedSummary": "{count} items · {size}",

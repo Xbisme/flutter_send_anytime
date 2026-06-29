@@ -866,6 +866,18 @@ abstract class AppLocalizations {
   /// **'Đã xảy ra lỗi, vui lòng thử lại'**
   String get pairingErrorGeneric;
 
+  /// Pairing error: neither a direct path nor the TURN relay could connect (#014)
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể kết nối qua mạng hiện tại. Hãy thử lại hoặc đổi mạng.'**
+  String get pairingErrorRelayUnavailable;
+
+  /// Subtle progress-screen badge shown when the transfer runs over an encrypted TURN relay (#014, FR-004a)
+  ///
+  /// In vi, this message translates to:
+  /// **'Chuyển tiếp · đã mã hoá'**
+  String get transferRelayIndicator;
+
   /// Send file-selection screen title
   ///
   /// In vi, this message translates to:

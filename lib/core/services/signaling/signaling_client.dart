@@ -49,8 +49,21 @@ class SignalingClient {
   Completer<Result<void>>? _joinCompleter;
   var _disposed = false;
 
+  /// Ephemeral TURN relay for this session, captured from the server's
+  /// `turn-credentials` frame (#014). Null until/unless the server issues one.
+  RtcIceServer? _turnServer;
+
   /// The pairing lifecycle stream (broadcast).
   Stream<PairingState> get state => _stateController.stream;
+
+  /// The ICE servers to use for this session: the static per-flavor STUN/TURN
+  /// config plus the ephemeral server-issued TURN relay if one arrived (#014).
+  /// The server sends `turn-credentials` before `peer-joined`, so this is
+  /// populated by the time the connection is established.
+  List<RtcIceServer> get sessionIceServers => [
+    ..._config.iceServers,
+    ?_turnServer,
+  ];
 
   /// The #002 signaling seam for this session. Valid once connected; the engine
   /// sends/receives SDP/ICE through it.
@@ -191,6 +204,20 @@ class SignalingClient {
       case PeerLeftFrame():
         _channel?.deliverFromPeer(const SignalingMessage.bye());
         _failPending(const AppFailure.connectionLost());
+      case TurnCredentialsFrame(
+        :final urls,
+        :final username,
+        :final credential,
+      ):
+        // #014: ephemeral TURN creds for this session → merged into
+        // `sessionIceServers` for the connector. Arrives before `peer-joined`,
+        // so it is captured before the connection is established. Never logged
+        // (Constitution I).
+        _turnServer = RtcIceServer(
+          urls: urls,
+          username: username,
+          credential: credential,
+        );
       // Client never receives these from the server.
       case HostFrame():
       case JoinFrame():

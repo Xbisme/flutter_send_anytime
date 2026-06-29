@@ -157,6 +157,7 @@ dev_dependencies:
   # In-process signaling relay for the #003 integration test (path dep)
   server:
     path: server
+  bloc_tools: ^0.1.0-dev.24
 
 flutter:
   uses-material-design: true

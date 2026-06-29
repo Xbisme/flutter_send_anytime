@@ -45,6 +45,12 @@ sealed class AppFailure with _$AppFailure {
   /// ICE connectivity negotiation failed.
   const factory AppFailure.iceFailed() = AppFailureIceFailed;
 
+  /// Neither a direct path nor the TURN relay could carry the connection
+  /// (#014) — relay unreachable/misconfigured while direct also failed. Distinct
+  /// from `peerUnreachable` so the UI can hint that connectivity (not the peer)
+  /// is the problem. Direct-only transfers are unaffected when this occurs.
+  const factory AppFailure.relayUnavailable() = AppFailureRelayUnavailable;
+
   /// An established connection dropped mid-session (disconnect / stall).
   const factory AppFailure.connectionLost() = AppFailureConnectionLost;
 

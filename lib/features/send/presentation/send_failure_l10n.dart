@@ -19,6 +19,7 @@ extension SendFailureL10n on AppFailure {
     AppFailureSignalingTimeout() => l10n.pairingErrorTimeout,
     AppFailurePeerUnreachable() => l10n.pairingErrorUnreachable,
     AppFailureIceFailed() => l10n.pairingErrorConnectionLost,
+    AppFailureRelayUnavailable() => l10n.pairingErrorRelayUnavailable,
     _ => l10n.pairingErrorGeneric,
   };
 }

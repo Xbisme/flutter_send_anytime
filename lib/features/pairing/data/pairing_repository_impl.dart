@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:injectable/injectable.dart';
-import 'package:safe_send/core/config/app_config.dart';
 import 'package:safe_send/core/constants/signaling_constants.dart';
 import 'package:safe_send/core/domain/pairing/pairing_code.dart';
 import 'package:safe_send/core/domain/pairing/pairing_role.dart';
@@ -22,13 +21,11 @@ class PairingRepositoryImpl implements PairingRepository {
   PairingRepositoryImpl(
     this._client,
     this._connector,
-    this._config,
     this._hostingRegistry,
   );
 
   final SignalingClient _client;
   final PeerConnector _connector;
-  final AppConfig _config;
   final ActiveHostingRegistry _hostingRegistry;
 
   final _state = StreamController<PairingState>.broadcast();
@@ -94,7 +91,9 @@ class PairingRepositoryImpl implements PairingRepository {
           ? TransferRole.sender
           : TransferRole.receiver,
       signaling: _client.channel,
-      iceServers: _config.iceServers,
+      // #014: static per-flavor ICE config + any ephemeral TURN relay the
+      // server issued for this session (captured before `peer-joined`).
+      iceServers: _client.sessionIceServers,
       timeout: SignalingTimeouts.handshake,
     );
     result.fold(

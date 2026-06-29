@@ -52,6 +52,14 @@ abstract final class SignalingProtocol {
 
   /// Server → client: too many invalid joins on this connection.
   static const String typeRateLimited = 'rate-limited';
+
+  /// Server → client: ephemeral TURN relay credentials for this session
+  /// (#014). Carries ICE-server *configuration* only (urls + short-lived
+  /// username/credential) — connection-setup metadata, never file data. A
+  /// client that predates this frame ignores the unknown type; a server that
+  /// never sends it leaves the client on its static per-flavor ICE config
+  /// (backward compatible).
+  static const String typeTurnCredentials = 'turn-credentials';
 }
 
 /// The kind of handshake item carried by a relay frame. Maps 1:1 to the #002

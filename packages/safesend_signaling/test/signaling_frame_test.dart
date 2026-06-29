@@ -22,6 +22,12 @@ void main() {
       const PeerLeftFrame(),
       const ByeFrame(),
       const RateLimitedFrame(retryAfterSeconds: 30),
+      const TurnCredentialsFrame(
+        urls: ['turn:turn.example:3478?transport=udp'],
+        username: '1751212800',
+        credential: 'aGFzaA==',
+        ttlSeconds: 600,
+      ),
     ];
 
     for (final frame in frames) {
@@ -128,6 +134,66 @@ void main() {
         SignalingFrame.tryDecode('{"v":1,"type":"rate-limited"}'),
         isNull,
       );
+    });
+
+    test('turn-credentials missing/empty/wrong-typed fields', () {
+      // empty urls
+      expect(
+        SignalingFrame.tryDecode(
+          '{"v":1,"type":"turn-credentials","urls":[],"username":"u","credential":"c","ttlSeconds":600}',
+        ),
+        isNull,
+      );
+      // non-string url element
+      expect(
+        SignalingFrame.tryDecode(
+          '{"v":1,"type":"turn-credentials","urls":[1],"username":"u","credential":"c","ttlSeconds":600}',
+        ),
+        isNull,
+      );
+      // missing ttl
+      expect(
+        SignalingFrame.tryDecode(
+          '{"v":1,"type":"turn-credentials","urls":["turn:x"],"username":"u","credential":"c"}',
+        ),
+        isNull,
+      );
+    });
+  });
+
+  group('turn-credentials frame (#014)', () {
+    test('preserves urls/username/credential/ttl', () {
+      final decoded =
+          SignalingFrame.tryDecode(
+                const TurnCredentialsFrame(
+                  urls: ['turn:a:3478', 'turns:a:5349'],
+                  username: '1751212800',
+                  credential: 'aGFzaA==',
+                  ttlSeconds: 600,
+                ).encode(),
+              )!
+              as TurnCredentialsFrame;
+      expect(decoded.urls, ['turn:a:3478', 'turns:a:5349']);
+      expect(decoded.username, '1751212800');
+      expect(decoded.credential, 'aGFzaA==');
+      expect(decoded.ttlSeconds, 600);
+    });
+
+    test('older client ignores the unknown type (backward compatible)', () {
+      // Simulate a future/extra type the demux does not know: tryDecode returns
+      // null and the caller skips it — never throws.
+      expect(SignalingFrame.tryDecode('{"v":1,"type":"future-frame"}'), isNull);
+    });
+
+    test('carries no file/byte field (privacy by construction)', () {
+      const f = TurnCredentialsFrame(
+        urls: ['turn:a:3478'],
+        username: 'u',
+        credential: 'c',
+        ttlSeconds: 600,
+      );
+      const forbidden = {'bytes', 'data', 'payload', 'chunk', 'file', 'blob'};
+      expect(f.toJson().keys.toSet().intersection(forbidden), isEmpty);
     });
   });
 

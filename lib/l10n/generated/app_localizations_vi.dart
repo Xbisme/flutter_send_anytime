@@ -404,6 +404,13 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pairingErrorGeneric => 'Đã xảy ra lỗi, vui lòng thử lại';
 
   @override
+  String get pairingErrorRelayUnavailable =>
+      'Không thể kết nối qua mạng hiện tại. Hãy thử lại hoặc đổi mạng.';
+
+  @override
+  String get transferRelayIndicator => 'Chuyển tiếp · đã mã hoá';
+
+  @override
   String get sendTitle => 'Gửi file';
 
   @override

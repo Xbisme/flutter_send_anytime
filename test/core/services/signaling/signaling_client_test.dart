@@ -134,6 +134,49 @@ void main() {
     });
   });
 
+  group('SignalingClient TURN credentials (#014)', () {
+    test('static iceServers only when no turn-credentials frame', () async {
+      final socket = FakeSocket();
+      final client = SignalingClient(_config(), opener: (_) => socket);
+      final future = client.join('012345');
+      await pumpEventQueue();
+      socket.emit(const PeerJoinedFrame());
+      await future;
+      // _config() has no iceServers → session list is empty (static only).
+      expect(client.sessionIceServers, isEmpty);
+    });
+
+    test(
+      'turn-credentials frame merges a TURN server into the session',
+      () async {
+        final socket = FakeSocket();
+        final client = SignalingClient(_config(), opener: (_) => socket);
+        final future = client.join('012345');
+        await pumpEventQueue();
+        // Server sends creds BEFORE peer-joined (the real ordering).
+        socket
+          ..emit(
+            const TurnCredentialsFrame(
+              urls: ['turn:relay:3478'],
+              username: '1751212800',
+              credential: 'aGFzaA==',
+              ttlSeconds: 600,
+            ),
+          )
+          ..emit(const PeerJoinedFrame());
+        await future;
+        await pumpEventQueue();
+
+        final servers = client.sessionIceServers;
+        expect(servers, hasLength(1));
+        final turn = servers.single;
+        expect(turn.urls, ['turn:relay:3478']);
+        expect(turn.username, '1751212800');
+        expect(turn.credential, 'aGFzaA==');
+      },
+    );
+  });
+
   group('SignalingClient join', () {
     test('peer-joined completes join() and emits peerPresent', () async {
       final socket = FakeSocket();

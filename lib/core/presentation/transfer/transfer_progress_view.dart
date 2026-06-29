@@ -100,6 +100,10 @@ class TransferProgressView extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
+                  if (v?.relayInUse ?? false) ...[
+                    const SizedBox(height: AppSpacing.x3),
+                    _RelayBadge(label: l10n.transferRelayIndicator),
+                  ],
                   const Spacer(),
                   Text(
                     '$percent%',
@@ -232,6 +236,35 @@ class _CurrentFileCard extends StatelessWidget {
       ext: _ext(view.currentFileName!),
       meta: position,
       trailing: const TransferSpinner(),
+    );
+  }
+}
+
+/// Subtle "relayed · encrypted" indicator shown only when ICE selected a TURN
+/// relay (#014, FR-004a). Reassuring, not alarming — the bytes stay encrypted.
+class _RelayBadge extends StatelessWidget {
+  const _RelayBadge({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = AppColors.of(context);
+    return Align(
+      child: Semantics(
+        label: label,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(LucideIcons.shieldCheck, size: 13, color: c.textMuted),
+            const SizedBox(width: AppSpacing.x2),
+            Text(
+              label,
+              style: AppTypography.mono(size: 11, color: c.textMuted),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

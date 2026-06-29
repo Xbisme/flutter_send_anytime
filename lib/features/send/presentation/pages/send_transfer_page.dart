@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -19,6 +18,7 @@ import 'package:safe_send/core/presentation/transfer/transfer_complete_view.dart
 import 'package:safe_send/core/presentation/transfer/transfer_progress_view.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
 import 'package:safe_send/core/theme/app_dimens.dart';
+import 'package:safe_send/core/utils/haptics.dart';
 import 'package:safe_send/core/utils/l10n_extension.dart';
 import 'package:safe_send/features/send/presentation/cubit/send_transfer_cubit.dart';
 import 'package:safe_send/features/send/presentation/send_failure_l10n.dart';
@@ -72,11 +72,15 @@ class _SendTransferView extends StatelessWidget {
                     prev.data.phase != curr.data.phase),
             listener: (context, state) {
               if (state is AppError<TransferView>) {
-                unawaited(HapticFeedback.heavyImpact());
+                unawaited(Haptics.fail());
               } else if (state is AppLoaded<TransferView>) {
                 final phase = state.data.phase;
-                if (phase == TransferPhase.done) {
-                  unawaited(HapticFeedback.mediumImpact());
+                if (phase == TransferPhase.transferring) {
+                  unawaited(Haptics.connect());
+                } else if (phase == TransferPhase.done) {
+                  unawaited(Haptics.complete());
+                } else if (phase == TransferPhase.failed) {
+                  unawaited(Haptics.fail());
                 } else if (phase == TransferPhase.cancelled) {
                   context.go(AppRoutes.home);
                 }

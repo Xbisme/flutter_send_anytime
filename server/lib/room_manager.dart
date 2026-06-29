@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:safesend_signaling/safesend_signaling.dart';
 import 'package:server/peer.dart';
+import 'package:server/turn_credential_service.dart';
 
 /// One ephemeral rendezvous room: a host, an optional guest, and a TTL timer.
 class _Room {
@@ -22,12 +23,18 @@ class RoomManager {
   RoomManager({
     this.ttl = SignalingProtocol.defaultTtl,
     Random? random,
-  }) : _random = random ?? Random.secure();
+    TurnCredentialService? turnCredentials,
+  }) : _random = random ?? Random.secure(),
+       _turn = turnCredentials;
 
   /// How long an issued code stays valid (configurable for tests).
   final Duration ttl;
 
   final Random _random;
+
+  /// Mints ephemeral TURN credentials on pairing; `null` when TURN is not
+  /// configured (clients then use their static per-flavor ICE config, FR-008).
+  final TurnCredentialService? _turn;
   final Map<String, _Room> _rooms = <String, _Room>{};
 
   /// Number of live rooms — used by tests to assert no residue (SC-005).
@@ -74,6 +81,16 @@ class RoomManager {
     conn.rateLimiter.reset();
     room.guest = conn;
     conn.code = code;
+    // #014: hand both peers fresh ephemeral TURN credentials BEFORE `peer-joined`
+    // — the client establishes the connection on `peer-joined`, so the creds
+    // must already be captured. One mint, sent to each (they share the relay).
+    // Skipped when TURN is not configured (clients fall back to static config).
+    final turn = _turn;
+    if (turn != null) {
+      final creds = turn.mint(DateTime.now());
+      room.host.send(creds);
+      conn.send(creds);
+    }
     room.host.send(const PeerJoinedFrame());
     conn.send(const PeerJoinedFrame());
   }

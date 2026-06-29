@@ -272,6 +272,11 @@
   "@pairingErrorConnectionLost": { "description": "Pairing error: peer connection lost" },
   "pairingErrorGeneric": "Đã xảy ra lỗi, vui lòng thử lại",
   "@pairingErrorGeneric": { "description": "Pairing error: generic fallback" },
+  "pairingErrorRelayUnavailable": "Không thể kết nối qua mạng hiện tại. Hãy thử lại hoặc đổi mạng.",
+  "@pairingErrorRelayUnavailable": { "description": "Pairing error: neither a direct path nor the TURN relay could connect (#014)" },
+
+  "transferRelayIndicator": "Chuyển tiếp · đã mã hoá",
+  "@transferRelayIndicator": { "description": "Subtle progress-screen badge shown when the transfer runs over an encrypted TURN relay (#014, FR-004a)" },
 
   "sendTitle": "Gửi file",
   "@sendTitle": { "description": "Send file-selection screen title" },

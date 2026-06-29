@@ -18,6 +18,7 @@ extension ReceiveFailureL10n on AppFailure {
     AppFailureConnectionLost() => l10n.receiveErrorConnectionLost,
     AppFailureDataChannelClosed() => l10n.receiveErrorConnectionLost,
     AppFailureIceFailed() => l10n.pairingErrorConnectionLost,
+    AppFailureRelayUnavailable() => l10n.pairingErrorRelayUnavailable,
     AppFailureIntegrityCheckFailed() => l10n.receiveErrorIntegrity,
     AppFailureFileWriteFailed() => l10n.receiveErrorWrite,
     AppFailureStorageFull() => l10n.receiveErrorWrite,

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TransferView {
 
- TransferPhase get phase; TransferRole get role; double get overallProgress; int get bytesDone; int get bytesTotal; double get speedBytesPerSec; int? get etaSeconds; int? get currentIndex; String? get currentFileName; int get fileCount; List<FileTransferItem> get items; Duration get elapsed; bool get awaitingDecision; IncomingOffer? get incomingOffer; AppFailure? get failure;
+ TransferPhase get phase; TransferRole get role; double get overallProgress; int get bytesDone; int get bytesTotal; double get speedBytesPerSec; int? get etaSeconds; int? get currentIndex; String? get currentFileName; int get fileCount; List<FileTransferItem> get items; Duration get elapsed; bool get awaitingDecision; IncomingOffer? get incomingOffer; AppFailure? get failure; bool get relayInUse;
 /// Create a copy of TransferView
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $TransferViewCopyWith<TransferView> get copyWith => _$TransferViewCopyWithImpl<T
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransferView&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.role, role) || other.role == role)&&(identical(other.overallProgress, overallProgress) || other.overallProgress == overallProgress)&&(identical(other.bytesDone, bytesDone) || other.bytesDone == bytesDone)&&(identical(other.bytesTotal, bytesTotal) || other.bytesTotal == bytesTotal)&&(identical(other.speedBytesPerSec, speedBytesPerSec) || other.speedBytesPerSec == speedBytesPerSec)&&(identical(other.etaSeconds, etaSeconds) || other.etaSeconds == etaSeconds)&&(identical(other.currentIndex, currentIndex) || other.currentIndex == currentIndex)&&(identical(other.currentFileName, currentFileName) || other.currentFileName == currentFileName)&&(identical(other.fileCount, fileCount) || other.fileCount == fileCount)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.elapsed, elapsed) || other.elapsed == elapsed)&&(identical(other.awaitingDecision, awaitingDecision) || other.awaitingDecision == awaitingDecision)&&(identical(other.incomingOffer, incomingOffer) || other.incomingOffer == incomingOffer)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransferView&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.role, role) || other.role == role)&&(identical(other.overallProgress, overallProgress) || other.overallProgress == overallProgress)&&(identical(other.bytesDone, bytesDone) || other.bytesDone == bytesDone)&&(identical(other.bytesTotal, bytesTotal) || other.bytesTotal == bytesTotal)&&(identical(other.speedBytesPerSec, speedBytesPerSec) || other.speedBytesPerSec == speedBytesPerSec)&&(identical(other.etaSeconds, etaSeconds) || other.etaSeconds == etaSeconds)&&(identical(other.currentIndex, currentIndex) || other.currentIndex == currentIndex)&&(identical(other.currentFileName, currentFileName) || other.currentFileName == currentFileName)&&(identical(other.fileCount, fileCount) || other.fileCount == fileCount)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.elapsed, elapsed) || other.elapsed == elapsed)&&(identical(other.awaitingDecision, awaitingDecision) || other.awaitingDecision == awaitingDecision)&&(identical(other.incomingOffer, incomingOffer) || other.incomingOffer == incomingOffer)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.relayInUse, relayInUse) || other.relayInUse == relayInUse));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,phase,role,overallProgress,bytesDone,bytesTotal,speedBytesPerSec,etaSeconds,currentIndex,currentFileName,fileCount,const DeepCollectionEquality().hash(items),elapsed,awaitingDecision,incomingOffer,failure);
+int get hashCode => Object.hash(runtimeType,phase,role,overallProgress,bytesDone,bytesTotal,speedBytesPerSec,etaSeconds,currentIndex,currentFileName,fileCount,const DeepCollectionEquality().hash(items),elapsed,awaitingDecision,incomingOffer,failure,relayInUse);
 
 @override
 String toString() {
-  return 'TransferView(phase: $phase, role: $role, overallProgress: $overallProgress, bytesDone: $bytesDone, bytesTotal: $bytesTotal, speedBytesPerSec: $speedBytesPerSec, etaSeconds: $etaSeconds, currentIndex: $currentIndex, currentFileName: $currentFileName, fileCount: $fileCount, items: $items, elapsed: $elapsed, awaitingDecision: $awaitingDecision, incomingOffer: $incomingOffer, failure: $failure)';
+  return 'TransferView(phase: $phase, role: $role, overallProgress: $overallProgress, bytesDone: $bytesDone, bytesTotal: $bytesTotal, speedBytesPerSec: $speedBytesPerSec, etaSeconds: $etaSeconds, currentIndex: $currentIndex, currentFileName: $currentFileName, fileCount: $fileCount, items: $items, elapsed: $elapsed, awaitingDecision: $awaitingDecision, incomingOffer: $incomingOffer, failure: $failure, relayInUse: $relayInUse)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $TransferViewCopyWith<$Res>  {
   factory $TransferViewCopyWith(TransferView value, $Res Function(TransferView) _then) = _$TransferViewCopyWithImpl;
 @useResult
 $Res call({
- TransferPhase phase, TransferRole role, double overallProgress, int bytesDone, int bytesTotal, double speedBytesPerSec, int? etaSeconds, int? currentIndex, String? currentFileName, int fileCount, List<FileTransferItem> items, Duration elapsed, bool awaitingDecision, IncomingOffer? incomingOffer, AppFailure? failure
+ TransferPhase phase, TransferRole role, double overallProgress, int bytesDone, int bytesTotal, double speedBytesPerSec, int? etaSeconds, int? currentIndex, String? currentFileName, int fileCount, List<FileTransferItem> items, Duration elapsed, bool awaitingDecision, IncomingOffer? incomingOffer, AppFailure? failure, bool relayInUse
 });
 
 
@@ -62,7 +62,7 @@ class _$TransferViewCopyWithImpl<$Res>
 
 /// Create a copy of TransferView
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? phase = null,Object? role = null,Object? overallProgress = null,Object? bytesDone = null,Object? bytesTotal = null,Object? speedBytesPerSec = null,Object? etaSeconds = freezed,Object? currentIndex = freezed,Object? currentFileName = freezed,Object? fileCount = null,Object? items = null,Object? elapsed = null,Object? awaitingDecision = null,Object? incomingOffer = freezed,Object? failure = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? phase = null,Object? role = null,Object? overallProgress = null,Object? bytesDone = null,Object? bytesTotal = null,Object? speedBytesPerSec = null,Object? etaSeconds = freezed,Object? currentIndex = freezed,Object? currentFileName = freezed,Object? fileCount = null,Object? items = null,Object? elapsed = null,Object? awaitingDecision = null,Object? incomingOffer = freezed,Object? failure = freezed,Object? relayInUse = null,}) {
   return _then(_self.copyWith(
 phase: null == phase ? _self.phase : phase // ignore: cast_nullable_to_non_nullable
 as TransferPhase,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
@@ -79,7 +79,8 @@ as List<FileTransferItem>,elapsed: null == elapsed ? _self.elapsed : elapsed // 
 as Duration,awaitingDecision: null == awaitingDecision ? _self.awaitingDecision : awaitingDecision // ignore: cast_nullable_to_non_nullable
 as bool,incomingOffer: freezed == incomingOffer ? _self.incomingOffer : incomingOffer // ignore: cast_nullable_to_non_nullable
 as IncomingOffer?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
-as AppFailure?,
+as AppFailure?,relayInUse: null == relayInUse ? _self.relayInUse : relayInUse // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 /// Create a copy of TransferView
@@ -188,10 +189,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( TransferPhase phase,  TransferRole role,  double overallProgress,  int bytesDone,  int bytesTotal,  double speedBytesPerSec,  int? etaSeconds,  int? currentIndex,  String? currentFileName,  int fileCount,  List<FileTransferItem> items,  Duration elapsed,  bool awaitingDecision,  IncomingOffer? incomingOffer,  AppFailure? failure)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( TransferPhase phase,  TransferRole role,  double overallProgress,  int bytesDone,  int bytesTotal,  double speedBytesPerSec,  int? etaSeconds,  int? currentIndex,  String? currentFileName,  int fileCount,  List<FileTransferItem> items,  Duration elapsed,  bool awaitingDecision,  IncomingOffer? incomingOffer,  AppFailure? failure,  bool relayInUse)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TransferView() when $default != null:
-return $default(_that.phase,_that.role,_that.overallProgress,_that.bytesDone,_that.bytesTotal,_that.speedBytesPerSec,_that.etaSeconds,_that.currentIndex,_that.currentFileName,_that.fileCount,_that.items,_that.elapsed,_that.awaitingDecision,_that.incomingOffer,_that.failure);case _:
+return $default(_that.phase,_that.role,_that.overallProgress,_that.bytesDone,_that.bytesTotal,_that.speedBytesPerSec,_that.etaSeconds,_that.currentIndex,_that.currentFileName,_that.fileCount,_that.items,_that.elapsed,_that.awaitingDecision,_that.incomingOffer,_that.failure,_that.relayInUse);case _:
   return orElse();
 
 }
@@ -209,10 +210,10 @@ return $default(_that.phase,_that.role,_that.overallProgress,_that.bytesDone,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( TransferPhase phase,  TransferRole role,  double overallProgress,  int bytesDone,  int bytesTotal,  double speedBytesPerSec,  int? etaSeconds,  int? currentIndex,  String? currentFileName,  int fileCount,  List<FileTransferItem> items,  Duration elapsed,  bool awaitingDecision,  IncomingOffer? incomingOffer,  AppFailure? failure)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( TransferPhase phase,  TransferRole role,  double overallProgress,  int bytesDone,  int bytesTotal,  double speedBytesPerSec,  int? etaSeconds,  int? currentIndex,  String? currentFileName,  int fileCount,  List<FileTransferItem> items,  Duration elapsed,  bool awaitingDecision,  IncomingOffer? incomingOffer,  AppFailure? failure,  bool relayInUse)  $default,) {final _that = this;
 switch (_that) {
 case _TransferView():
-return $default(_that.phase,_that.role,_that.overallProgress,_that.bytesDone,_that.bytesTotal,_that.speedBytesPerSec,_that.etaSeconds,_that.currentIndex,_that.currentFileName,_that.fileCount,_that.items,_that.elapsed,_that.awaitingDecision,_that.incomingOffer,_that.failure);case _:
+return $default(_that.phase,_that.role,_that.overallProgress,_that.bytesDone,_that.bytesTotal,_that.speedBytesPerSec,_that.etaSeconds,_that.currentIndex,_that.currentFileName,_that.fileCount,_that.items,_that.elapsed,_that.awaitingDecision,_that.incomingOffer,_that.failure,_that.relayInUse);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -229,10 +230,10 @@ return $default(_that.phase,_that.role,_that.overallProgress,_that.bytesDone,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( TransferPhase phase,  TransferRole role,  double overallProgress,  int bytesDone,  int bytesTotal,  double speedBytesPerSec,  int? etaSeconds,  int? currentIndex,  String? currentFileName,  int fileCount,  List<FileTransferItem> items,  Duration elapsed,  bool awaitingDecision,  IncomingOffer? incomingOffer,  AppFailure? failure)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( TransferPhase phase,  TransferRole role,  double overallProgress,  int bytesDone,  int bytesTotal,  double speedBytesPerSec,  int? etaSeconds,  int? currentIndex,  String? currentFileName,  int fileCount,  List<FileTransferItem> items,  Duration elapsed,  bool awaitingDecision,  IncomingOffer? incomingOffer,  AppFailure? failure,  bool relayInUse)?  $default,) {final _that = this;
 switch (_that) {
 case _TransferView() when $default != null:
-return $default(_that.phase,_that.role,_that.overallProgress,_that.bytesDone,_that.bytesTotal,_that.speedBytesPerSec,_that.etaSeconds,_that.currentIndex,_that.currentFileName,_that.fileCount,_that.items,_that.elapsed,_that.awaitingDecision,_that.incomingOffer,_that.failure);case _:
+return $default(_that.phase,_that.role,_that.overallProgress,_that.bytesDone,_that.bytesTotal,_that.speedBytesPerSec,_that.etaSeconds,_that.currentIndex,_that.currentFileName,_that.fileCount,_that.items,_that.elapsed,_that.awaitingDecision,_that.incomingOffer,_that.failure,_that.relayInUse);case _:
   return null;
 
 }
@@ -244,7 +245,7 @@ return $default(_that.phase,_that.role,_that.overallProgress,_that.bytesDone,_th
 
 
 class _TransferView extends TransferView {
-  const _TransferView({required this.phase, required this.role, this.overallProgress = 0, this.bytesDone = 0, this.bytesTotal = 0, this.speedBytesPerSec = 0, this.etaSeconds, this.currentIndex, this.currentFileName, this.fileCount = 0, final  List<FileTransferItem> items = const <FileTransferItem>[], this.elapsed = Duration.zero, this.awaitingDecision = false, this.incomingOffer, this.failure}): _items = items,super._();
+  const _TransferView({required this.phase, required this.role, this.overallProgress = 0, this.bytesDone = 0, this.bytesTotal = 0, this.speedBytesPerSec = 0, this.etaSeconds, this.currentIndex, this.currentFileName, this.fileCount = 0, final  List<FileTransferItem> items = const <FileTransferItem>[], this.elapsed = Duration.zero, this.awaitingDecision = false, this.incomingOffer, this.failure, this.relayInUse = false}): _items = items,super._();
   
 
 @override final  TransferPhase phase;
@@ -268,6 +269,7 @@ class _TransferView extends TransferView {
 @override@JsonKey() final  bool awaitingDecision;
 @override final  IncomingOffer? incomingOffer;
 @override final  AppFailure? failure;
+@override@JsonKey() final  bool relayInUse;
 
 /// Create a copy of TransferView
 /// with the given fields replaced by the non-null parameter values.
@@ -279,16 +281,16 @@ _$TransferViewCopyWith<_TransferView> get copyWith => __$TransferViewCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransferView&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.role, role) || other.role == role)&&(identical(other.overallProgress, overallProgress) || other.overallProgress == overallProgress)&&(identical(other.bytesDone, bytesDone) || other.bytesDone == bytesDone)&&(identical(other.bytesTotal, bytesTotal) || other.bytesTotal == bytesTotal)&&(identical(other.speedBytesPerSec, speedBytesPerSec) || other.speedBytesPerSec == speedBytesPerSec)&&(identical(other.etaSeconds, etaSeconds) || other.etaSeconds == etaSeconds)&&(identical(other.currentIndex, currentIndex) || other.currentIndex == currentIndex)&&(identical(other.currentFileName, currentFileName) || other.currentFileName == currentFileName)&&(identical(other.fileCount, fileCount) || other.fileCount == fileCount)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.elapsed, elapsed) || other.elapsed == elapsed)&&(identical(other.awaitingDecision, awaitingDecision) || other.awaitingDecision == awaitingDecision)&&(identical(other.incomingOffer, incomingOffer) || other.incomingOffer == incomingOffer)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransferView&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.role, role) || other.role == role)&&(identical(other.overallProgress, overallProgress) || other.overallProgress == overallProgress)&&(identical(other.bytesDone, bytesDone) || other.bytesDone == bytesDone)&&(identical(other.bytesTotal, bytesTotal) || other.bytesTotal == bytesTotal)&&(identical(other.speedBytesPerSec, speedBytesPerSec) || other.speedBytesPerSec == speedBytesPerSec)&&(identical(other.etaSeconds, etaSeconds) || other.etaSeconds == etaSeconds)&&(identical(other.currentIndex, currentIndex) || other.currentIndex == currentIndex)&&(identical(other.currentFileName, currentFileName) || other.currentFileName == currentFileName)&&(identical(other.fileCount, fileCount) || other.fileCount == fileCount)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.elapsed, elapsed) || other.elapsed == elapsed)&&(identical(other.awaitingDecision, awaitingDecision) || other.awaitingDecision == awaitingDecision)&&(identical(other.incomingOffer, incomingOffer) || other.incomingOffer == incomingOffer)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.relayInUse, relayInUse) || other.relayInUse == relayInUse));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,phase,role,overallProgress,bytesDone,bytesTotal,speedBytesPerSec,etaSeconds,currentIndex,currentFileName,fileCount,const DeepCollectionEquality().hash(_items),elapsed,awaitingDecision,incomingOffer,failure);
+int get hashCode => Object.hash(runtimeType,phase,role,overallProgress,bytesDone,bytesTotal,speedBytesPerSec,etaSeconds,currentIndex,currentFileName,fileCount,const DeepCollectionEquality().hash(_items),elapsed,awaitingDecision,incomingOffer,failure,relayInUse);
 
 @override
 String toString() {
-  return 'TransferView(phase: $phase, role: $role, overallProgress: $overallProgress, bytesDone: $bytesDone, bytesTotal: $bytesTotal, speedBytesPerSec: $speedBytesPerSec, etaSeconds: $etaSeconds, currentIndex: $currentIndex, currentFileName: $currentFileName, fileCount: $fileCount, items: $items, elapsed: $elapsed, awaitingDecision: $awaitingDecision, incomingOffer: $incomingOffer, failure: $failure)';
+  return 'TransferView(phase: $phase, role: $role, overallProgress: $overallProgress, bytesDone: $bytesDone, bytesTotal: $bytesTotal, speedBytesPerSec: $speedBytesPerSec, etaSeconds: $etaSeconds, currentIndex: $currentIndex, currentFileName: $currentFileName, fileCount: $fileCount, items: $items, elapsed: $elapsed, awaitingDecision: $awaitingDecision, incomingOffer: $incomingOffer, failure: $failure, relayInUse: $relayInUse)';
 }
 
 
@@ -299,7 +301,7 @@ abstract mixin class _$TransferViewCopyWith<$Res> implements $TransferViewCopyWi
   factory _$TransferViewCopyWith(_TransferView value, $Res Function(_TransferView) _then) = __$TransferViewCopyWithImpl;
 @override @useResult
 $Res call({
- TransferPhase phase, TransferRole role, double overallProgress, int bytesDone, int bytesTotal, double speedBytesPerSec, int? etaSeconds, int? currentIndex, String? currentFileName, int fileCount, List<FileTransferItem> items, Duration elapsed, bool awaitingDecision, IncomingOffer? incomingOffer, AppFailure? failure
+ TransferPhase phase, TransferRole role, double overallProgress, int bytesDone, int bytesTotal, double speedBytesPerSec, int? etaSeconds, int? currentIndex, String? currentFileName, int fileCount, List<FileTransferItem> items, Duration elapsed, bool awaitingDecision, IncomingOffer? incomingOffer, AppFailure? failure, bool relayInUse
 });
 
 
@@ -316,7 +318,7 @@ class __$TransferViewCopyWithImpl<$Res>
 
 /// Create a copy of TransferView
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? phase = null,Object? role = null,Object? overallProgress = null,Object? bytesDone = null,Object? bytesTotal = null,Object? speedBytesPerSec = null,Object? etaSeconds = freezed,Object? currentIndex = freezed,Object? currentFileName = freezed,Object? fileCount = null,Object? items = null,Object? elapsed = null,Object? awaitingDecision = null,Object? incomingOffer = freezed,Object? failure = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? phase = null,Object? role = null,Object? overallProgress = null,Object? bytesDone = null,Object? bytesTotal = null,Object? speedBytesPerSec = null,Object? etaSeconds = freezed,Object? currentIndex = freezed,Object? currentFileName = freezed,Object? fileCount = null,Object? items = null,Object? elapsed = null,Object? awaitingDecision = null,Object? incomingOffer = freezed,Object? failure = freezed,Object? relayInUse = null,}) {
   return _then(_TransferView(
 phase: null == phase ? _self.phase : phase // ignore: cast_nullable_to_non_nullable
 as TransferPhase,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
@@ -333,7 +335,8 @@ as List<FileTransferItem>,elapsed: null == elapsed ? _self.elapsed : elapsed // 
 as Duration,awaitingDecision: null == awaitingDecision ? _self.awaitingDecision : awaitingDecision // ignore: cast_nullable_to_non_nullable
 as bool,incomingOffer: freezed == incomingOffer ? _self.incomingOffer : incomingOffer // ignore: cast_nullable_to_non_nullable
 as IncomingOffer?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
-as AppFailure?,
+as AppFailure?,relayInUse: null == relayInUse ? _self.relayInUse : relayInUse // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

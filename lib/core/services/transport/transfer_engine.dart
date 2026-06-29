@@ -72,6 +72,12 @@ class TransferEngine {
     progress: _progress,
     items: List<FileTransferItem>.unmodifiable(_items),
     failure: _failure,
+    // #014: surface a relayed path when the adopted transport reports one.
+    // Transports that aren't RelayAware (loopback/fakes) count as direct.
+    relayInUse: switch (_transport) {
+      final RelayAware t => t.isRelay,
+      _ => false,
+    },
   );
 
   /// Receiver-only: every file in the manifest has arrived and been verified.

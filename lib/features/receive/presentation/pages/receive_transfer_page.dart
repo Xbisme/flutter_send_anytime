@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -10,6 +9,7 @@ import 'package:safe_send/core/constants/app_routes.dart';
 import 'package:safe_send/core/di/injection.dart';
 import 'package:safe_send/core/domain/cubit/app_state.dart';
 import 'package:safe_send/core/domain/failures/app_failure.dart';
+import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/core/domain/transfer/transfer_view.dart';
 import 'package:safe_send/core/domain/transfer_enums.dart';
 import 'package:safe_send/core/presentation/buttons/app_buttons.dart';
@@ -21,6 +21,7 @@ import 'package:safe_send/core/presentation/transfer/transfer_progress_view.dart
 import 'package:safe_send/core/presentation/viewers/file_open_coordinator.dart';
 import 'package:safe_send/core/theme/app_colors.dart';
 import 'package:safe_send/core/theme/app_dimens.dart';
+import 'package:safe_send/core/utils/haptics.dart';
 import 'package:safe_send/core/utils/l10n_extension.dart';
 import 'package:safe_send/features/receive/presentation/cubit/receive_transfer_cubit.dart';
 import 'package:safe_send/features/receive/presentation/receive_failure_l10n.dart';
@@ -86,10 +87,13 @@ class _ReceiveTransferViewState extends State<_ReceiveTransferView> {
       } else {
         cubit.reject();
       }
+    } else if (state is AppLoaded<TransferView> &&
+        state.data.phase == TransferPhase.transferring) {
+      unawaited(Haptics.connect());
     } else if (state is AppLoaded<TransferView> && state.data.isDone) {
-      unawaited(HapticFeedback.mediumImpact());
+      unawaited(Haptics.complete());
     } else if (state is AppError<TransferView>) {
-      unawaited(HapticFeedback.heavyImpact());
+      unawaited(Haptics.fail());
       // A user-initiated reject ends the flow at Home (FR-009).
       if (cubit.rejectedByUser) context.go(AppRoutes.home);
     }

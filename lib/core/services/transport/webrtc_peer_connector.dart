@@ -10,6 +10,7 @@ import 'package:safe_send/core/domain/result.dart';
 import 'package:safe_send/core/domain/transfer/transfer_state.dart';
 import 'package:safe_send/core/services/signaling/signaling_channel.dart';
 import 'package:safe_send/core/services/transport/data_transport.dart';
+import 'package:safe_send/core/services/transport/ice_stats.dart';
 import 'package:safe_send/core/utils/app_logger.dart';
 
 /// Real [PeerConnector] backed by `flutter_webrtc`. Establishes an
@@ -106,8 +107,12 @@ class WebRtcPeerConnector implements PeerConnector {
 
       final channel = await channelCompleter.future.timeout(timeout);
       await sub.cancel();
+      // #014: detect whether ICE chose a TURN-relayed path (drives the
+      // "relayed · encrypted" indicator). Best-effort — a stats failure must
+      // not fail an otherwise-open channel; default to direct (false).
+      final isRelay = await _detectRelay(pcRef);
       return Result<DataTransport>.success(
-        _WebRtcDataTransport(pcRef, channel),
+        _WebRtcDataTransport(pcRef, channel, isRelay: isRelay),
       );
     } on TimeoutException {
       await sub?.cancel();
@@ -119,6 +124,27 @@ class WebRtcPeerConnector implements PeerConnector {
       await sub?.cancel();
       await pc?.close();
       return const Result.failure(AppFailure.iceFailed());
+    }
+  }
+
+  /// Best-effort relay detection via `getStats()`. Returns false on any error
+  /// or when no relayed candidate pair is selected (#014). Logs the error type
+  /// only — never candidate addresses (Constitution I).
+  Future<bool> _detectRelay(RTCPeerConnection pc) async {
+    try {
+      final reports = await pc.getStats();
+      final mapped = [
+        for (final r in reports)
+          IceStatReport(
+            id: r.id,
+            type: r.type,
+            values: Map<String, Object?>.from(r.values),
+          ),
+      ];
+      return isRelaySelected(mapped);
+    } on Object catch (error) {
+      AppLogger.warning('relay stats unavailable (${error.runtimeType})');
+      return false;
     }
   }
 
@@ -185,8 +211,9 @@ class WebRtcPeerConnector implements PeerConnector {
   }
 }
 
-class _WebRtcDataTransport implements DataTransport {
-  _WebRtcDataTransport(this._pc, this._channel) {
+class _WebRtcDataTransport implements DataTransport, RelayAware {
+  _WebRtcDataTransport(this._pc, this._channel, {bool isRelay = false})
+    : _isRelay = isRelay {
     _channel.onMessage = (message) {
       if (!message.isBinary) return;
       // Normalize to a fresh, zero-offset Uint8List — the native bridge can hand
@@ -205,10 +232,14 @@ class _WebRtcDataTransport implements DataTransport {
 
   final RTCPeerConnection _pc;
   final RTCDataChannel _channel;
+  final bool _isRelay;
   final _inbound = StreamController<Uint8List>();
   final _low = StreamController<void>.broadcast();
   final _closed = Completer<void>();
   var _isClosed = false;
+
+  @override
+  bool get isRelay => _isRelay;
 
   @override
   Stream<Uint8List> get inbound => _inbound.stream;
